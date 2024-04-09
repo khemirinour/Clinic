@@ -458,6 +458,16 @@
             });
             var serviceSelected = $("#serviceDropdown").val();
             var dateSelected = $("#currentWeek").val();
+            var ListeDailyEmployment = {};
+            $('table > tbody  > tr').each(function (index, tr) {
+                console.log(index);
+                console.log(tr);
+            });
+            // lundi
+            var DailyEmployment = {};
+            DailyEmployment.DateofWeek = dateSelected;
+
+            
             $.post(
                 '@Url.Action("EnregistrerEmploi", "Emploi")',
                 {

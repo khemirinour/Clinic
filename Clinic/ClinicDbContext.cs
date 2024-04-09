@@ -17,8 +17,9 @@ namespace Clinic.Models
         public DbSet<HR> HR { get; set; }
         public DbSet<EmployeeSupplement> EmployeeSupplements { get; set; }
         public DbSet<GestionViewModel> GestionViewModels { get; set; }
-        public DbSet<WeeklyEmployment> WeeklyEmployments { get; set; }
-        public DbSet<DailyEmployment> DailyEmployments { get; set; }
+     //   public DbSet<WeeklyEmployment> WeeklyEmployments { get; set; }
+
+      //  public DbSet<DailyEmployment> DailyEmployments { get; set; }
 
         public ClinicDbContext(DbContextOptions<ClinicDbContext> options) : base(options)
         {
