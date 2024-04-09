@@ -1,0 +1,19 @@
+﻿@model Clinic.Models.Supplement
+@{
+    ViewData["Title"] = "Ajouter un supplément";
+}
+
+<h1>Ajouter un supplément</h1>
+
+<form asp-action="AddSupplement">
+    <div class="form-group">
+        <label asp-for="Nom" class="control-label">Nom du supplément :</label>
+        <input asp-for="Nom" class="form-control">
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+
+    
+
+
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>

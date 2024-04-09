@@ -1,0 +1,500 @@
+﻿@model Clinic.Models.EmploiViewModel
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+    <title>CliniSys</title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        .schedule-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+            .schedule-table table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+
+        .droppable {
+            min-height: 50px;
+            border: 2px dashed #aaa;
+            background-color: #f9f9f9;
+        }
+
+        .position,
+        .repos {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: grab;
+        }
+
+        .position-details {
+            font-size: 14px;
+        }
+
+        .droppable.hovered {
+            background-color: #e0f7fa;
+        }
+    </style>
+</head>
+<body>
+    <form id="emploi-form" onsubmit="saveData(event)">
+        <select id="serviceDropdown" onchange="updateEmployees()">
+            <option value="">Sélectionner un service</option>
+            @if (Model != null && Model.Services != null)
+            {
+                @foreach (var service in Model.Services)
+                {
+                    <option value="@service.ServiceId">@service.ServiceName</option>
+                }
+            }
+        </select>
+        <div class="schedule-table">
+            <div class="container">
+                <button id="previousWeekBtn" class="btn">Previous Week</button>
+                <label for="currentWeek">Sélectionner une semaine :</label>
+                <input type="date" id="currentWeek">
+                <button id="nextWeekBtn" class="btn">Next Week</button>
+                @if (Model != null && Model.Days != null)
+                {
+                    <table id="tableau" data-days="@string.Join(',', Model.Days.Select(day => day.Name))">
+                        <thead>
+                            <tr>
+                                @if (Model.Employees != null)
+                                {
+                                    <th class="employee-column">Employee</th>
+                                }
+                                @foreach (var day in Model.Days)
+                                {
+                                    @if (day != null && day.Name != null)
+                                    {
+                                        <th>@day.Name</th>
+                                    }
+                                }
+                                <th>Total Weekly Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Employees != null)
+                            {
+                                @foreach (var employee in Model.Employees)
+                                {
+                                    <tr id="@employee.EmployeeId">
+                                        <td class="employee-column">@employee.Name</td>
+                                        @if (Model.Days != null)
+                                        {
+                                            @foreach (var day in Model.Days)
+                                            {
+                                                @if (day != null && day.Name != null)
+                                                {
+                                                    <td class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)" data-day="@day.Name"></td>
+                                                }
+                                            }
+                                        }
+                                        <td class="TotalHours-column">@employee.TotalWeeklyHours</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+        <select id="categorieDropdown" name="categorieId" title="Sélectionnez une catégorie">
+            <option value="">Sélectionnez une catégorie</option>
+            @if (Model != null && Model.Categories != null)
+            {
+                @foreach (var categorie in Model.Categories)
+                {
+                    <option value="@categorie.CategorieId">@categorie.CategorieName</option>
+                }
+            }
+        </select>
+        <div id="postes">
+            <div id="postesSection">
+                @if (Model != null && Model.Postes != null)
+                {
+                    @foreach (var poste in Model.Postes)
+                    {
+                        <div class="position" id="poste_@poste.PosteId" draggable="true">
+                            <div class="position-details">
+                                <strong>@poste.Postename</strong><br />
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div id="repos">
+            <div id="reposSection">
+                <h2>Répos</h2>
+                @if (Model != null && Model.Repos != null)
+                {
+                    @foreach (var repos in Model.Repos)
+                    {
+                        <div class="repos" id="repos_@repos.ReposId" draggable="true">
+                            <div class="repos-details">
+                                <strong>@repos.ReposName</strong><br />
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <h2>Suppléments</h2>
+        <div id="supplement">
+            @if (Model != null && Model.Supplements != null)
+            {
+                @foreach (var supplement in Model.Supplements)
+                {
+                    <div class="supplement" draggable="true">
+                        @if (!string.IsNullOrEmpty(supplement?.Nom))
+                        {
+                            <p>@supplement.Nom</p>
+                        }
+                    </div>
+                }
+            }
+        </div>
+        <input type="hidden" id="emploiData" name="emploiData" />
+        <button id="myButton" type="submit">Enregistrer</button>
+    </form>
+
+    <script>
+
+
+        var draggedItem;
+
+        function dragStart(e) {
+            draggedItem = this.cloneNode(true);
+            draggedItem.classList.add('dragged');
+            this.style.opacity = '0';
+            e.dataTransfer.setData('text/plain', '');
+            document.body.appendChild(draggedItem);
+        }
+
+        function dragEnd() {
+            this.style.opacity = '1';
+            draggedItem.remove();
+        }
+
+        function dragOver(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            this.classList.add('hovered');
+        }
+
+        function dragLeave() {
+            if (this) {
+                this.classList.remove('hovered');
+            }
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            this.classList.remove('hovered');
+            if (draggedItem) {
+                var clonedItem = draggedItem.cloneNode(true);
+                this.appendChild(clonedItem);
+            }
+        }
+
+        function clearCell() {
+            if (this.innerHTML.trim() !== '') {
+                this.innerHTML = '';
+            }
+        }     
+
+        function attachDragDropEvents() {
+            const positions = document.querySelectorAll('.position');
+            const repos = document.querySelectorAll('.repos');
+            const cells = document.querySelectorAll('.droppable');
+            const supplements = document.querySelectorAll('.supplement');
+
+            positions.forEach(position => {
+                position.addEventListener('dragstart', dragStart);
+                position.addEventListener('dragend', dragEnd);
+            });
+
+            repos.forEach(repo => {
+                repo.addEventListener('dragstart', dragStart);
+                repo.addEventListener('dragend', dragEnd);
+            });
+
+            cells.forEach(cell => {
+                cell.addEventListener('dragover', dragOver);
+                cell.addEventListener('dragenter', dragEnter);
+                cell.addEventListener('dragleave', dragLeave);
+                cell.addEventListener('drop', drop);
+                cell.addEventListener('click', clearCell);
+            });
+
+            supplements.forEach(supplement => {
+                supplement.addEventListener('dragstart', dragStart);
+                supplement.addEventListener('dragend', dragEnd);
+            });
+        }
+
+
+
+        $(document).ready(function () {
+            initDraggableElements();
+            attachEventHandlers();
+            updateServices();
+            attachDragDropEvents();
+
+            // Gestionnaire d'événements pour la soumission du formulaire #emploi-form
+            $("#emploi-form").submit(function (event) {
+                saveData(event);
+                updateEmployees();
+            });
+
+            function initDraggableElements() {
+                $(".element").draggable({
+                    containment: "parent",
+                    stop: function (event, ui) {
+                        $(this).data("posX", ui.position.left);
+                        $(this).data("posY", ui.position.top);
+                    },
+                });
+            }
+
+            function attachEventHandlers() {
+                // Gestionnaire d'événements pour le changement de catégorie
+                $('#categorieDropdown').change(updatePostesAndRepos);
+            }
+
+            function updateServices() {
+                // Récupération des services depuis le serveur
+                fetch('/Emploi/GetServices')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            data.services.forEach(services => {
+                                $('#serviceDropdown').append(`<option value="${services.ServiceId}">${services.ServiceName}</option>`);
+                            });
+                        } else {
+                            console.error(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur réseau ou de conversion JSON:', error);
+                    });
+            }
+
+            // Gérer le changement de catégorie
+            var categorieDropdown = document.getElementById("categorieDropdown");
+            categorieDropdown.addEventListener('change', updatePostesAndRepos);
+
+            function updatePostesAndRepos() {
+                var categorieId = document.getElementById("categorieDropdown").value;
+                if (categorieId) {
+                    fetch('/Emploi/GetPostesAndReposByCategorie?categorieId=' + categorieId)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            var postesSection = document.getElementById("postesSection");
+                            postesSection.innerHTML = '';
+
+                            if (data.postes) {
+                                data.postes.forEach(poste => {
+                                    var posteDiv = document.createElement('div');
+                                    posteDiv.className = "position";
+                                    posteDiv.draggable = "true";
+                                    posteDiv.id = "poste_" + poste.PosteId;
+                                    posteDiv.innerHTML = `
+                                            <div class="position-details">
+                                                <strong>${poste.postename}</strong><br />
+                                                <label>Séance 1 :</label><br />
+                                                <label>Début :</label>
+                                                <span>${poste.seance1Debut}</span><br />
+                                                <label> Fin :</label>
+                                                <span>${poste.seance1Fin}</span><br />
+                                                <label> Séance 2 :</label><br />
+                                                <label> Début :</label>
+                                                <span>${poste.seance2Debut}</span><br />
+                                                <label> Fin :</label>
+                                                <span>${poste.seance2Fin}</span><br />
+                                            </div>
+                                        `;
+                                    postesSection.appendChild(posteDiv);
+                                });
+                            }
+
+                            var reposSection = document.getElementById("reposSection");
+                            reposSection.innerHTML = '';
+
+                            if (data.repos) {
+                                data.repos.forEach(repo => {
+                                    var repoDiv = document.createElement('div');
+                                    repoDiv.className = "repos";
+                                    repoDiv.draggable = "true";
+                                    repoDiv.id = "repos_" + repo.reposId;
+                                    repoDiv.innerHTML = `
+                                            <div class="repos-details">
+                                                <strong>${repo.reposName}</strong><br />
+                                                <label>Date :</label>
+                                                <span>${repo.date_Jours}</span><br />
+                                            </div>
+                                        `;
+                                    reposSection.appendChild(repoDiv);
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération des postes et repos:', error);
+                        });
+                } else {
+                    var postesSection = document.getElementById("postesSection");
+                    postesSection.innerHTML = '';
+
+                    var reposSection = document.getElementById("reposSection");
+                    reposSection.innerHTML = '';
+                }
+            }
+
+            // Section 3: Gestion des événements de glisser-déposer
+
+           
+
+
+
+            updateEmployees(); // Call the function here after it's defined
+            attachDragDropEvents(); // Call the function after it's defined
+
+            $("#serviceDropdown").change(updateEmployees);
+
+
+           
+
+           // Add this closing parenthesis
+        });
+        function updateEmployees() {
+            const serviceId = document.getElementById("serviceDropdown").value;
+
+            if (serviceId) {
+                fetch('/Emploi/GetEmployeesByService?ServiceId=' + serviceId)
+                    .then(response => response.json())
+                    .then(data => {
+                        const tableBody = document.querySelector('#tableau tbody');
+                        tableBody.innerHTML = '';
+
+                        const days = document.getElementById("tableau").dataset.days.split(',');
+
+                        if (typeof data === 'object' && data.employees) {
+                            data.employees.forEach(employee => {
+                                const employeeRow = document.createElement('tr');
+                                employeeRow.id = "employee-" + employee.employeeId;
+
+                                const employeeNameCell = document.createElement('td');
+                                employeeNameCell.textContent = employee.name;
+                                employeeRow.appendChild(employeeNameCell);
+
+                                days.forEach(day => {
+                                    const dayCell = document.createElement('td');
+                                    dayCell.className = "droppable";
+                                    dayCell.dataset.day = day;
+                                    employeeRow.appendChild(dayCell);
+                                });
+
+                                const totalHoursCell = document.createElement('td');
+                                totalHoursCell.className = "TotalHours-column";
+                                totalHoursCell.textContent = employee.totalWeeklyHours;
+                                employeeRow.appendChild(totalHoursCell);
+
+                                tableBody.appendChild(employeeRow);
+                            });
+                        } else {
+                            console.error('Erreur: Les données ne sont pas dans le format attendu.');
+                        }
+
+                        attachDragDropEvents();
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des employés:', error);
+                    });
+            } else {
+                document.querySelector('#tableau tbody').innerHTML = '';
+            }
+        }
+
+        function saveData(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('emploi-form'));
+            const emploiData = {
+                postes: [],
+                repos: [],
+                supplements: [],
+                someField: formData.get('someField'),
+            };
+
+            formData.getAll('postes').forEach(poste => {
+                emploiData.postes.push(poste);
+            });
+
+            formData.getAll('repos').forEach(repo => {
+                emploiData.repos.push(repo);
+            });
+
+            formData.getAll('supplements').forEach(supplement => {
+                emploiData.supplements.push(supplement);
+            });
+            var serviceSelected = $("#serviceDropdown").val();
+            var dateSelected = $("#currentWeek").val();
+            $.post(
+                '@Url.Action("EnregistrerEmploi", "Emploi")',
+                {
+                    serviceSelected: serviceSelected, dateSelected: dateSelected
+                },
+                function (result) {
+                    console.log("result", result);
+                }
+            );
+            // fetch('//', {
+            //     method: 'POST',
+            //     body: JSON.stringify(emploiData),
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // })
+            //     .then(response => {
+            //         if (response.ok) {
+            //             console.log('Données enregistrées avec succès');
+            //             $('#successMessage').show();
+            //         } else {
+            //             console.error('Erreur lors de l\'enregistrement des données:', response.statusText);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         console.error('Erreur lors de la requête au serveur:', error);
+            //         $('#errorMessage').text('Une erreur réseau est survenue. Veuillez réessayer ultérieurement.').show();
+            //     });
+        }
+
+
+
+    </script>
+
+
+
+
+
+</body>
+</html>
