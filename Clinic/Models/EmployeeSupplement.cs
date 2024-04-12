@@ -5,7 +5,7 @@ namespace Clinic.Models
     public class EmployeeSupplement
     {
         [Key]
-        public int EmployeeSupplementId { get; set; }
+        public int Id { get; set; }
 
         // Clé étrangère vers l'employé
         public int EmployeeId { get; set; }

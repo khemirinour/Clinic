@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Clinic.Migrations
 {
-    public partial class Data : Migration
+    public partial class add12 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,19 +20,6 @@ namespace Clinic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.CategorieId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GestionViewModels",
-                columns: table => new
-                {
-                    CategorieId = table.Column<int>(type: "int", nullable: false),
-                    NouveauPoste = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NouveauRepos = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NouveauSupplement = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
                 });
 
             migrationBuilder.CreateTable(
@@ -51,17 +38,45 @@ namespace Clinic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WeeklyEmployments",
+                name: "Services",
                 columns: table => new
                 {
-                    WeeklyEmploymentId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    WeekStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    WeekEndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HRId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WeeklyEmployments", x => x.WeeklyEmploymentId);
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_HR_HRId",
+                        column: x => x.HRId,
+                        principalTable: "HR",
+                        principalColumn: "HRId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WeeklyEmployments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    WeekStartDay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WeeklyEmployments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WeeklyEmployments_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,40 +94,12 @@ namespace Clinic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ChefsDeService", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DailyEmployments",
-                columns: table => new
-                {
-                    DailyEmploymentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Day = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    WeeklyEmploymentId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DailyEmployments", x => x.DailyEmploymentId);
                     table.ForeignKey(
-                        name: "FK_DailyEmployments_WeeklyEmployments_WeeklyEmploymentId",
-                        column: x => x.WeeklyEmploymentId,
-                        principalTable: "WeeklyEmployments",
-                        principalColumn: "WeeklyEmploymentId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Days",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmploiId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Days", x => x.Id);
+                        name: "FK_ChefsDeService_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,8 +113,7 @@ namespace Clinic.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ServiceId = table.Column<int>(type: "int", nullable: false),
-                    TotalWeeklyHours = table.Column<int>(type: "int", nullable: false),
-                    DayCreation = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DayCreation = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ChefDeServiceId = table.Column<int>(type: "int", nullable: true),
                     HRId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -144,6 +130,51 @@ namespace Clinic.Migrations
                         column: x => x.HRId,
                         principalTable: "HR",
                         principalColumn: "HRId");
+                    table.ForeignKey(
+                        name: "FK_Emplois_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Days",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmploiId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Days", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Days_Emplois_EmploiId",
+                        column: x => x.EmploiId,
+                        principalTable: "Emplois",
+                        principalColumn: "EmploiId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DailyEmployments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    DateofWeek = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WeeklyEmploymentId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyEmployments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DailyEmployments_WeeklyEmployments_WeeklyEmploymentId",
+                        column: x => x.WeeklyEmploymentId,
+                        principalTable: "WeeklyEmployments",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -181,7 +212,7 @@ namespace Clinic.Migrations
                         name: "FK_Postes_DailyEmployments_DailyEmploymentId",
                         column: x => x.DailyEmploymentId,
                         principalTable: "DailyEmployments",
-                        principalColumn: "DailyEmploymentId");
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Postes_Emplois_EmploiId",
                         column: x => x.EmploiId,
@@ -218,7 +249,7 @@ namespace Clinic.Migrations
                         name: "FK_Repos_DailyEmployments_DailyEmploymentId",
                         column: x => x.DailyEmploymentId,
                         principalTable: "DailyEmployments",
-                        principalColumn: "DailyEmploymentId");
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Repos_Emplois_EmploiId",
                         column: x => x.EmploiId,
@@ -267,18 +298,26 @@ namespace Clinic.Migrations
                         column: x => x.PosteId,
                         principalTable: "Postes",
                         principalColumn: "PosteId");
+                    table.ForeignKey(
+                        name: "FK_Employee_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "EmployeePoste",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     PosteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeePoste", x => new { x.EmployeeId, x.PosteId });
+                    table.PrimaryKey("PK_EmployeePoste", x => x.Id);
                     table.ForeignKey(
                         name: "FK_EmployeePoste_Employee_EmployeeId",
                         column: x => x.EmployeeId,
@@ -297,13 +336,14 @@ namespace Clinic.Migrations
                 name: "EmployeeRepos",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    ReposId = table.Column<int>(type: "int", nullable: false),
-                    ReposId1 = table.Column<int>(type: "int", nullable: true)
+                    ReposId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeRepos", x => new { x.EmployeeId, x.ReposId });
+                    table.PrimaryKey("PK_EmployeeRepos", x => x.Id);
                     table.ForeignKey(
                         name: "FK_EmployeeRepos_Employee_EmployeeId",
                         column: x => x.EmployeeId,
@@ -316,46 +356,6 @@ namespace Clinic.Migrations
                         principalTable: "Repos",
                         principalColumn: "ReposId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EmployeeRepos_Repos_ReposId1",
-                        column: x => x.ReposId1,
-                        principalTable: "Repos",
-                        principalColumn: "ReposId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Services",
-                columns: table => new
-                {
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChefDeServiceId = table.Column<int>(type: "int", nullable: true),
-                    ChefDeServiceId1 = table.Column<int>(type: "int", nullable: true),
-                    HRId = table.Column<int>(type: "int", nullable: true),
-                    ChefServiceId = table.Column<int>(type: "int", nullable: true),
-                    ChefServiceEmployeeId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Services", x => x.ServiceId);
-                    table.ForeignKey(
-                        name: "FK_Services_ChefsDeService_ChefDeServiceId1",
-                        column: x => x.ChefDeServiceId1,
-                        principalTable: "ChefsDeService",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Services_Employee_ChefServiceEmployeeId",
-                        column: x => x.ChefServiceEmployeeId,
-                        principalTable: "Employee",
-                        principalColumn: "EmployeeId");
-                    table.ForeignKey(
-                        name: "FK_Services_HR_HRId",
-                        column: x => x.HRId,
-                        principalTable: "HR",
-                        principalColumn: "HRId");
                 });
 
             migrationBuilder.CreateTable(
@@ -383,7 +383,7 @@ namespace Clinic.Migrations
                         name: "FK_Supplements_DailyEmployments_DailyEmploymentId",
                         column: x => x.DailyEmploymentId,
                         principalTable: "DailyEmployments",
-                        principalColumn: "DailyEmploymentId");
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Supplements_Emplois_EmploiId",
                         column: x => x.EmploiId,
@@ -400,14 +400,14 @@ namespace Clinic.Migrations
                 name: "EmployeeSupplements",
                 columns: table => new
                 {
-                    EmployeeSupplementId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
                     SupplementId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmployeeSupplements", x => x.EmployeeSupplementId);
+                    table.PrimaryKey("PK_EmployeeSupplements", x => x.Id);
                     table.ForeignKey(
                         name: "FK_EmployeeSupplements_Employee_EmployeeId",
                         column: x => x.EmployeeId,
@@ -483,19 +483,24 @@ namespace Clinic.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmployeePoste_EmployeeId",
+                table: "EmployeePoste",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmployeePoste_PosteId",
                 table: "EmployeePoste",
                 column: "PosteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmployeeRepos_EmployeeId",
+                table: "EmployeeRepos",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmployeeRepos_ReposId",
                 table: "EmployeeRepos",
                 column: "ReposId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EmployeeRepos_ReposId1",
-                table: "EmployeeRepos",
-                column: "ReposId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmployeeSupplements_EmployeeId",
@@ -538,16 +543,6 @@ namespace Clinic.Migrations
                 column: "EmploiId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_ChefDeServiceId1",
-                table: "Services",
-                column: "ChefDeServiceId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_ChefServiceEmployeeId",
-                table: "Services",
-                column: "ChefServiceEmployeeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Services_HRId",
                 table: "Services",
                 column: "HRId");
@@ -567,6 +562,11 @@ namespace Clinic.Migrations
                 table: "Supplements",
                 column: "EmployeeId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_WeeklyEmployments_ServiceId",
+                table: "WeeklyEmployments",
+                column: "ServiceId");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_ChefsDeService_Employee_EmployeeId",
                 table: "ChefsDeService",
@@ -575,40 +575,12 @@ namespace Clinic.Migrations
                 principalColumn: "EmployeeId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ChefsDeService_Services_ServiceId",
-                table: "ChefsDeService",
-                column: "ServiceId",
-                principalTable: "Services",
-                principalColumn: "ServiceId");
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_DailyEmployments_Employee_EmployeeId",
                 table: "DailyEmployments",
                 column: "EmployeeId",
                 principalTable: "Employee",
                 principalColumn: "EmployeeId",
                 onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Days_Emplois_EmploiId",
-                table: "Days",
-                column: "EmploiId",
-                principalTable: "Emplois",
-                principalColumn: "EmploiId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Emplois_Services_ServiceId",
-                table: "Emplois",
-                column: "ServiceId",
-                principalTable: "Services",
-                principalColumn: "ServiceId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Employee_Services_ServiceId",
-                table: "Employee",
-                column: "ServiceId",
-                principalTable: "Services",
-                principalColumn: "ServiceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -621,14 +593,6 @@ namespace Clinic.Migrations
                 name: "FK_DailyEmployments_Employee_EmployeeId",
                 table: "DailyEmployments");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_Services_Employee_ChefServiceEmployeeId",
-                table: "Services");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ChefsDeService_Services_ServiceId",
-                table: "ChefsDeService");
-
             migrationBuilder.DropTable(
                 name: "Days");
 
@@ -640,9 +604,6 @@ namespace Clinic.Migrations
 
             migrationBuilder.DropTable(
                 name: "EmployeeSupplements");
-
-            migrationBuilder.DropTable(
-                name: "GestionViewModels");
 
             migrationBuilder.DropTable(
                 name: "Repos");
@@ -669,10 +630,10 @@ namespace Clinic.Migrations
                 name: "WeeklyEmployments");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "ChefsDeService");
 
             migrationBuilder.DropTable(
-                name: "ChefsDeService");
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "HR");

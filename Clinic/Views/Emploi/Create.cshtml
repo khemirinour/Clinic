@@ -59,7 +59,7 @@
             {
                 @foreach (var service in Model.Services)
                 {
-                    <option value="@service.ServiceId">@service.ServiceName</option>
+                    <option value="@service.Id">@service.Name</option>
                 }
             }
         </select>
@@ -67,7 +67,7 @@
             <div class="container">
                 <button id="previousWeekBtn" class="btn">Previous Week</button>
                 <label for="currentWeek">Sélectionner une semaine :</label>
-                <input type="date" id="currentWeek">
+                <input type="date" id="currentWeek" name="date" onchange="checkSaturday(this.value)">
                 <button id="nextWeekBtn" class="btn">Next Week</button>
                 @if (Model != null && Model.Days != null)
                 {
@@ -175,7 +175,15 @@
     </form>
 
     <script>
+        function checkSaturday(selectedDate) {
+            var date = new Date(selectedDate);
+            var dayOfWeek = date.getDay();
 
+            // Vérifie si le jour sélectionné est un samedi (6 pour samedi)
+            if (dayOfWeek !== 6) {
+                document.getElementById('currentWeek').value = ''; // Réinitialise la valeur de l'input
+            }
+        }
 
         var draggedItem;
 
@@ -288,7 +296,7 @@
                     .then(data => {
                         if (data.success) {
                             data.services.forEach(services => {
-                                $('#serviceDropdown').append(`<option value="${services.ServiceId}">${services.ServiceName}</option>`);
+                                $('#serviceDropdown').append(`<option value="${services.Id}">${services.Name}</option>`);
                             });
                         } else {
                             console.error(data.message);
@@ -459,7 +467,7 @@
             var serviceSelected = $("#serviceDropdown").val();
             var dateSelected = $("#currentWeek").val();
             var ListeDailyEmployment = {};
-            $('table > tbody  > tr').each(function (index, tr) {
+            $('#tableau > tbody  > tr').each(function (index, tr) {
                 console.log(index);
                 console.log(tr);
             });
