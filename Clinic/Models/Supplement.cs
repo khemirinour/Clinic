@@ -12,6 +12,8 @@ namespace Clinic.Models
 
         // Nom du supplément
         public string Nom { get; set; } = string.Empty;
+        public int CategorieId { get; set; }
+        public Categorie? Categorie { get; set; }
 
         // ID de l'employé associé à ce supplément
         public int? EmployeeId { get; set; }

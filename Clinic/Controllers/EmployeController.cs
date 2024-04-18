@@ -3,40 +3,27 @@ using Clinic.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Clinic.Controllers
 {
     public class EmployeController : Controller
     {
         private readonly ClinicDbContext _context;
+        private readonly ILogger<EmployeController> _logger;
 
-        public EmployeController(ClinicDbContext context)
+        public EmployeController(ClinicDbContext context, ILogger<EmployeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
-
-
 
         public IActionResult Create()
         {
-            var services = _context.Services.ToList();
-
-            if (services.Any())
-            {
-                ViewBag.ServiceList = new SelectList(services, "ServiceId", "ServiceName");
-            }
-            else
-            {
-                ViewBag.ServiceList = new SelectList(new List<string> { "Aucun service disponible" });
-            }
-
+            PopulateServiceList();
             return View();
         }
-
-
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -49,19 +36,14 @@ namespace Clinic.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Recharger la liste des services en cas de modèle non valide
-            ViewBag.ServiceList = new SelectList(_context.Services.ToList(), "ServiceId", "ServiceName");
+            PopulateServiceList();
             return View(newEmployee);
         }
 
-
-
-
-
-
-
-
-
-
+        private void PopulateServiceList()
+        {
+            var services = _context.Services.ToList();
+            ViewBag.ServiceList = new SelectList(services, "Id", "Name");
+        }
     }
 }

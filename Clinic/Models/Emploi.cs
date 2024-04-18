@@ -13,23 +13,22 @@ namespace Clinic.Models
         public string? Title { get; set; }
         public string? Description { get; set; }
 
+    
         [Required]
-        public DateTime StartDate { get; set; }
-
-        [Required]
-        public DateTime EndDate { get; set; }
+        public DateTime DateofWeek { get; set; }
 
         [ForeignKey("Service")]
         public int ServiceId { get; set; }
         public Service? Service { get; set; }
 
-        public DateTime? DayCreation { get; set; } = null;
-
+        public int CategorieId { get; set; }
         public ICollection<Day> Days { get; set; }
         public ICollection<Poste> Postes { get; set; }
         public ICollection<Repos> Repos { get; set; }
         public ICollection<Supplement> Supplements { get; set; }
         public ICollection<Employee> Employees { get; set; }
+        public List<DailyEmployment>? DailyEmployments { get; internal set; }
+
         public Emploi()
         {
             // Initialisation des collections
@@ -38,6 +37,8 @@ namespace Clinic.Models
             Repos = new List<Repos>();
             Supplements = new List<Supplement>();
             Employees = new List<Employee>();
+            DailyEmployments =new List<DailyEmployment>();
+            DateofWeek = DateTime.Now; // Initialise la propriété Date avec la date actuelle
         }
 
 

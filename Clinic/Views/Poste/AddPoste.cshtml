@@ -1,0 +1,44 @@
+﻿@model Clinic.Models.Poste
+<div class="heading"><h3>Gestion <span> de poste</span></h3></div>
+
+
+
+
+<form asp-action="AddPoste" class="margin"> 
+
+    <label asp-for="Postename" class="heading"><h6>Nom du poste :</h6></label>
+        <input asp-for="Postename" placeholder="Nom Poste" class="boxx" />
+        <span asp-validation-for="Postename"></span>
+    <strong>
+    <label class="">Séances :</label>   
+    <div class="schedule-table">
+       
+        <label><input type="checkbox" asp-for="Matin"> Matin</label><br />
+        <label><input type="checkbox" asp-for="ApresMidi"> Après-midi</label><br />
+        <label><input type="checkbox" asp-for="GardeSoir"> Garde de soir</label>
+        </div>
+        <label>Séance 1 :</label>
+        <label>Début :</label>
+    <input asp-for="Seance1Debut" class="box"  type="time">
+        <label>Fin :</label>
+    <input asp-for="Seance1Fin" class="box" type="time">
+
+        <label>Séance 2 :</label>
+        <label>Début :</label>
+    <input asp-for="Seance2Debut" class="box" type="time">
+        <label>Fin :</label>
+    <input asp-for="Seance2Fin" class="box" type="time">
+
+    <div>
+        <label><input type="checkbox" asp-for="Actif"> Actif?</label>
+
+     
+    </div>
+    <div>
+        <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="box">
+            <option value="">Sélectionnez une catégorie</option>
+        </select>
+    </div>
+    </strong>
+    <button type="submit" class="btn">Ajouter</button>
+</form>

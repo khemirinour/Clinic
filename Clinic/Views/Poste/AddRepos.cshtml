@@ -1,7 +1,5 @@
 ﻿@model Clinic.Models.Repos
-@{
-    ViewData["Title"] = "Ajouter un repos";
-}
+
 
 <h1>Ajouter un repos</h1>
 
@@ -9,21 +7,21 @@
     <div class="form-group">
         <label asp-for="ReposName" class="control-label">Nom du repos :</label>
         <input asp-for="ReposName" class="form-control">
-        <span asp-validation-for="ReposName" class="text-danger"></span>
+        <span asp-validation-for="ReposName"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Date_Jours" class="control-label">Date du jour :</label>
-        <input asp-for="Date_Jours" type="date" class="form-control">
-        <span asp-validation-for="Date_Jours" class="text-danger"></span>
+        <label asp-for="Date_Jours">Date du jour :</label>
+        <input asp-for="Date_Jours" type="date">
+        <span asp-validation-for="Date_Jours"></span>
     </div>
-    <div class="form-group">
+    <div>
         <label asp-for="CategorieId" class="control-label">Catégorie :</label>
-        <select asp-for="CategorieId" class="form-control" asp-items="@ViewBag.CategorieList">
+        <select asp-for="CategorieId" class="box" asp-items="@ViewBag.CategorieList">
             <option value="">Sélectionnez une catégorie</option>
         </select>
         <span asp-validation-for="CategorieId" class="text-danger"></span>
     </div>
    
     <!-- Autres champs pour le repos -->
-    <button type="submit" class="btn btn-primary">Ajouter</button>
+    <button type="submit" class="btn">Ajouter</button>
 </form>

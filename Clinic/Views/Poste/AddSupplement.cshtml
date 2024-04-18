@@ -1,19 +1,42 @@
-﻿@model Clinic.Models.Supplement
-@{
-    ViewData["Title"] = "Ajouter un supplément";
-}
+﻿@model Clinic.Models.AddSupplementViewModel
 
-<h1>Ajouter un supplément</h1>
 
-<form asp-action="AddSupplement">
+
+<div class="heading"><h3>Gestin <span>de supplément</span></h3></div>
+<div class="center">
+<form class="margin boxx container" asp-action="AddSupplement" method="post">
     <div class="form-group">
-        <label asp-for="Nom" class="control-label">Nom du supplément :</label>
-        <input asp-for="Nom" class="form-control">
-        <span asp-validation-for="Nom" class="text-danger"></span>
+        <label class="heading" asp-for="NewSupplement.Nom"><h5>Nom du supplément :</h5></label>
+        <input class="boxx" asp-for="NewSupplement.Nom">
+        <span asp-validation-for="NewSupplement.Nom" class="text-danger"></span>
     </div>
-
-    
-
-
+    <div> </label>
+        <select class="box" asp-for="NewSupplement.CategorieId" class="form-control" asp-items="@ViewBag.CategorieList">
+            <option value="">Sélectionnez une catégorie</option>
+        </select>
+        <span asp-validation-for="NewSupplement.CategorieId"></span>
+    </div>
     <button type="submit" class="btn btn-primary">Ajouter</button>
-</form>
+    </form> </div>
+    <div class="center">
+
+        @foreach (var category in Model.CategoriesWithSupplements)
+    {
+
+        <div class="table-container margin">
+            <div class="heading">
+            <h5>@category.CategorieName</h5>
+        </div>
+
+            @foreach (var supplement in category.Supplements)
+            {
+                <div class="boxx margin">
+                        <strong>@supplement.Nom<br /></strong>
+                    </div>
+            }
+            </div>
+
+        <br /> 
+    }
+
+</div>        <div>

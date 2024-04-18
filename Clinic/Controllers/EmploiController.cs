@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Clinic.Controllers
 {
@@ -13,14 +13,14 @@ namespace Clinic.Controllers
         private readonly ILogger<EmploiController> _logger;
 
         public EmploiController(ClinicDbContext context, ILogger<EmploiController> logger)
-        {
+        {                  
             _context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            var emplois = _context.Emplois.ToList();
+            var emplois = _context.Emplois?.ToList();
             return View(emplois);
         }
 
@@ -28,7 +28,7 @@ namespace Clinic.Controllers
         {
             try
             {
-                var emploi = _context.Emplois.FirstOrDefault();
+                var emploi = _context.Emplois?.FirstOrDefault();
                 if (emploi == null) throw new Exception("L'objet emploi est null.");
                 return View(emploi);
             }
@@ -39,92 +39,56 @@ namespace Clinic.Controllers
                 return View("Error");
             }
         }
-
         [HttpGet]
         public IActionResult Create()
         {
             var emploiViewModel = new EmploiViewModel
             {
-                Services = _context.Services.ToList(),
-                Categories = _context.Categories.ToList(),
-                Postes = _context.Postes.ToList(),
-                Repos = _context.Repos.ToList(),
-                Days = _context.Days.ToList(),
-                Employees = _context.Employee.ToList(),
-                Supplements = _context.Supplements.ToList()
+                Services = _context.Services?.ToList(),
+                Categories = _context.Categories?.ToList(),
+                Postes = _context.Postes?.ToList(),
+                Repos = _context.Repos?.ToList(),
+                Days = _context.Days?.ToList(),
+                Employees = _context.Employee?.ToList(),
+                Supplements = _context.Supplements?.ToList()
             };
 
             return View("Create", emploiViewModel);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create([FromBody] Emploi emploi)
+        public IActionResult EnregistrerEmploi([FromBody] EmploiViewModel emploiViewModel)
         {
-            if (emploi == null)
-            {
-                ViewBag.ErrorMessage = "L'objet emploi est null.";
-                return View("Error");
-            }
-
             if (!ModelState.IsValid)
             {
-                ViewBag.Services = _context.Services.ToList();
-                return View(emploi);
+                return BadRequest(ModelState);
             }
 
             try
             {
-                _context.Emplois.Add(emploi);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+               
+                return Ok();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Une erreur s'est produite lors de la création de l'emploi.");
-                ViewBag.ErrorMessage = "Une erreur s'est produite lors de la création de l'emploi.";
-                return View("Error");
+                // Log the exception
+                Console.Error.WriteLine(ex);
+
+                return StatusCode(500, "An error occurred while saving the data.");
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EnregistrerEmploi(int serviceSelected,DateTime dateSelected)
-        {
-            Service service = await _context.Services.FindAsync(serviceSelected);
 
-            return View("Error");
-            //if (emploiViewModel == null || emploiViewModel.Emploi == null)
-            //{
-            //    ViewBag.ErrorMessage = "L'objet emploiViewModel ou son propriété Emploi est null.";
-            //    return View("Error");
-            //}
 
-            //if (!ModelState.IsValid)
-            //{
-            //    // Repopulate ViewModel properties if needed
-            //    return View("Create", emploiViewModel);
-            //}
 
-            //try
-            //{
-            //    _context.Emplois.Add(emploiViewModel.Emploi);
-            //    _context.SaveChanges();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "Une erreur s'est produite lors de l'enregistrement de l'emploi.");
-            //    ViewBag.ErrorMessage = "Une erreur s'est produite lors de l'enregistrement de l'emploi.";
-            //    return View("Error");
-            //}
-        }
+
 
         [HttpGet]
         public IActionResult GetServices()
         {
             try
             {
-                var services = _context.Services.ToList();
+                var services = _context.Services?.ToList();
                 return Json(new { success = true, services });
             }
             catch (Exception ex)
@@ -133,13 +97,12 @@ namespace Clinic.Controllers
                 return Json(new { success = false, message = "An error occurred while retrieving services." });
             }
         }
-
         [HttpGet]
         public IActionResult GetEmployeesByService(int ServiceId)
         {
             try
             {
-                var employees = _context.Employee.Where(e => e.ServiceId == ServiceId).ToList();
+                var employees = _context.Employee?.Where(e => e.ServiceId == ServiceId).ToList();
                 return Json(new { success = true, employees });
             }
             catch (Exception ex)
@@ -148,37 +111,29 @@ namespace Clinic.Controllers
                 return Json(new { success = false, message = "Une erreur s'est produite lors de la récupération des employés." });
             }
         }
-
         [HttpGet]
-        public IActionResult GetPostesAndReposByCategorie(int categorieId)
+        public IActionResult GetPostesReposAndSupplementsByCategorie(int CategorieId)
         {
             try
             {
-                var postes = _context.Postes.Where(p => p.CategorieId == categorieId).ToList();
-                var repos = _context.Repos.Where(r => r.CategorieId == categorieId).ToList();
-                return Json(new { success = true, postes, repos });
+                var postes = _context.Postes?.Where(p => p.CategorieId == CategorieId).ToList();
+                var repos = _context.Repos?.Where(r => r.CategorieId == CategorieId).ToList();
+                var supplements = _context.Supplements?.Where(s => s.CategorieId == CategorieId).ToList();
+
+                if (postes == null || repos == null || supplements == null)
+                {
+                    return Json(new { success = false, message = "Aucune donnée correspondante trouvée." });
+                }
+
+                return Json(new { success = true, postes, repos, supplements });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Une erreur s'est produite lors de la récupération des postes et repos.");
-                return Json(new { success = false, message = "Une erreur s'est produite lors de la récupération des postes et repos." });
+                _logger.LogError(ex, "Une erreur s'est produite lors de la récupération des postes, repos et supplements.");
+                return Json(new { success = false, message = "Une erreur s'est produite lors de la récupération des postes, repos et supplements." });
             }
         }
 
-        [HttpGet]
-        public IActionResult GetSupplements()
-        {
-            try
-            {
-                var supplements = _context.Supplements.ToList();
-                return Json(new { success = true, supplements });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while retrieving supplements.");
-                return Json(new { success = false, message = "An error occurred while retrieving supplements." });
-            }
-        }
+
     }
 }
-

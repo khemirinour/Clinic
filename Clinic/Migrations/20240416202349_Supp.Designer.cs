@@ -4,6 +4,7 @@ using Clinic.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clinic.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    partial class ClinicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240416202349_Supp")]
+    partial class Supp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,23 +82,11 @@ namespace Clinic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Categorie")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DateofWeek")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EmploiId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DateofWeek")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Service")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
@@ -105,8 +95,6 @@ namespace Clinic.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EmploiId");
 
                     b.HasIndex("EmployeeId");
 
@@ -144,9 +132,6 @@ namespace Clinic.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmploiId"), 1L, 1);
-
-                    b.Property<int>("CategorieId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("ChefDeServiceId")
                         .HasColumnType("int");
@@ -580,10 +565,6 @@ namespace Clinic.Migrations
 
             modelBuilder.Entity("Clinic.Models.DailyEmployment", b =>
                 {
-                    b.HasOne("Clinic.Models.Emploi", null)
-                        .WithMany("DailyEmployments")
-                        .HasForeignKey("EmploiId");
-
                     b.HasOne("Clinic.Models.Employee", null)
                         .WithMany("DailyEmployments")
                         .HasForeignKey("EmployeeId")
@@ -817,8 +798,6 @@ namespace Clinic.Migrations
 
             modelBuilder.Entity("Clinic.Models.Emploi", b =>
                 {
-                    b.Navigation("DailyEmployments");
-
                     b.Navigation("Days");
 
                     b.Navigation("Employees");
