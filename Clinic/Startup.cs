@@ -16,30 +16,23 @@ namespace Clinic
         }
 
         public IConfiguration Configuration { get; }
+  
 
-        // Cette méthode configure les services utilisés par l'application.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add DbContext service
             services.AddDbContext<ClinicDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DbConn")));
 
-            services.AddControllersWithViews();
+            // Add other services as needed
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                    });
-            });
+            // Add controller services
+            services.AddControllersWithViews();
         }
 
-        // Cette méthode configure le pipeline HTTP de l'application.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Configure the HTTP request pipeline
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,8 +49,6 @@ namespace Clinic
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
             {

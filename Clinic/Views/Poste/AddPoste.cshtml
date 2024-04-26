@@ -1,44 +1,289 @@
 ﻿@model Clinic.Models.Poste
-<div class="heading"><h3>Gestion <span> de poste</span></h3></div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <link rel="stylesheet" href="~/css/style.css">
 
 
 
+    <link rel="icon" href="img/favicon.png">
 
-<form asp-action="AddPoste" class="margin"> 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 
-    <label asp-for="Postename" class="heading"><h6>Nom du poste :</h6></label>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- Nice Select CSS -->
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- icofont CSS -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- Slicknav -->
+    <link rel="stylesheet" href="~/css/slicknav.min.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="~/css/owl-carousel.css">
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="~/css/datepicker.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <!-- Medipro CSS -->
+
+    <link rel="stylesheet" href="~/css/normalize.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+</head>
+<body>
+    <header class="header">
+        <div class="header-innner">
+            <div class="heading">
+                <div class="inner">
+                    <div class="row">
+                        <!-- Start Logo -->
+                        <div class="col">
+                            <!-- Start Logo -->
+                            <a href="" class="logo">
+                                <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
+                            </a>
+                            <!-- End Logo -->
+                            <!-- Mobile Nav -->
+                            <div class="mobile-nav"></div>
+                            <!-- End Mobile Nav -->
+                        </div>
+
+                        <div class="col">
+                            <!-- Main Menu -->
+                            <div class="main-menu">
+                                <nav class="navigation">
+                                    <ul class="nav menu">
+                                        <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Employée</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddRepos">Pause</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddSupplement">Heures Supplémentaire</a></li>
+                                        <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a></li>
+                                        <li>
+                                            <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn">Déconnexion  </div></a>
+                                        </li>
+                                    </ul>
+
+                                </nav>
+                            </div>
+
+                        </div>
+                        <!--/ End Main Menu -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ End Header Inner -->
+    </header>
+    <form asp-action="AddPoste" class="container">
+        <div class="text center"><h1>Gestion <span> Des poste</span></h1></div>
+        <div class="container margin">
+        <div class="row">
+            <div class="col">
+        <label asp-for="Postename" class="text"><h5>Nom du poste </h5></label>
+            </div>
+            <div class="col">
+
         <input asp-for="Postename" placeholder="Nom Poste" class="boxx" />
         <span asp-validation-for="Postename"></span>
-    <strong>
-    <label class="">Séances :</label>   
-    <div class="schedule-table">
-       
-        <label><input type="checkbox" asp-for="Matin"> Matin</label><br />
-        <label><input type="checkbox" asp-for="ApresMidi"> Après-midi</label><br />
-        <label><input type="checkbox" asp-for="GardeSoir"> Garde de soir</label>
+            </div>
         </div>
-        <label>Séance 1 :</label>
-        <label>Début :</label>
-    <input asp-for="Seance1Debut" class="box"  type="time">
-        <label>Fin :</label>
-    <input asp-for="Seance1Fin" class="box" type="time">
 
-        <label>Séance 2 :</label>
-        <label>Début :</label>
-    <input asp-for="Seance2Debut" class="box" type="time">
-        <label>Fin :</label>
-    <input asp-for="Seance2Fin" class="box" type="time">
+        <strong>
 
-    <div>
-        <label><input type="checkbox" asp-for="Actif"> Actif?</label>
+            <!-- Première ligne -->
+            <div class="row">
+                <div class="col">
+                    <label><input type="checkbox" asp-for="Matin"> Matin</label>
+                </div>
+                <div class="col">
+                    <label><input type="checkbox" asp-for="ApresMidi"> Après-midi</label>
+                </div>
+                <div class="col">
+                    <label><input type="checkbox" asp-for="GardeSoir"> Garde de soir</label>
+                </div>
+            </div>
 
-     
-    </div>
-    <div>
-        <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="box">
-            <option value="">Sélectionnez une catégorie</option>
-        </select>
-    </div>
-    </strong>
-    <button type="submit" class="btn">Ajouter</button>
-</form>
+            <!-- Deuxième ligne -->
+            <div class="row">
+                <div class="col">
+                    <label>Séance 1 :</label>
+                </div>
+                <div class="col">
+                    <label>Début :</label>
+                    <input asp-for="Seance1Debut" type="time" class="box">
+                </div>
+                <div class="col">
+                    <label>Fin :</label>
+                    <input asp-for="Seance1Fin" type="time" class="box">
+                </div>
+            </div>
+
+            <!-- Troisième ligne -->
+            <div class="row">
+                <div class="col">
+                    <label>Séance 2 :</label>
+                </div>
+                <div class="col">
+                    <label>Début :</label>
+                    <input asp-for="Seance2Debut" type="time" class="box">
+                </div>
+                <div class="col">
+                    <label>Fin :</label>
+                    <input asp-for="Seance2Fin" type="time" class="box">
+                </div>
+            </div>
+
+            <!-- Quatrième ligne -->
+            <div class="row margin">
+                <div class="col">
+                    <label><input type="checkbox" asp-for="Actif"> Actif?</label>
+                </div>
+          
+
+            <div class="col">
+                <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="box">
+                        <option value="">Sélectionnez une catégorie</option>
+                    </select>
+                </div>
+            </div>
+        </strong>
+        <div class="row center">
+
+                <button type="submit" class="btn">Ajouter</button>
+            </div></div>
+    </form>
+
+
+   
+    <footer id="contact" class="footer">
+        <!-- Haut du footer -->
+        <div class="footer-top">
+            <div class="content">
+                <div class="row">
+                    <div class="col">
+                        <div class="single-footer">
+                            <h2>Suivez-nous</h2>
+                            <ul class="social">
+                                <li><a href="#"><i class="icofont-facebook"></i></a></li>
+                                <li><a href="#"><i class="icofont-google-plus"></i></a></li>
+                                <li><a href="#"><i class="icofont-twitter"></i></a></li>
+                                <li><a href="#"><i class="icofont-vimeo"></i></a></li>
+                            </ul>
+                            <!-- Réseaux sociaux -->
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Liens rapides</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Accueil</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>À propos de nous</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos services</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos cas</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Autres liens</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Nos services</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Soins dentaires</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Thérapie par massage</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Cardiologie</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Diagnostic</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services d'ambulance</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Contact</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i> 123 Rue de la Santé</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Sfax, Tunisie</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>info@clinique.com</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>+216 22 24 25 26 </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Fin du haut du footer -->
+        <!-- Contact -->
+        <!--/ Fin du Contact -->
+    </footer>
+
+    <!-- jquery Min JS -->
+    <script src="~/js/jquery.min.js"></script>
+    <!-- jquery Migrate JS -->
+    <script src="~/js/jquery-migrate-3.0.0.js"></script>
+    <!-- jquery Ui JS -->
+    <script src="~/js/jquery-ui.min.js"></script>
+    <!-- Easing JS -->
+    <script src="~/js/easing.js"></script>
+    <!-- Color JS -->
+    <script src="~/js/colors.js"></script>
+    <!-- Popper JS -->
+    <script src="~/js/popper.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    <!-- Jquery Nav JS -->
+    <script src="~/js/jquery.nav.js"></script>
+    <!-- Slicknav JS -->
+    <script src="~/js/slicknav.min.js"></script>
+    <!-- ScrollUp JS -->
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <!-- Niceselect JS -->
+    <script src="~/js/niceselect.js"></script>
+    <!-- Tilt Jquery JS -->
+    <script src="~/js/tilt.jquery.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/js/owl-carousel.js"></script>
+    <!-- counterup JS -->
+    <script src="~/js/jquery.counterup.min.js"></script>
+    <!-- Steller JS -->
+    <script src="~/js/steller.js"></script>
+    <!-- Wow JS -->
+    <script src="~/js/wow.min.js"></script>
+    <!-- Magnific Popup JS -->
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <!-- Counter Up CDN JS -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- Main JS -->
+    <script src="~/js/main.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- Main JS -->
+    <script src="~/js/main.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+
+</body>
+</html>
+

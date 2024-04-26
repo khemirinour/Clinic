@@ -150,6 +150,5 @@ namespace Clinic.Controllers
         }
    
 
-        // Autres actions du contrôleur (Index, Edit, Delete, etc.)
     }
 }

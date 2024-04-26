@@ -5,79 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Clinic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <header class="header">
-                <a href="" class="logo"><i class="fas fa-heartbeat"> Clinisys. </i>  </a>
-           
-             
-                <nav class="navbar">
-                            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    
-                            <a  asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    
-                            <a  asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a>
+       @*  <a href="" class="logo"><i class="fas fa-heartbeat"> Clinisys. </i>  </a>
 
-        </nav>            <div id="menu-btn"  class="fas fa-bars"> </div>
+
+        <nav class="navbar">
+            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+            <a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a>
+
+        </nav>            <div id="menu-btn" class="fas fa-bars"> </div> *@
 
     </header>
-    <div class="container">
+    <div class="">
         <main role="main">
             @RenderBody()
         </main>
     </div>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
- 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/jquery-ui.js" asp-append-version="true"></script>
+    <!-- jQuery UI -->
+    <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <!-- Other scripts -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery-ui.js" asp-append-version="true"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
-    <section class="footer">
-        <div class="box-container">
-            <div class="box">
-                <h3> quick links</h3>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> Home</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> services</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> about</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> doctors</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> book</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> review</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> blog</a>
-
-            </div>
-            <div class="box">
-                <h3> our services</h3>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> dental care</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> message therapy</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> cardiology</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> diagnosis</a>
-                <a href="#"> <i class="fas fa-chevron-right"> </i> ambulance services</a>
-
-            </div>
-            <div class="box">
-                <h3>contact info</h3>
-                <a href="#"> <i class="fas fa-phone"> </i> +216 22 222 222 </a>
-                <a href="#"> <i class="fas fa-phone"> </i> +216 73 222 222 </a>
-                <a href="#"> <i class="fas fa-envelope"> </i> foulen@gmail.com </a>
-                <a href="#"> <i class="fas fa-map-marker-alt"> </i> Tunisie sfax , sfax </a>
-
-            </div>
-
-            <div class="box">
-                <h3>Follow us</h3>
-                <a href="#"> <i class="fab fa-facebook-f"></i> facebook</a>
-                <a href="#"> <i class="fab fa-twitter"></i> twitter</a>
-                <a href="#"> <i class="fab fa-linkedin"></i> linkedin</a>
-
-            </div>
-        </div>
-
-
-    </section>
 </body>
 </html>

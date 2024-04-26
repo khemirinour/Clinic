@@ -2,7 +2,925 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <!doctype html>
+<html class="no-js" lang="zxx">
+    <head>
+        <!-- Meta Tags -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Title -->
+
+		<!-- Favicon -->
+        <link rel="icon" href="img/favicon.png">
+
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+		<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="~/css/bootstrap.min.css">
+		<!-- Nice Select CSS -->
+	<link rel="stylesheet" href="~/css/nice-select.css">
+		<!-- Font Awesome CSS -->
+	<link rel="stylesheet" href="~/css/font-awesome.min.css">
+		<!-- icofont CSS -->
+	<link rel="stylesheet" href="~/css/icofont.css">
+		<!-- Slicknav -->
+	<link rel="stylesheet" href="~/css/slicknav.min.css">
+		<!-- Owl Carousel CSS -->
+	<link rel="stylesheet" href="~/css/owl-carousel.css">
+		<!-- Datepicker CSS -->
+	<link rel="stylesheet" href="~/css/datepicker.css">
+		<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/css/animate.min.css">
+		<!-- Magnific Popup CSS -->
+	<link rel="stylesheet" href="~/css/magnific-popup.css">
+
+		<!-- Medipro CSS -->
+	<link rel="stylesheet" href="~/css/normalize.css">
+	<link rel="stylesheet" href="~/css/style.css">
+	<link rel="stylesheet" href="~/css/responsive.css">
+
+    </head>
+    <body>
+
+		<!-- Preloader -->
+        <div class="preloader">
+            <div class="loader">
+                <div class="loader-outter"></div>
+                <div class="loader-inner"></div>
+
+                <div class="indicator">
+                    <svg width="16px" height="12px">
+                        <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                        <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <!-- End Preloader -->
+
+
+		<!-- Header Area -->
+	<header class="header">
+		<!-- Topbar -->
+		<!-- End Topbar -->
+		<!-- Header Inner -->
+		<div class="header-inner">
+			<div class="margin">
+				<div class="inner">
+					<div class="row">
+						<!-- Ajout de la classe align-items-center pour aligner les éléments verticalement -->
+						<div class="col">
+							<!-- Start Logo -->
+							<a href="" class="logo margin">
+                                <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
+							</a>
+							<!-- End Logo -->
+							<!-- Mobile Nav -->
+							<div class="mobile-nav"></div>
+							<!-- End Mobile Nav -->
+						</div>
+						<div class="col">
+							<!-- Main Menu -->
+							<div class="main-menu">
+								<nav class="navigation">
+									<ul class="nav menu">
+										<li class="active">
+											<a href="#acceuil">Acceuil <i class="icofont-rounded-down"></i></a>
+										</li>
+										<li><a href="#blog">Blog</a></li>
+										<li><a href="#contact">Contact</a></li>
+										<li>
+                                            <a asp-area="" asp-controller="Home" asp-action="Submit"> <div class="btn mr-2">Connecter</div></a>
+
+										</li>
+                                        <li>
+                                            <a asp-area="" asp-controller="Home" asp-action="Submit"> <div class="btn mr-2">S'inscrire</div></a>
+                                        </li>
+                                    </ul>
+								</nav>
+							</div>
+                         
+                        
+					</div>
+				</div>
+				</div>
+			</div>
+
+		</div>
+		<!--/ End Header Inner -->
+	</header>
+
+		<!-- End Header Area -->
+
+		<!-- Slider Area -->
+	<section class="slider" id="acceuil">
+			<div class="hero-slider">
+				<!-- Start Single Slider -->
+			<div class="single-slider" style="background-image:url('@Url.Content("~/img/slider.jpg")')">
+				<div class="container">
+						<div class="row">
+							<div class="col-lg-7">
+								<div class="text">
+
+								<h1>Nous Fournissons des <span>Services Médicaux</span> en Qui Vous Pouvez <span>Avoir Confiance!</span></h1>							
+								<p>Notre clinique offre une gamme complète de services médicaux pour répondre à vos besoins de santé. Que vous ayez besoin de soins préventifs, de traitements spécialisés ou de consultations, nous sommes là pour vous aider à prendre soin de votre bien-être. </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End Single Slider -->
+				<!-- Start Single Slider -->
+			<div class="single-slider" style="background-image:url('@Url.Content("~/img/slider2.jpg")')">
+				<div class="container">
+						<div class="row">
+							<div class="col-lg-7">
+								<div class="text">
+
+								<h1>Nous Fournissons des <span>Services Médicaux</span> en Qui Vous Pouvez <span>Avoir Confiance!</span></h1>
+								<p>Notre clinique offre une gamme complète de services médicaux pour répondre à vos besoins de santé. Que vous ayez besoin de soins préventifs, de traitements spécialisés ou de consultations, nous sommes là pour vous aider à prendre soin de votre bien-être. </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Start End Slider -->
+				<!-- Start Single Slider -->
+			<div class="single-slider" style="background-image:url('@Url.Content("~/img/slider3.jpg")')">
+				<div class="container">
+						<div class="row">
+							<div class="col-lg-7">
+								<div class="text">
+
+								<h1>Nous Fournissons des <span>Services Médicaux</span> en Qui Vous Pouvez <span>Avoir Confiance!</span></h1>
+								<p>Notre clinique offre une gamme complète de services médicaux pour répondre à vos besoins de santé. Que vous ayez besoin de soins préventifs, de traitements spécialisés ou de consultations, nous sommes là pour vous aider à prendre soin de votre bien-être. </p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End Single Slider -->
+			</div>
+		</section>
+		<!--/ End Slider Area -->
+
+		<!-- Start Schedule Area -->
+		<section class="schedule">
+			<div class="container">
+				<div class="schedule-inner">
+					<div class="row">
+						<div class="col-lg-4 col-md-6 col-12 ">
+							<!-- single-schedule -->
+							<div class="single-schedule first">
+								<div class="inner">
+									<div class="icon">
+										<i class="fa fa-ambulance"></i>
+									</div>
+								<div class="single-content">
+									<h4>Cas d'Urgence</h4>
+									<p>Que vous ayez besoin de soins médicaux d'urgence ou de consultations régulières, notre équipe est là pour vous offrir des services de qualité.</p>
+									<a href="#">EN SAVOIR PLUS <i class="fa fa-long-arrow-right"></i></a>
+								</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-6 col-12">
+							<!-- single-schedule -->
+							<div class="single-schedule middle">
+								<div class="inner">
+									<div class="icon">
+										<i class="icofont-prescription"></i>
+									</div>
+									<div class="single-content">
+									<h4>
+										Approche Globale de la Santé
+
+									</h4>
+									<p>Nous croyons en une approche holistique de la santé, en prenant en compte votre bien-être physique, mental et émotionnel</p>
+									<a href="#">EN SAVOIR PLUS<i class="fa fa-long-arrow-right"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+						 <div class="col-lg-4 col-md-12 col-12">
+							<!-- single-schedule -->
+							<div class="single-schedule last">
+								<div class="inner">
+									<div class="icon">
+										<i class="icofont-ui-clock"></i>
+									</div>
+									<div class="single-content">
+									<h4>Respect et Professionnalisme envers Chaque Patients</h4>
+									<p>Chez nous, chaque patient est traité avec respect, compassion et professionnalisme</p>
+
+									<a href="#">EN SAVOIR PLUS<i class="fa fa-long-arrow-right"></i></a>
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--/End Start schedule Area -->
+
+		<!-- Start Feautes -->
+	<section class="Feautes section">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<h2> Nous sommes toujours prêts à vous aider, vous et votre famille </h2>
+						<img src="img/section-img.png" alt="#">
+						<p>Nous croyons en une approche holistique de la santé, prenant en compte votre bien-être physique, mental et émotionnel.</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 col-12">
+					<!-- Start Single features -->
+					<div class="single-features">
+						<div class="signle-icon">
+							<i class="icofont icofont-ambulance-cross"></i>
+						</div>
+						<h3>Aide d'urgence</h3>
+						<p>Faites confiance à notre équipe expérimentée pour vous fournir une assistance rapide en cas d'urgence médicale.</p>
+					</div>
+					<!-- End Single features -->
+				</div>
+				<div class="col-lg-4 col-12">
+					<!-- Start Single features -->
+					<div class="single-features">
+						<div class="signle-icon">
+							<i class="icofont icofont-medical-sign-alt"></i>
+						</div>
+						<h3>Pharmacie enrichie</h3>
+						<p>Comptez sur notre pharmacie bien approvisionnée pour répondre à tous vos besoins en médicaments.</p>
+					</div>
+					<!-- End Single features -->
+				</div>
+				<div class="col-lg-4 col-12">
+					<!-- Start Single features -->
+					<div class="single-features last">
+						<div class="signle-icon">
+							<i class="icofont icofont-stethoscope"></i>
+						</div>
+						<h3>Traitement médical</h3>
+						<p>Profitez de nos services de traitement médical complets pour retrouver votre santé et votre bien-être.</p>
+					</div>
+					<!-- End Single features -->
+				</div>
+			</div>
+		</div>
+	</section>
+
+		<!--/ End Feautes -->
+
+		<!-- Start Fun-facts -->
+		<div id="fun-facts" class="fun-facts section overlay">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-6 col-12">
+						<!-- Start Single Fun -->
+						<div class="single-fun">
+							<i class="icofont icofont-home"></i>
+							<div class="content">
+								<span class="counter">3468</span>
+								<p>Hospital Rooms</p>
+							</div>
+						</div>
+						<!-- End Single Fun -->
+					</div>
+					<div class="col-lg-3 col-md-6 col-12">
+						<!-- Start Single Fun -->
+						<div class="single-fun">
+							<i class="icofont icofont-user-alt-3"></i>
+							<div class="content">
+								<span class="counter">557</span>
+							<p>Médecin Spécialiste</p>
+							</div>
+						</div>
+						<!-- End Single Fun -->
+					</div>
+					<div class="col-lg-3 col-md-6 col-12">
+						<!-- Start Single Fun -->
+						<div class="single-fun">
+							<i class="icofont-simple-smile"></i>
+							<div class="content">
+								<span class="counter">4379</span>
+								<p>Patients satisfaits</p>
+							</div>
+						</div>
+						<!-- End Single Fun -->
+					</div>
+					<div class="col-lg-3 col-md-6 col-12">
+						<!-- Start Single Fun -->
+						<div class="single-fun">
+							<i class="icofont icofont-table"></i>
+							<div class="content">
+								<span class="counter">32</span>
+							<p>Années d'Expérience</p>
+							</div>
+						</div>
+						<!-- End Single Fun -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	<section class="blog section" id="blog">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="section-title">
+						<h2>Restez Informé avec Nos Dernières Actualités Médicales.</h2>
+						<img src="img/section-img.png" alt="#">
+						<p>Restez informé des dernières nouvelles médicales en vous abonnant à notre bulletin d'information.</p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4 col-md-6 col-12">
+					<!-- Single Blog -->
+					<div class="single-news">
+						<div class="news-head">
+							<img src="img/blog1.jpg" alt="#">
+						</div>
+						<div class="news-body">
+							<div class="news-content">
+								<div class="date">22 Août, 2022</div>
+								<h2>
+									<a href="blog-single.html">
+										Nous avons annoncé notre nouveau produit.
+									</a>
+								</h2>
+								<p class="text">Restez à jour avec notre dernière annonce concernant notre nouveau produit.</p>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Blog -->
+				</div>
+				<div class="col-lg-4 col-md-6 col-12">
+					<!-- Single Blog -->
+					<div class="single-news">
+						<div class="news-head">
+							<img src="img/blog2.jpg" alt="#">
+						</div>
+						<div class="news-body">
+							<div class="news-content">
+								<div class="date">1 Avril, 2024</div>
+								<h2><a href="blog-single.html">Top cinq façons de résoudre les problèmes dentaires.</a></h2>
+								<p class="text">Découvrez nos cinq meilleures façons de résoudre les problèmes dentaires courants.</p>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Blog -->
+				</div>
+				<div class="col-lg-4 col-md-6 col-12">
+					<!-- Single Blog -->
+					<div class="single-news">
+						<div class="news-head">
+							<img src="img/blog3.jpg" alt="#">
+						</div>
+						<div class="news-body">
+							<div class="news-content">
+								<div class="date">05 Janvier, 2024</div>
+								<h2><a href="blog-single.html">Nous fournissons des solutions commerciales hautement solides.</a></h2>
+								<p class="text">Découvrez comment nos solutions commerciales peuvent bénéficier à votre entreprise.</p>
+							</div>
+						</div>
+					</div>
+					<!-- End Single Blog -->
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Blog Area -->
+	<!-- End Blog Area -->
+	<!-- Footer Area -->
+	<footer id="contact" class="footer" >
+		<!-- Haut du footer -->
+		<div class="footer-top">
+			<div class="content">
+			<div class="row">
+				<div class="col">
+					<div class="single-footer">
+						<h2>Suivez-nous</h2>
+						<ul class="social">
+							<li><a href="#"><i class="icofont-facebook"></i></a></li>
+							<li><a href="#"><i class="icofont-google-plus"></i></a></li>
+							<li><a href="#"><i class="icofont-twitter"></i></a></li>
+							<li><a href="#"><i class="icofont-vimeo"></i></a></li>
+						</ul>
+						<!-- Réseaux sociaux -->
+					</div>
+				</div>
+				<div class="col">
+					<div class="single-footer f-link">
+						<h2>Liens rapides</h2>
+						<div class="row">
+							<div class="col">
+								<ul>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Accueil</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>À propos de nous</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos services</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos cas</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Autres liens</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="single-footer f-link">
+						<h2>Nos services</h2>
+						<div class="row">
+							<div class="col">
+								<ul>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Soins dentaires</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Thérapie par massage</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Cardiologie</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Diagnostic</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services d'ambulance</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="single-footer f-link">
+						<h2>Contact</h2>
+						<div class="row">
+							<div class="col">
+								<ul>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i> 123 Rue de la Santé</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Sfax, Tunisie</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>info@clinique.com</a></li>
+									<li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>+216 22 24 25 26 </a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div></div>
+		<!--/ Fin du haut du footer -->
+		<!-- Contact -->
+		<!--/ Fin du Contact -->
+	</footer>
+
+
+	<!--/ End Footer Area -->
+	<!-- jquery Min JS -->
+	<script src="~/js/jquery.min.js"></script>
+	<!-- jquery Migrate JS -->
+	<script src="~/js/jquery-migrate-3.0.0.js"></script>
+	<!-- jquery Ui JS -->
+	<script src="~/js/jquery-ui.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/js/easing.js"></script>
+	<!-- Color JS -->
+	<script src="~/js/colors.js"></script>
+	<!-- Popper JS -->
+	<script src="~/js/popper.min.js"></script>
+	<!-- Bootstrap Datepicker JS -->
+	<script src="~/js/bootstrap-datepicker.js"></script>
+	<!-- Jquery Nav JS -->
+	<script src="~/js/jquery.nav.js"></script>
+	<!-- Slicknav JS -->
+	<script src="~/js/slicknav.min.js"></script>
+	<!-- ScrollUp JS -->
+	<script src="~/js/jquery.scrollUp.min.js"></script>
+	<!-- Niceselect JS -->
+	<script src="~/js/niceselect.js"></script>
+	<!-- Tilt Jquery JS -->
+	<script src="~/js/tilt.jquery.min.js"></script>
+	<!-- Owl Carousel JS -->
+	<script src="~/js/owl-carousel.js"></script>
+	<!-- counterup JS -->
+	<script src="~/js/jquery.counterup.min.js"></script>
+	<!-- Steller JS -->
+	<script src="~/js/steller.js"></script>
+	<!-- Wow JS -->
+	<script src="~/js/wow.min.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/js/jquery.magnific-popup.min.js"></script>
+	<!-- Counter Up CDN JS -->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<!-- Main JS -->
+	<script src="~/js/main.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<!-- Main JS -->
+	<script src="~/js/main.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+</head>
+<body>
+<header class="header">
+    <a href="#" class="logo"><i class="fas fa-heartbeat"> Clinisys. </i>  </a>
+    <nav class="navbar">
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#about">about</a>
+        <a href="#doctors">doctor</a>
+        <a href="#book">book</a>
+        <a href="#review">review</a>
+        <a href="#blog">Blog</a>
+            <a asp-area="" asp-controller="Home" asp-action="Submit"> <button class="btn">Sign in</button></a>
+
+        <a href="singup.html"> <button class="btn">Sign up</button></a>
+    </nav>
+
+
+
+    <div id="menu-btn" class="fas fa-bars"> </div>
+
+
+</header>
+    <section class="section1" id="home">
+        <div class='stage'>
+            <input type='checkbox'>
+            <div class='stage_inner__list'>
+                <li>  &nbsp; &nbsp;&nbsp;Nutrition &amp; healthy food</li>
+                <li>Mind and mood</li>
+                <li>Fitness and sport</li>
+                <li> &nbsp; &nbsp; &nbsp;Beauty and skincare</li>
+
+            </div>
+            <div class='stage_inner__centerbox'>
+                <div class='illustration'></div>
+                <div class='text'>
+                    <div class='title'>
+                        Heart &nbsp;  Health
+                    </div>
+                    <br />                    <div class='articles'>
+                        <h1>  78 Articles</h1>
+
+                    </div>
+
+                </div>
+            </div>
+            </input>
+           <div class="container1">
+                <h5>CliniSys</h5>
+            </div>
+           
+        </div>
+
+    </section>
+
+<section class="icons-container">
+    <div class="icons">
+        <i class="fas fa-user-md"></i>
+        <h3>140+</h3>
+        <p>doctors at work</p>
+    </div>
+
+
+    <div class="icons">
+        <i class="fas fa-users"></i>
+        <h3>1040+</h3>
+        <p>satisfied patients</p>
+    </div>
+
+    <div class="icons">
+        <i class="fas fa-procedures"></i>
+        <h3>500+</h3>
+        <p>bed facility</p>
+    </div>
+    <div class="icons">
+        <i class="fas fa-hospital"></i>
+        <h3>80+</h3>
+        <p>avialable hospital</p>
+    </div>
+
+
+
+</section>
+
+
+<section class="services" id="services">
+
+    <h1 class="heading">our <span>services</span></h1>
+    <div class="box-container">
+        <div class="box">
+            <i class="fas fa-notes-medical"></i>
+            <h3>free checkups</h3>
+            <p>To continue learning, click here to read more</p>
+            <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+
+        </div>
+        <div class="box">
+            <i class="fas fa-ambulance"></i>
+            <h3>24/7 ambulance</h3>
+            <p>To continue learning, click here to read more</p>
+            <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+
+        </div>
+        <div class="box">
+            <i class="fas fa-user-md"></i>
+            <h3>expert doctors</h3>
+            <p>To continue learning, click here to read more</p>
+            <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+
+        </div>
+        <div class="box">
+            <i class="fas fa-pills"></i>
+            <h3>Medicine</h3>
+            <p>To continue learning, click here to read more</p>
+            <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+
+        </div>
+        <div class="box">
+            <i class="fas fa-procedures"></i>
+            <h3>bed facility</h3>
+            <p>To continue learning, click here to read more</p>
+            <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+
+        </div>
+
+        <div class="box">
+            <i class="fas fa-heartbeat"></i>
+            <h3>total care</h3>
+            <p>To continue learning, click here to read more</p>
+            <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+
+        </div>
+
+
+
+    </div>
+</section>
+<section class="about" id="about">
+
+    <h1 class="heading"><span> about </span> us</h1>
+    <div class="row">
+        <div class="image">
+                <img src="~/image/Doctors-bro (1).svg" alt="">
+        </div>
+        <div class="content">
+            <h3>we take care of your healthy life</h3>
+            <p>We're here to support you every step of the way. Reach out to our friendly team for any questions or concerns you may have about your health</p>
+            <a href="#" class="btn">learn more<span class="fas fa-chevron-right"></span></a>
+        </div>
+
+
+    </div>
+
+
+
+
+</section>
+
+
+
+<section class="doctors" id="doctors">
+
+    <h1 class="heading">our <span>doctors</span></h1>
+
+    <div class="box-container">
+
+        <div class="box">
+                <img src="~/image/1-6-2-2-FindADoctor.png" alt="">
+            <h3>foulen </h3>
+            <span>expert doctor</span>
+            <div class="share">
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+        <div class="box">
+                <img src="~/image/download.jpeg" alt="">
+            <h3>foulen </h3>
+            <span>expert doctor</span>
+            <div class="share">
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+        <div class="box">
+                <img src="~/image/images.jpeg" alt="">
+            <h3>foulen </h3>
+            <span>expert doctor</span>
+            <div class="share">
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+        <div class="box">
+                <img src="~/image/1-6-2-2-FindADoctor.png" alt="">
+            <h3>foulen </h3>
+            <span>expert doctor</span>
+            <div class="share">
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+        <div class="box">
+                <img src="~/image/download.jpeg" alt="">
+            <h3>foulen </h3>
+            <span>expert doctor</span>
+            <div class="share">
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+        <div class="box">
+                <img src="~/image/images.jpeg" alt="">
+            <h3>foulen </h3>
+            <span>expert doctor</span>
+            <div class="share">
+                <a href="#" class="fab fa-facebook-f"></a>
+                <a href="#" class="fab fa-twitter"></a>
+                <a href="#" class="fab fa-instagram"></a>
+            </div>
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+@* <section class="book" id="book">
+    <h1 class="heading"> <span>Book </span> Now</h1>
+
+    <div class="row">
+
+        <div class="image">
+            <img src="image/Medical prescription-bro.svg" alt="">
+        </div>
+        <form action="">
+            <h3>book apoinement</h3>
+            <input type="text" placeholder="Your name" class="box">
+            <input type="number" placeholder="Your number" class="box">
+            <input type="email" placeholder="Your email" class="box">
+            <input type="date" class="box">
+
+            <input type="submit" placeholder="book now" class="btn">
+
+        </form>
+
+    </div>
+
+</section> *@@* 
+<section class="review" id="review">
+
+    <h1 class="heading">client's <span> review</span></h1>
+
+    <div class="box-container">
+        <div class="box">
+
+                <img src="~/image/image.jpg" alt="">
+            <h3>foulen</h3>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <p class="text">
+                    I'm thoroughly impressed with the quality of service provided. Truly exceeded my expectations!
+                </p>
+            </div>
+        </div>
+        <div class="box">
+
+                <img src="~/image/istockphoto-1200677760-612x612.jpg" alt="">
+            <h3>foulen</h3>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <p class="text">
+                    I'm thoroughly impressed with the quality of service provided. Truly exceeded my expectations!
+                </p>
+            </div>
+        </div>
+        <div class="box">
+
+                <img src="~/image/download (1).jpeg" alt="">
+            <h3>foulen</h3>
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star-half-alt"></i>
+                <p class="text">
+                    I'm thoroughly impressed with the quality of service provided. Truly exceeded my expectations!
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+
+</section>
+
+<section class="blog" id="blog">
+    <h1 class="heading"> our <span>blogs</span></h1>
+    <div class="box-container">
+        <div class="box">
+            <div class="image">
+                    <img src="~/image/Laboratory-bro.svg" alt="">
+            </div>
+            <div class="content">
+                <div class="icon">
+                    <a href="#"><i class="fas fa-calendar">1st may, 2017</i></a>
+                    <a href="#"><i class="fas fa-user">by admin</i></a>
+
+                </div>
+                <h3>blog title goes here</h3>
+                <p>lorem ipsum , dolor sit amet consectetur elit. provident, euis</p>
+                <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+            </div>
+        </div>
+        <div class="box">
+            <div class="image">
+                    <img src="~/image/Science-bro.svg" alt="">
+            </div>
+            <div class="content">
+                <div class="icon">
+                    <a href="#"> <i class="fas fa-calendar"> 1st may, 2017 </i></a>
+                    <a href="#"> <i class="fas fa-user"> by admin </i></a>
+
+                </div>
+                <h3>blog title goes here</h3>
+                <p>lorem ipsum , dolor sit amet consectetur elit. provident, euis</p>
+                <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+            </div>
+        </div>
+        <div class="box">
+            <div class="image">
+                    <img src="~/image/Forensic medicine-bro.svg" alt="">
+            </div>
+            <div class="content">
+                <div class="icon">
+                    <a href="#"><i class="fas fa-calendar">1st may, 2017</i></a>
+                    <a href="#"><i class="fas fa-user">by admin</i></a>
+
+                </div>
+                <h3>blog title goes here</h3>
+                <p>lorem ipsum , dolor sit amet consectetur elit. provident, euis</p>
+                <a href="#" class="btn">learn more <span class="fas fa-chevron-right"></span></a>
+            </div>
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+
+</body>
+</html> *@

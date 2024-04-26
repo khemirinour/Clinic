@@ -81,11 +81,9 @@ namespace Clinic.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Categorie")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DateofWeek")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("EmploiId")
@@ -95,7 +93,6 @@ namespace Clinic.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Service")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ServiceId")
@@ -117,11 +114,11 @@ namespace Clinic.Migrations
 
             modelBuilder.Entity("Clinic.Models.Day", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Id_day")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_day"), 1L, 1);
 
                     b.Property<int?>("EmploiId")
                         .HasColumnType("int");
@@ -130,7 +127,7 @@ namespace Clinic.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id_day");
 
                     b.HasIndex("EmploiId");
 
@@ -154,17 +151,11 @@ namespace Clinic.Migrations
                     b.Property<DateTime>("DateofWeek")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("HRId")
                         .HasColumnType("int");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmploiId");
 

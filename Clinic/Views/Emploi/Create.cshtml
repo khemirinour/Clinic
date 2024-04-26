@@ -1,185 +1,133 @@
 ﻿@model Clinic.Models.EmploiViewModel
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js">
+<head>
 
     <meta charset="utf-8" />
 
     <title>CliniSys</title>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/jquery-ui.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
-    <style>
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 10%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 600;
-        }
 
-        .overlay-content {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 70%;
-            height: 60%;
-            padding: 10px;
-        }
-        .droppable.hovered {
-            background-color: #e0f7fa;
-        }
-    </style>
+    
+    <link rel="icon" href="img/favicon.png">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- Nice Select CSS -->
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- icofont CSS -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- Slicknav -->
+    <link rel="stylesheet" href="~/css/slicknav.min.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="~/css/owl-carousel.css">
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="~/css/datepicker.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <!-- Medipro CSS -->
+    
+    <link rel="stylesheet" href="~/css/normalize.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 <body>
-
+    <!-- Preloader -->
     <header class="header">
-        <a href="index.html" class="logo"><i class="fas fa-heartbeat"> Clinisys. </i>  </a>
-        <nav class="navbar">
-            <a asp-area="" asp-controller="Employe" asp-action="Create">Gestion d'employée</a>
-            <a asp-area="" asp-controller="Poste" asp-action="AddPoste">Gestion de Poste</a>
-            <a asp-area="" asp-controller="Poste" asp-action="AddRepos">Gestion de Pause</a>
-            <a asp-area="" asp-controller="Poste" asp-action="AddSupplement">Gestion de supplément</a>
+        <div class="header-innner">
+            <div class="heading">
+                <div class="inner">
+                    <div class="row">
+                            <!-- Start Logo -->
+                            <div class="col">
+                                <!-- Start Logo -->
+                                <a href="" class="logo">
+                                    <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
+                                </a>
+                                <!-- End Logo -->
+                                <!-- Mobile Nav -->
+                                <div class="mobile-nav"></div>
+                                <!-- End Mobile Nav -->
+                            </div>
 
-          @*   <a href="#poste" onclick="showCard('employee')">Paramétre d'employée</a>
-            <a href="#" onclick="showCard('poste')">Paramétre de Poste</a>
+                        <div class="col">
+                            <!-- Main Menu -->
+                            <div class="main-menu">
+                                <nav class="navigation">
+                                    <ul class="nav menu">
+                                        <li><a asp-area="" asp-controller="Employe" asp-action="Create">Employée</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddPoste"> Poste</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddRepos">Pause</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddSupplement">Heures Supplémentaire</a></li>
+                                        <li>
+                                            <select class="btn-service" id="serviceDropdown" name="ServiceId" onchange="updateEmployees()" required>
+                                                <option value="">
+                                                    Service
+                                                </option>
+                                                @if (Model != null && Model.Services != null)
+                                                {
+                                                    @foreach (var service in Model.Services)
+                                                    {
+                                                        <option value="@service.Id">@service.Name</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </li>
+                                    </ul>
 
-            <a href="#" onclick="showCard('repos')">Paramétre de Pause</a>
-            <a href="#" onclick="showCard('chef')">Paramétre de Chef de service</a> *@
-            <a href="index.html"> <button class="btn">Sign out</button></a>
-        </nav>
-        <div id="menu-btn" class="fas fa-bars"> </div>
-
+                                </nav>  
+                            </div>
+                               
+                        </div> 
+                            <!--/ End Main Menu -->
+                       
+                </div>
+            </div>
+        </div></div>
+        <!--/ End Header Inner -->
     </header>
-    
-@* 
-    <div class="card" id="poste">
-        <span class="close" onclick="closeModal('poste')">&times;</span>
-        <div class="content">
-            <h1 class="center">Gestion des Postes</h1>
-            <label for="postName"><h2>Nom du Poste</h2></label>
-            <input type="text" class="box" id="postName" name="postName" required><br>
 
-            <h2>Ajouter un Horaire</h2>
-            <div class="line">
-                <h3>Début</h3><input type="time" class="box">
-                <h3>Fin</h3><input type="time" class="box">
-            </div>
 
-            <div class="center">
-                <button id="savePostSchedule" class="btn center">Enregistrer</button>
-            </div><br>
 
-            <label for="postName"><h2>Nom du Poste</h2></label>
-            <input type="text" class="box" id="postName" name="postName" required><br>
-            <div class="center">
-                <button class="btn">Supprimer</button>
-            </div>
-        </div>
-    </div>
 
-    <div class="card" id="repos">
-        <span class="close" onclick="closeModal('repos')">&times;</span>
-        <div class="content">
-            <h1 class="center">Gestion des Repos</h1>
-            <label for="reposName"><h2>Nom du Repos</h2></label>
-            <input type="text" class="box" id="reposName" name="reposName" required><br>
-
-            <h2>Ajouter un Horaire</h2>
-            <div class="line">
-                <h3>Début</h3><input type="time" class="box">
-                <h3>Fin</h3><input type="time" class="box">
-            </div>
-
-            <div class="center">
-                <button id="saveRestSchedule" class="btn center">Enregistrer</button>
-            </div><br>
-
-            <label for="reposName"><h2>Nom du Repos</h2></label>
-            <input type="text" class="box" id="reposName" name="reposName" required><br>
-            <div class="center">
-                <button class="btn">Supprimer</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="card" id="chef">
-        <span class="close" onclick="closeModal('chef')">&times;</span>
-        <div class="content">
-            <h1 class="center">Chef de Service</h1>
-            <h2>Nom</h2>
-            <input type="text" placeholder="Nom du Chef" class="box" required><br>
-            <h2>Email</h2>
-            <input type="email" placeholder="Email du Chef" class="box" required><br>
-            <div class="center">
-                <button type="submit" class="btn">Ajouter le Chef de Service</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="card" id="employee">
-        <span class="close" onclick="closeModal('employee')">&times;</span>
-        <div class="content">
-            <h1 class="center">Ajouter un Employé</h1>
-            <h2>Nom</h2>
-            <input type="text" id="employeeName" placeholder="Nom de l'Employé" class="box" required><br>
-            <h2>Email</h2>
-            <input type="email" placeholder="Email de l'Employé" name="employeeEmail" class="box" required><br>
-            <div class="center">
-                <button type="submit" class="btn">Ajouter l'Employé</button>
-            </div>
-        </div>
-    </div> *@
-
-  
-  
     <form class="margin" id="emploi-form">
-        <h2 class="heading"> <span> Planificateur </span> Clinique</h2>
-
+@*         <div class="text">
+            <h4>Planificateur Clinique</h4>
+        </div> *@
         <div class="center">
-            <div class="date-navigation">
-
-                <button id="previousWeekBtn" class="btn"><span class="fas fa-chevron-left"></span> Semaine Précédente </button>
-                <input type="date" id="date" class="box" name="DateofWeek"  onchange="checkSaturday(this.value)" required>
-
-                <button id="nextWeekBtn" class="btn">Semaine Prochaine<span class="fas fa-chevron-right"></span></button>
+            <div class="row">
+                    <div class="date-navigation">
+                        <button id="previousWeekBtn" class="btn mx-1"><span class="fas fa-chevron-left"> </span> Semaine Précédente </button>
+                        <input type="date" id="date" class="box mx-1" name="DateofWeek" onchange="checkSaturday(this.value)" required>
+                        <button id="nextWeekBtn" class="btn mx-1"> Semaine Prochaine <span class="fas fa-chevron-right">  </span></button>
+                    </div>
+                </div>
+                    
             </div>
-        </div>
-
-
-
-        <div class="supllementt" id="supplementsSection">
-
+        <div class="supllement" id="supplementsSection">
             @if (Model != null && Model.Supplements != null)
             {
-
                 @foreach (var supplement in Model.Supplements)
                 {
-                        <div id="supplement_@supplement.SupplementId" draggable="true">
-                        </div>
-
-                }                   
-
+                    <div class="supplement" onclick="openModal('@supplement.SupplementId')" id="supplement_@supplement.SupplementId" draggable="true">
+                    </div>
+                }
             }
+
         </div>
 
-      
-        <div class="buttons-container">
-            <select class="box" id="serviceDropdown" name="ServiceId" onchange="updateEmployees()" required>
-                <option value="">Sélectionner un service</option>
-                @if (Model != null && Model.Services != null)
-                {
-                    @foreach (var service in Model.Services)
-                    {
-                        <option value="@service.Id">@service.Name</option>
-                    }
-                }
-            </select>
+    
+        <div class="buttons-container mt-4">
+
             <div class="form">
                 <label for="search">
                     <input class="input" type="text"  placeholder="Rechercher" id="search">
@@ -204,7 +152,7 @@
                         <path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z"></path>
                     </svg>
                 </span>
-                <p class="text">Enregistrer</p>
+                <p class="textt">Enregistrer</p>
             </button>
             <button class="button" id="clearButton">
                 <svg viewBox="0 0 448 512" class="svgIcon"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>
@@ -255,6 +203,7 @@
                 </div>
             </div>
         </div>
+
         <div class="schedule-table">
             <div class="table-container">
                
@@ -265,7 +214,7 @@
                             <tr>
                                 @if (Model.Employees != null)
                                 {
-                                    <th class="employee-column">Employee</th>
+                                    <th class="employee-column">Employée</th>
                                 }
                                 @foreach (var day in Model.Days)
                                 {
@@ -274,7 +223,7 @@
                                         <th>@day.Name</th>
                                     }
                                 }
-                                <th>Total Weekly Hours</th>
+                                <th>Heures totales</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -304,7 +253,7 @@
             </div>
             <div class="extra-boxes">
 
-                <select class="box" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
+                <select class="btn-categories" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
                     <option value="">Sélectionnez une catégorie</option>
                     @if (Model != null && Model.Categories != null)
                     {
@@ -350,11 +299,114 @@
 
         
     </form>
-   
+    <footer id="contact" class="footer">
+        <!-- Haut du footer -->
+        <div class="footer-top">
+            <div class="content">
+                <div class="row">
+                    <div class="col">
+                        <div class="single-footer">
+                            <h2>Suivez-nous</h2>
+                            <ul class="social">
+                                <li><a href="#"><i class="icofont-facebook"></i></a></li>
+                                <li><a href="#"><i class="icofont-google-plus"></i></a></li>
+                                <li><a href="#"><i class="icofont-twitter"></i></a></li>
+                                <li><a href="#"><i class="icofont-vimeo"></i></a></li>
+                            </ul>
+                            <!-- Réseaux sociaux -->
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Liens rapides</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Accueil</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>À propos de nous</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos services</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos cas</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Autres liens</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    		<div class="col">
+                    <div class="single-footer f-link">
+                    <h2>Nos services</h2>
+                    <div class="row">
+                    <div class="col">
+                    <ul>
+                    <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Soins dentaires</a></li>
+                    <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Thérapie par massage</a></li>
+                    <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Cardiologie</a></li>
+                    <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Diagnostic</a></li>
+                    <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services d'ambulance</a></li>
+                    </ul>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Contact</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i> 123 Rue de la Santé</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Sfax, Tunisie</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>info@clinique.com</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>+216 22 24 25 26 </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Fin du haut du footer -->
+        <!-- Contact -->
+        <!--/ Fin du Contact -->
+    </footer>
 
+    <!--/ End Footer Area -->
+    <!-- jquery Min JS -->
+    <!-- jquery Migrate JS -->
+    <!-- jquery Ui JS -->
+    <!-- Easing JS -->
+
+    <!-- Other scripts -->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
     <script>
+        // Fonction pour ouvrir le modèle
+        function openModal(supplementId) {
+            // Récupérer les détails du supplément en utilisant son identifiant
+            var supplement = document.getElementById('supplement_' + supplementId);
+            var nom = supplement.getAttribute('data-nom');
+            var matricule = supplement.getAttribute('data-matricule');
+            var heureDebut = supplement.getAttribute('data-heure-debut');
+            var heureFin = supplement.getAttribute('data-heure-fin');
+            var dateJour = supplement.getAttribute('data-date-jour');
+
+            // Mettre à jour les champs du formulaire dans le modèle avec les détails du supplément
+            document.getElementById('nom').value = nom;
+            document.getElementById('matricule').value = matricule;
+            document.getElementById('heureDebut').value = heureDebut;
+            document.getElementById('heureFin').value = heureFin;
+            document.getElementById('dateJour').value = dateJour;
+
+            // Afficher le modèle
+            document.getElementById('modal').style.display = 'block';
+        }
+
         function checkSaturday(selectedDate) {
             var date = new Date(selectedDate);
             var dayOfWeek = date.getDay();
@@ -589,18 +641,18 @@
                                         var posteDiv = document.createElement('div');
                                         posteDiv.className = "position";
                                         posteDiv.draggable = "true";
-                                        posteDiv.id ="poste_"+ poste.posteId;
+                                        posteDiv.id = "poste_" + poste.posteId;
                                         posteDiv.innerHTML = `
-                                        <div class="box holiday-box">
-                                            <strong>${poste.postename}</strong><br />
-                                            Séance 1 :<br />
-                                            Début <span>${poste.seance1Debut}</span>
-                                            Fin <span>${poste.seance1Fin}</span><br />
-                                            Séance 2 :<br />
-                                            Début : <span>${poste.seance2Debut}</span>
-                                            Fin : <span>${poste.seance2Fin}</span>
-                                        </div>
-                                    `;
+                                    <div class="box holiday-box">
+                                        <strong>${poste.postename}</strong><br />
+                                        S1 :
+                                        <span>${poste.seance1Debut} /</span>
+                                        <span>${poste.seance1Fin}</span><br />
+                                        S2 :
+                                        <span>${poste.seance2Debut} /4</span>
+                                        <span>${poste.seance2Fin}</span>
+                                    </div>
+                                `;
                                         postesSection.appendChild(posteDiv);
                                     });
                                 }
@@ -612,13 +664,13 @@
                                         var repoDiv = document.createElement('div');
                                         repoDiv.className = "repos";
                                         repoDiv.draggable = "true";
-                                        repoDiv.id ="repos_"+ repo.reposId;
+                                        repoDiv.id = "repos_" + repo.reposId;
                                         repoDiv.innerHTML = `
-                                        <div class="box repo-box">
-                                            <strong>${repo.reposName}</strong><br />
-                                            <span>${repo.date_Jours}</span>
-                                        </div>
-                                    `;
+                                    <div class="box repo-box">
+                                        <strong>${repo.reposName}</strong><br />
+                                        <span>${repo.date_Jours}</span>
+                                    </div>
+                                `;
                                         reposSection.appendChild(repoDiv);
                                     });
                                 }
@@ -630,17 +682,22 @@
                                         var supplementDiv = document.createElement('div');
                                         supplementDiv.className = "supplement";
                                         supplementDiv.draggable = "true";
-                                        supplementDiv.id = "supplement_"+ supplement.supplementId;
+                                        supplementDiv.id = "supplement_" + supplement.supplementId;
+                                        supplementDiv.setAttribute('data-nom', supplement.nom);
+                                        supplementDiv.setAttribute('data-matricule', supplement.matricule);
+                                        supplementDiv.setAttribute('data-heure-debut', supplement.heureDebut);
+                                        supplementDiv.setAttribute('data-heure-fin', supplement.heureFin);
+                                        supplementDiv.setAttribute('data-date-jour', supplement.dateJour);
                                         supplementDiv.innerHTML = `
-                                        <div class="btn">
+                                        <div class="btn" onclick="openModal(${supplement.supplementId})">
                                             <strong>${supplement.nom}</strong>
                                         </div>
                                     `;
                                         supplementsSection.appendChild(supplementDiv);
                                     });
+                                } else {
+                                    console.error('Erreur lors de la récupération des données: ', data.message);
                                 }
-                            } else {
-                                console.error('Erreur lors de la récupération des données: ', data.message);
                             }
                         })
                         .catch(error => {
@@ -717,25 +774,124 @@
                 document.querySelector('#tableau tbody').innerHTML = '';
             }
         }
+        ////////////////////////////////////SAVE DATA ////////////////////////////////////////////
+        // function saveData(event) {
+        //     event.preventDefault();
+        //     const formData = new FormData(document.getElementById('emploi-form'));
+        //     const emploiData = {
+        //         postes: [],
+        //         repos: [],
+        //         supplements: [],
+        //         someField: formData.get('someField'),
+        //     };
+
+        //     formData.getAll('postes').forEach(poste => {
+        //         emploiData.postes.push(poste);
+        //     });
+
+        //     formData.getAll('repos').forEach(repo => {
+        //         emploiData.repos.push(repo);
+        //     });
+        //     formData.getAll('supplements').forEach(supplement => {
+        //         emploiData.supplements.push(supplement);
+        //     });
+
+        //     var serviceSelected = $("#serviceDropdown").val();
+        //     var dateSelected = $("#date").val();
+        //     var categorieSelected = $("#categorieDropdown").val();
+
+        //     // Construct the data to send to the server
+        //     var dataToSend = {
+        //         serviceSelected: serviceSelected,
+        //         dateSelected: dateSelected,
+        //         categorieSelected: categorieSelected,
+        //         emploiData: emploiData
+        //     };
+
+        //     document.querySelectorAll('#tableau tbody tr').forEach(employeeRow => {
+        //         const employeeId = employeeRow.id.split('-')[1];
+        //         emploiData[employeeId] = {};
+
+        //         employeeRow.querySelectorAll('.droppable').forEach(cell => {
+        //             const day = cell.dataset.day;
+        //             const postData = cell.innerHTML.trim();
+        //             const classification = classifyCellData(postData);
+        //             // Validate required fields and data types
+        //             if (postData !== '') {
+        //                 if (!emploiData[employeeId][day]) {
+        //                     emploiData[employeeId][day] = {
+        //                         postes: [],
+        //                         repos: [],
+        //                         supplements: []
+        //                     };
+        //                 }
+
+        //                 switch (classification) {
+        //                     case 'position':
+        //                         emploiData[employeeId][day].postes.push({
+        //                             data: postData
+        //                         });
+        //                         break;
+        //                     case 'repos':
+        //                         emploiData[employeeId][day].repos.push({
+        //                             data: postData
+        //                         });
+        //                         break;
+        //                     case 'supplement':
+        //                         emploiData[employeeId][day].supplements.push({
+        //                             data: postData
+        //                         });
+        //                         break;
+        //                     default:
+        //                         // Handle invalid classification
+        //                         console.warn('Cell data cannot be classified:', postData);
+        //                         break;
+        //                 }
+        //             }
+        //         });
+        //     });
+        //     console.log("Données d'emploi à envoyer au serveur :", emploiData); // Display data to send in console
+        //     $.post(
+        //         '@Url.Action("EnregistrerEmploi", "Emploi")',
+        //         dataToSend,
+        //         function (result) {
+        //             console.log("result", result);
+        //             // Handle the result if needed
+        //         }
+        //     );
+        // }
+
+        function classifyCellData(cellData) {
+            const containsPositions = cellData.includes('<div class="position');
+            const containsRepos = cellData.includes('<div class="repos');
+            const containsSupplements = cellData.includes('<div class="supplement');
+            if (!containsPositions && !containsRepos && !containsSupplements) {
+                return 'unknown';
+            }
+            if (containsPositions && containsRepos && containsSupplements) {
+                console.warn('Cell data contains positions, repos, and supplements:', cellData);
+                return 'mixed';
+            } else if (containsPositions) {
+                return 'position';
+            } else if (containsRepos) {
+                return 'repos';
+            } else if (containsSupplements) {
+                return 'supplement';
+            } else {
+                console.warn('Cell data cannot be classified:', cellData);
+                return '';
+            }
+        }
+
 
         function saveData(event) {
             event.preventDefault(); // Empêche le formulaire de se soumettre normalement
 
-            // Récupérer les valeurs sélectionnées pour le service et la date
             const serviceSelected = $("#serviceDropdown").val();
             const dateSelected = $("#date").val();
-            const categorieselected = $("#categorieDropdown").val();
+            const categorieSelected = $("#categorieDropdown").val();
 
-
-            // Créer un objet pour les détails d'emploi quotidien
-            const dailyEmployment = {
-                DateofWeek: dateSelected, service: serviceSelected, Categorie: categorieselected
-            };
-
-            // Récupérer les données du tableau pour chaque employé et chaque jour de la semaine
-            const emploiData = {
-
-            };
+            const emploiData = {};
 
             document.querySelectorAll('#tableau tbody tr').forEach(employeeRow => {
                 const employeeId = employeeRow.id.split('-')[1];
@@ -745,16 +901,6 @@
                     const day = cell.dataset.day;
                     const postData = cell.innerHTML.trim();
                     const classification = classifyCellData(postData);
-                    // Validate required fields and data types
-                    if (!serviceSelected) {
-                        displayErrorMessage('Veuillez sélectionner un service.');
-                        return;
-                    }
-
-                    if (!dateSelected) {
-                        displayErrorMessage('Veuillez sélectionner une date.');
-                        return;
-                    }
 
                     if (postData !== '') {
                         if (!emploiData[employeeId][day]) {
@@ -782,92 +928,68 @@
                                 emploiData[employeeId][day].supplements.push({
                                     data: postData,
                                     CategorieId: cell.dataset.CategorieId // Add selected category
-
                                 });
                                 break;
                             default:
-                                // Handle invalid classification
                                 console.warn('Cell data cannot be classified:', postData);
                                 break;
                         }
                     }
                 });
             });
-            console.log("Données d'emploi à envoyer au serveur :", dailyEmployment, emploiData); // Affichage des données à envoyer dans la console
 
-            fetch('@Url.Action("Emploi/EnregistrerEmploi")', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    serviceSelected: serviceSelected,
-                    dateSelected: dateSelected,
-                    emploiData: emploiData,
-                    dailyEmployment: dailyEmployment
-                })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Une erreur s\'est produite lors de l\'enregistrement de l\'emploi.');
-                    }
-                    // Check for empty response
-                    const contentType = response.headers.get('content-type');
-                    if (contentType && contentType.includes('application/json')) {
-                        return response.json();
-                    } else {
-                        console.warn('La réponse n\'est pas au format JSON.');
-                        displayEmptyResponseMessage();
-                        return {}; // or null depending  your need
-                    }
-                })
-                .then(data => {
-                    if (!data || Object.keys(data).length === 0) {
-                        console.warn('La réponse du serveur est vide.');
-                        displayEmptyResponseMessage();
-                    } else {
-                        console.log("Réponse du serveur :", data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de l\'envoi des données:', error);
-                    displayErrorMessage(error.message);
-                });
+            console.log("Données d'emploi à envoyer au serveur :", emploiData);
+
+            const dataToSend = {
+                serviceSelected: serviceSelected,
+                dateSelected: dateSelected,
+                categorieSelected: categorieSelected,
+                emploiData: JSON.stringify(emploiData)
+            };
+
+            $.post(
+                '@Url.Action("EnregistrerEmploi", "Emploi")',
+                dataToSend,
+                function (result) {
+                    console.log("result", result);
+                    // Gérer le résultat si nécessaire
+                }
+            );
         }
 
-        function displayEmptyResponseMessage() {
-         e:
-            alert("Une erreur est survenue. L'enregistrement de l'emploi est vide. Veuillez réessayer plus tard.");
-        }
+            // fetch('@Url.Action("Emploi/EnregistrerEmploi")', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({
+            //         serviceSelected: serviceSelected,
+            //         dateSelected: dateSelected,
+            //         emploiData: emploiData,
+            //     })
+            // })
+            //     .then(response => {
+            //         if (!response.ok) {
+            //             throw new Error('Une erreur s\'est produite lors de l\'enregistrement de l\'emploi.');
+            //         }
+            //         // Check for empty response
+            //         const contentType = response.headers.get('content-type');
+            //         if (contentType && contentType.includes('application/json')) {
+            //             return response.json();
+            //         } else {
+            //             console.warn('La réponse n\'est pas au format JSON.');
+            //             displayEmptyResponseMessage();
+            //             return {}; // or null depending  your need
+            //         }
+            //     })
+               
+        //         .catch(error => {
+        //             console.error('Erreur lors de l\'envoi des données:', error);
+        //             displayErrorMessage(error.message);
+        //         });
+        // }
+     
 
-        function displayErrorMessage(errorMessage) {
-    
-            alert("Une erreur est survenue lors de l'enregistrement de l'emploi: " + errorMessage);
-        }
-
-
-        function classifyCellData(cellData) {
-
-            const containsPositions = cellData.includes('<div class="position');
-            const containsRepos = cellData.includes('<div class="repos');
-            const containsSupplements = cellData.includes('<div class="supplement');
-            if (!containsPositions && !containsRepos && !containsSupplements) {
-                return 'unknown';
-            }
-            if (containsPositions && containsRepos && containsSupplements) {
-                console.warn('Cell data contains positions, repos, and supplements:', cellData);
-                return 'mixed';
-            } else if (containsPositions) {
-                return 'position';
-            } else if (containsRepos) {
-                return 'repos';
-            } else if (containsSupplements) {
-                return 'supplement';
-            } else {
-                console.warn('Cell data cannot be classified:', cellData);
-                return '';
-            }
-        }
 
 
     </script>

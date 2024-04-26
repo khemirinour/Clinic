@@ -21,10 +21,52 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\image\1-6-2-2-FindADoctor.png" />
+    <None Include="wwwroot\image\diabet.jpg" />
+    <None Include="wwwroot\image\Doctor-bro %282%29.svg" />
+    <None Include="wwwroot\image\Doctor-bro.svg" />
+    <None Include="wwwroot\image\Doctors-bro %281%29.svg" />
+    <None Include="wwwroot\image\Doctors-bro.svg" />
+    <None Include="wwwroot\image\download %281%29.jpeg" />
+    <None Include="wwwroot\image\download.jpeg" />
+    <None Include="wwwroot\image\Forensic medicine-bro.svg" />
+    <None Include="wwwroot\image\Gastroenterology.jpg" />
+    <None Include="wwwroot\image\General medicine.jpg" />
+    <None Include="wwwroot\image\Hospital building-rafiki.svg" />
+    <None Include="wwwroot\image\image.jpg" />
+    <None Include="wwwroot\image\images.jpeg" />
+    <None Include="wwwroot\image\Insurance-pana %281%29.svg" />
+    <None Include="wwwroot\image\Insurance-pana.svg" />
+    <None Include="wwwroot\image\istockphoto-1200677760-612x612.jpg" />
+    <None Include="wwwroot\image\Laboratory-bro.svg" />
+    <None Include="wwwroot\image\Medical prescription-bro.svg" />
+    <None Include="wwwroot\image\Medicine-amico.svg" />
+    <None Include="wwwroot\image\Medicine-pana.svg" />
+    <None Include="wwwroot\image\Nephrology.jpg" />
+    <None Include="wwwroot\image\Pain management and palliative care.jpg" />
+    <None Include="wwwroot\image\Pediatrics.jpg" />
+    <None Include="wwwroot\image\Rheumatology-bro.svg" />
+    <None Include="wwwroot\image\Science-bro.svg" />
+    <None Include="wwwroot\image\Surgery.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\js\jquery.min.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\js\jquery.min.map">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

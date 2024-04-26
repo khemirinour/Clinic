@@ -10,10 +10,6 @@ namespace Clinic.Models
         [Key]
         public int EmploiId { get; set; }
 
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-
-    
         [Required]
         public DateTime DateofWeek { get; set; }
 
@@ -23,10 +19,13 @@ namespace Clinic.Models
 
         public int CategorieId { get; set; }
         public ICollection<Day> Days { get; set; }
+
         public ICollection<Poste> Postes { get; set; }
         public ICollection<Repos> Repos { get; set; }
         public ICollection<Supplement> Supplements { get; set; }
         public ICollection<Employee> Employees { get; set; }
+    
+
         public List<DailyEmployment>? DailyEmployments { get; internal set; }
 
         public Emploi()
