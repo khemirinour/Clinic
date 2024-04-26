@@ -113,18 +113,16 @@
                 </div>
                     
             </div>
-        <div class="supllement" id="supplementsSection">
+        <div class="supllement"  id="supplementsSection">
             @if (Model != null && Model.Supplements != null)
             {
                 @foreach (var supplement in Model.Supplements)
                 {
-                    <div class="supplement" onclick="openModal('@supplement.SupplementId')" id="supplement_@supplement.SupplementId" draggable="true">
+                    <div id="supplement_@supplement.SupplementId" draggable="true">
                     </div>
                 }
             }
-
         </div>
-
     
         <div class="buttons-container mt-4">
 
@@ -386,26 +384,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     <script>
-        // Fonction pour ouvrir le modèle
-        function openModal(supplementId) {
-            // Récupérer les détails du supplément en utilisant son identifiant
-            var supplement = document.getElementById('supplement_' + supplementId);
-            var nom = supplement.getAttribute('data-nom');
-            var matricule = supplement.getAttribute('data-matricule');
-            var heureDebut = supplement.getAttribute('data-heure-debut');
-            var heureFin = supplement.getAttribute('data-heure-fin');
-            var dateJour = supplement.getAttribute('data-date-jour');
-
-            // Mettre à jour les champs du formulaire dans le modèle avec les détails du supplément
-            document.getElementById('nom').value = nom;
-            document.getElementById('matricule').value = matricule;
-            document.getElementById('heureDebut').value = heureDebut;
-            document.getElementById('heureFin').value = heureFin;
-            document.getElementById('dateJour').value = dateJour;
-
-            // Afficher le modèle
-            document.getElementById('modal').style.display = 'block';
-        }
+       
 
         function checkSaturday(selectedDate) {
             var date = new Date(selectedDate);
@@ -643,16 +622,16 @@
                                         posteDiv.draggable = "true";
                                         posteDiv.id = "poste_" + poste.posteId;
                                         posteDiv.innerHTML = `
-                                    <div class="box holiday-box">
-                                        <strong>${poste.postename}</strong><br />
-                                        S1 :
-                                        <span>${poste.seance1Debut} /</span>
-                                        <span>${poste.seance1Fin}</span><br />
-                                        S2 :
-                                        <span>${poste.seance2Debut} /4</span>
-                                        <span>${poste.seance2Fin}</span>
-                                    </div>
-                                `;
+                                        <div class="box holiday-box">
+                                            <strong>${poste.postename}</strong><br />
+                                            S1 :
+                                            <span>${poste.seance1Debut} /</span>
+                                            <span>${poste.seance1Fin}</span><br />
+                                            S2 :
+                                            <span>${poste.seance2Debut} /4</span>
+                                            <span>${poste.seance2Fin}</span>
+                                        </div>
+                                    `;
                                         postesSection.appendChild(posteDiv);
                                     });
                                 }
@@ -666,16 +645,15 @@
                                         repoDiv.draggable = "true";
                                         repoDiv.id = "repos_" + repo.reposId;
                                         repoDiv.innerHTML = `
-                                    <div class="box repo-box">
-                                        <strong>${repo.reposName}</strong><br />
-                                        <span>${repo.date_Jours}</span>
-                                    </div>
-                                `;
+                                        <div class="box repo-box">
+                                            <strong>${repo.reposName}</strong><br />
+                                            <span>${repo.date_Jours}</span>
+                                        </div>
+                                    `;
                                         reposSection.appendChild(repoDiv);
                                     });
                                 }
 
-                                // Afficher les suppléments
                                 if (data.supplements && data.supplements.length > 0) {
                                     data.supplements.forEach(supplement => {
                                         // Créer un élément HTML pour chaque supplément
@@ -683,21 +661,18 @@
                                         supplementDiv.className = "supplement";
                                         supplementDiv.draggable = "true";
                                         supplementDiv.id = "supplement_" + supplement.supplementId;
-                                        supplementDiv.setAttribute('data-nom', supplement.nom);
-                                        supplementDiv.setAttribute('data-matricule', supplement.matricule);
-                                        supplementDiv.setAttribute('data-heure-debut', supplement.heureDebut);
-                                        supplementDiv.setAttribute('data-heure-fin', supplement.heureFin);
-                                        supplementDiv.setAttribute('data-date-jour', supplement.dateJour);
+                                        // Correction de la variable ici ↓
                                         supplementDiv.innerHTML = `
-                                        <div class="btn" onclick="openModal(${supplement.supplementId})">
-                                            <strong>${supplement.nom}</strong>
-                                        </div>
-                                    `;
+                    <div class="btn">
+                        <strong>${supplement.nom}</strong>
+                    </div>
+                `;
                                         supplementsSection.appendChild(supplementDiv);
                                     });
                                 } else {
                                     console.error('Erreur lors de la récupération des données: ', data.message);
                                 }
+
                             }
                         })
                         .catch(error => {
@@ -715,6 +690,7 @@
                     supplementsSection.innerHTML = '';
                 }
             }
+
 
 
             attachDragDropEvents();
