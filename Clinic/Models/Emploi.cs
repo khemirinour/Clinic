@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Clinic.Models
 {
@@ -10,23 +8,25 @@ namespace Clinic.Models
         [Key]
         public int EmploiId { get; set; }
 
-        [Required]
-        public DateTime DateofWeek { get; set; }
+        public DateTime? DateOfWeek { get; set; } // Changer le nom de la propriété
 
+        // Ajouter une propriété pour le nom de la catégorie sélectionnée
+        public string? ServiceSelected { get; set; }
+        public string? CategorieSelected { get; set; }
+        public ICollection<Day>? Days { get; set; }
+        public ICollection<Poste>? Postes { get; set; }
+        public ICollection<Repos>? Repos { get; set; }
+        public ICollection<Supplement>? Supplements { get; set; }
+        public ICollection<Employee>? Employees { get; set; }
+        public int? EmployeeId { get; set; }   
+        public ICollection<DailyEmployment>?   DailyEmployments { get; set; }
         [ForeignKey("Service")]
-        public int ServiceId { get; set; }
+        public int? ServiceId { get; set; }
         public Service? Service { get; set; }
 
-        public int CategorieId { get; set; }
-        public ICollection<Day> Days { get; set; }
-
-        public ICollection<Poste> Postes { get; set; }
-        public ICollection<Repos> Repos { get; set; }
-        public ICollection<Supplement> Supplements { get; set; }
-        public ICollection<Employee> Employees { get; set; }
-    
-
-        public List<DailyEmployment>? DailyEmployments { get; internal set; }
+        [ForeignKey("Categorie")]
+        public int? CategorieId { get; set; }
+        public Categorie? Categorie { get; set; }
 
         public Emploi()
         {
@@ -36,10 +36,8 @@ namespace Clinic.Models
             Repos = new List<Repos>();
             Supplements = new List<Supplement>();
             Employees = new List<Employee>();
-            DailyEmployments =new List<DailyEmployment>();
-            DateofWeek = DateTime.Now; // Initialise la propriété Date avec la date actuelle
+            DailyEmployments = new List<DailyEmployment>();
+            DateOfWeek = DateTime.Now; // Initialise la propriété Date avec la date actuelle
         }
-
-
     }
 }

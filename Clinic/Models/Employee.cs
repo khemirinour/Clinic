@@ -11,26 +11,31 @@ namespace Clinic.Models
         public int EmployeeId { get; set; }
 
         [Required]
-        public string Name { get; set; }=string.Empty;  
+        public string? Name { get; set; } 
 
+        [EmailAddress]
         public string? Email { get; set; }
         public string? Sex { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Nationality { get; set; }
-        public string? Password { get; set; }
-        public string? Address { get; set; }
+        public string?  Password { get; set; }
+        public string?   Address { get; set; }
         public DateTime? RecruitmentDate { get; set; }
         public string? City { get; set; }
-        public string? PhotoUrl { get; set; }
         public bool? IsChefDeService { get; set; }
         public int? TotalWeeklyHours { get; set; }
 
         public int? CategorieId { get; set; }
         public Categorie? Categorie { get; set; }
-        public ICollection<EmployeeRepos>? EmployeeRepos { get; set; }
-        public ICollection<EmployeePoste>? EmployeePostes { get; set; }
-        public ICollection<DailyEmployment>? DailyEmployments { get; set; }
-        public ICollection<Supplement>? Supplements { get; set; }
+        public List<Poste>? Postes { get; set; }
+
+        // Propriété de navigation pour les Repos
+        public List<Repos>? Repos { get; set; }
+
+        // Propriété de navigation pour les Suppléments
+        public List<Supplement>? Supplements { get; set; }
+        public bool? Approved { get; set; } // Indique si l'inscription a été approuvée par l'administrateur (chef de service)
+
 
         [ForeignKey("Emploi")]
         public int? EmploiId { get; set; }

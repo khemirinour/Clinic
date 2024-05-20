@@ -1,4 +1,4 @@
-﻿@model Clinic.Models.AddSupplementViewModel
+﻿@model Clinic.Models.Supplement
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -85,62 +85,38 @@
         <!--/ End Header Inner -->
     </header>
     <div class="center">
-    <form asp-action="AddSupplement" class="container margin ">
-     
-                    <div class="text center"><h2>Gestion <span> des heures supplémentaires</span></h2></div>
-                    <div class="container center margin">
-             <div class="row">
-                <div class="col">
-                <label class="" asp-for="NewSupplement.Nom"><h6>Nom du supplément :</h6></label>
-            </div>               
-            <div class="col">
+<form asp-action="AddSupplement" method="post">
 
-                <input class="" asp-for="NewSupplement.Nom">
-                <span asp-validation-for="NewSupplement.Nom" class="text-danger"></span>
-            </div>
+    <div>
+        <label asp-for="Nom" class="control-label"></label>
+        <input asp-for="Nom" class="form-control" />
+        <span asp-validation-for="Nom" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+                <label for="categorieId">Catégorie :</label>
 
-            <div class="col">
-                <select class="box" asp-for="NewSupplement.CategorieId" class="form-control" asp-items="@ViewBag.CategorieList">
+                <select asp-for="CategorieId" class="box" asp-items="@ViewBag.CategorieList">
                     <option value="">Sélectionnez une catégorie</option>
                 </select>
-                <span asp-validation-for="NewSupplement.CategorieId"></span>
-                </div>
-                <br />
-            </div>
-            <br />         <br />       
-           
-        </div>
-        <div class="row">
-            <div class="col center">
-                <br />
-                <button type="submit" class="btn margin center">Ajouter</button>
-            </div>
-        </div>
-
-        </form>
     </div>
-    @* <div class="center">
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
+    </div>
 
-        @foreach (var category in Model.CategoriesWithSupplements)
-        {
+    <form asp-action="DeleteSupplement" method="post">
+        <div class="form-group">
+            <label for="nom">Nom du supplément :</label>
+            <input type="text" id="nom" name="nom" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="categorieId">Catégorie :</label>
+            <select asp-for="CategorieId" class="box" asp-items="@ViewBag.CategorieList">
+                <option value="">Sélectionnez une catégorie</option>
+            </select>
 
-            <div class="table-container margin">
-                <div class="heading">
-                    <h5>@category.CategorieName</h5>
-                </div>
-
-                @foreach (var supplement in category.Supplements)
-                {
-                    <div class="boxx margin">
-                        <strong>@supplement.Nom<br /></strong>
-                    </div>
-                }
-            </div>
-
-            <br />
-        }
-
-    </div> *@
+        </div>
+        <button type="submit" class="btn btn-danger">Supprimer le supplément</button>
+    </form>
 
     <footer id="contact" class="footer">
         <!-- Haut du footer -->
@@ -249,18 +225,15 @@
     <!-- Magnific Popup JS -->
     <script src="~/js/jquery.magnific-popup.min.js"></script>
     <!-- Counter Up CDN JS -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="~/js/bootstrap.min.js"></script>
     <!-- Main JS -->
     <script src="~/js/main.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="~/js/bootstrap.min.js"></script>
     <!-- Main JS -->
     <script src="~/js/main.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
 
 </body>
 </html>

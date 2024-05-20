@@ -1,7 +1,7 @@
 ﻿@model Clinic.Models.Repos
 
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 </head>
 <body>
     <header class="header">
-        <div class="header-innner">
+        <div class="header-inner">
             <div class="heading">
                 <div class="inner">
                     <div class="row">
@@ -84,58 +84,91 @@
         </div>
         <!--/ End Header Inner -->
     </header>
-    <form asp-action="AddPoste" class="container">
-        <div class="text center"><h1>Gestion <span> Des Pauses</span></h1></div>
+    <form asp-action="AddRepos" method="post" class="container">
+        <div class="text center"><h1>Gestion <span>Des Pauses</span></h1></div>
         <div class="container margin">
             <div class="row">
                 <div class="col">
-                    <label asp-for="ReposName" class="control-label">Nom du repos :</label>
-
+                    <label asp-for="ReposName">Nom du repos :</label>
                 </div>
                 <div class="col">
-
-                    <input asp-for="ReposName" class="form-control">
+                    <input asp-for="ReposName" type="text" required>
                     <span asp-validation-for="ReposName"></span>
                 </div>
             </div>
 
             <strong>
-
-                <!-- Première ligne -->
                 <div class="row">
                     <div class="col">
-
                         <label asp-for="Date_Jours">Date du jour :</label>
                     </div>
-
-                        <div class="col">
-
-                    <input asp-for="Date_Jours" type="date">
-                    <span asp-validation-for="Date_Jours"></span>           </div>
-
-                </div>
-
-           
-              
-
-
-                    <div class="row">
-                
-                        <select asp-for="CategorieId" class="box" asp-items="@ViewBag.CategorieList">
-                            <option value="">Sélectionnez une catégorie</option>
-                        </select>
-                        <span asp-validation-for="CategorieId" class="text-danger"></span>
+                    <div class="col">
+                        <input asp-for="Date_Jours" type="date" required>
+                        <span asp-validation-for="Date_Jours"></span>
                     </div>
-               
+                </div>
+                <div class="row">
+                    <select asp-for="CategorieId" class="box" asp-items="ViewBag.CategorieList" required>
+                        <option value="">Sélectionnez une catégorie</option>
+                    </select>
+                    <span asp-validation-for="CategorieId" class="text-danger"></span>
+                </div>
             </strong>
-            <div class="row center margin">
 
+            <div class="row center margin">
                 <button type="submit" class="btn">Ajouter</button>
             </div>
         </div>
     </form>
+    <form asp-action="UpdateRepos" method="post" class="container">
+        <div class="text center"><h1>Gestion <span>Des Pauses</span></h1></div>
+        <div class="container margin">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="ReposName">Nom du repos :</label>
+                </div>
+                <div class="col">
+                    <input asp-for="ReposName" type="text" required>
+                    <span asp-validation-for="ReposName"></span>
+                </div>
+            </div>
 
+            <strong>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Date_Jours">Date du jour :</label>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Date_Jours" type="date" required>
+                        <span asp-validation-for="Date_Jours"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <select asp-for="CategorieId" class="box" asp-items="ViewBag.CategorieList" required>
+                        <option value="">Sélectionnez une catégorie</option>
+                    </select>
+                    <span asp-validation-for="CategorieId" class="text-danger"></span>
+                </div>
+            </strong>
 
+            <div class="row center margin">
+                <button type="submit" class="btn">Mettre à jour</button>
+            </div>
+        </div>
+    </form>
+    <form asp-action="DeleteRepos" method="post" class="container">
+        <div class="form-group">
+            <label for="nom">Nom du repos :</label>
+            <input type="text" id="nom" name="nom" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="categorieId">Catégorie :</label>
+            <select asp-for="CategorieId" class="box" asp-items="ViewBag.CategorieList" required>
+                <option value="">Sélectionnez une catégorie</option>
+            </select>
+        </div>
+        <button type="submit" class="btn">Supprimer</button>
+    </form>
 
     <footer id="contact" class="footer">
         <!-- Haut du footer -->

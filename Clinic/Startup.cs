@@ -1,4 +1,6 @@
-﻿using Clinic.Models;
+﻿// Startup.cs
+
+using Clinic.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +18,6 @@ namespace Clinic
         }
 
         public IConfiguration Configuration { get; }
-  
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -55,6 +56,15 @@ namespace Clinic
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                // Utilisez un nom de route différent pour éviter les conflits
+                endpoints.MapControllerRoute(
+                    name: "emploi",
+                    pattern: "Emploi/{action=Affiche}/{id?}");
+                // Définissez la route spécifique pour la méthode d'action AfficherEmploi
+                endpoints.MapControllerRoute(
+                    name: "afficherEmploi",
+                    pattern: "Emploi/AfficherEmploi",
+                    defaults: new { controller = "Emploi", action = "AfficherEmploi" });
             });
         }
     }

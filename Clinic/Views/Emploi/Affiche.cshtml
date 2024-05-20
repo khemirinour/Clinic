@@ -1,0 +1,120 @@
+﻿@model Clinic.Models.EmploiViewModel
+
+<form id="emploi-form" method="post" class="margin">
+    <input type="date" id="dateOfWeek" name="dateOfWeek">
+
+    <div class="extra-boxes">
+        <select class="btn-categories" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
+            <option value="">Sélectionnez une catégorie</option>
+            @if (Model != null && Model.Categories != null)
+            {
+                foreach (var categorie in Model.Categories)
+                {
+                    <option value="@categorie.CategorieId">@categorie.CategorieName</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="buttons-container mt-4">
+        <button type="button" class="btn" id="afficherEmploiButton" onclick="afficherEmploi()">Afficher les emplois</button>
+    </div>
+
+    <div class="schedule-table">
+        <div class="table-container">
+            <table class="table" id="tableau">
+                <thead>
+                    <tr>
+                        <th>Nom de l'employé</th>
+                        @foreach (var day in Model.Days)
+                        {
+                            <th>@day.Dayname</th>
+                        }
+                        <th>Total des heures</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Employee != null)
+                    {
+                        <tr id="@Model.Employee.EmployeeId">
+                            <td class="employee-column">@Model.Employee.Name</td>
+                            @foreach (var day in Model.Days)
+                            {
+                                var cellId = $"{Model.Employee.EmployeeId}-{day.Dayname}";
+                                <td id="@cellId" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)" data-employee="@Model.Employee.EmployeeId" data-day="@day.Dayname"></td>
+                            }
+                            <td class="TotalHours-column">@Model.Employee.TotalWeeklyHours</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <input type="hidden" id="emploiData" name="emploiData" />
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        if ($("#categorieDropdown").val()) {
+            afficherEmploi();
+        }
+    });
+
+    function afficherEmploi() {
+        var categorieId = $("#categorieDropdown").val();
+        var employeeId = sessionStorage.getItem("employeeId");
+        var serviceId = sessionStorage.getItem("serviceId");
+        var dateOfWeek = $("#dateOfWeek").val();
+
+        if (!categorieId) {
+            alert("Veuillez sélectionner une catégorie.");
+            return;
+        }
+
+        console.log("Catégorie ID :", categorieId);
+        console.log("ID de l'employé :", employeeId);
+        console.log("ID du service :", serviceId);
+        console.log("Date de la semaine :", dateOfWeek);
+
+        $.ajax({
+            url: '/Emploi/GetEmploiByEmployee',
+            type: 'GET',
+            data: { categorieId: categorieId, employeeId: employeeId, serviceId: serviceId, dateOfWeek: dateOfWeek },
+            success: function (response) {
+                if (response.success) {
+                    var emplois = response.data || [];
+                    var tbody = $("#tableau tbody");
+                    tbody.empty();
+
+                    emplois.forEach(function (emploi) {
+                        var cellId = `${emploi.EmployeeId}-${emploi.DayName}`;
+                        var cellContent = '';
+
+                        if (emploi.PosteName) {
+                            cellContent += emploi.PosteName + '<br>';
+                        }
+                        if (emploi.ReposName) {
+                            cellContent += emploi.ReposName + '<br>';
+                        }
+                        if (emploi.SupplementName) {
+                            cellContent += emploi.SupplementName + '<br>';
+                        }
+
+                        $("#" + cellId).html(cellContent);
+                        console.log(cellId);
+                        console.log(cellContent);
+                    });
+                } else {
+                    console.error("Aucun emploi trouvé pour l'employé.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Une erreur s'est produite lors de la récupération des emplois de l'employé :", error);
+            }
+        });
+    }
+
+</script>

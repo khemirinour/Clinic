@@ -15,11 +15,15 @@ namespace Clinic.Controllers
         {
             return View();
         }
-        public ActionResult Submit()
+        public ActionResult Login()
         {
             return View();
         }
+        //public ActionResult ApproveRegistrationRequests()
+        //{
+        //    return View();
 
+       //}
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

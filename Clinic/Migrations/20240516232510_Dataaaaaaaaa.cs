@@ -4,39 +4,17 @@
 
 namespace Clinic.Migrations
 {
-    public partial class Mig145 : Migration
+    public partial class Dataaaaaaaaa : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_WeeklyEmployments_Services_ServiceId",
-                table: "WeeklyEmployments");
+                name: "FK_Employee_Services_ServiceId",
+                table: "Employee");
 
             migrationBuilder.AlterColumn<int>(
                 name: "ServiceId",
-                table: "WeeklyEmployments",
-                type: "int",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_WeeklyEmployments_Services_ServiceId",
-                table: "WeeklyEmployments",
-                column: "ServiceId",
-                principalTable: "Services",
-                principalColumn: "Id");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_WeeklyEmployments_Services_ServiceId",
-                table: "WeeklyEmployments");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "ServiceId",
-                table: "WeeklyEmployments",
+                table: "Employee",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -45,12 +23,34 @@ namespace Clinic.Migrations
                 oldNullable: true);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_WeeklyEmployments_Services_ServiceId",
-                table: "WeeklyEmployments",
+                name: "FK_Employee_Services_ServiceId",
+                table: "Employee",
                 column: "ServiceId",
                 principalTable: "Services",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Employee_Services_ServiceId",
+                table: "Employee");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "ServiceId",
+                table: "Employee",
+                type: "int",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "int");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Employee_Services_ServiceId",
+                table: "Employee",
+                column: "ServiceId",
+                principalTable: "Services",
+                principalColumn: "Id");
         }
     }
 }

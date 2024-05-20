@@ -1,28 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Clinic.Models
 {
     public class ChefDeService
     {
         [Key]
-        public int Id { get; set; }
+        public int ChefDeServiceId { get; set; }
 
-
-        public string ChefDeServiceName { get; set; } = string.Empty;
+        [Required]
+        public string? Name { get; set; }
 
         public string? Email { get; set; }
 
         public string? Password { get; set; }
 
-        // Clé étrangère vers le service auquel appartient le chef de service
-        public int ServiceId { get; set; }
-        public Service?  Service { get; set; }
-
-        // Propriété de navigation
+        public int? ServiceId { get; set; }
+        [ForeignKey("ServiceId")]
+        public Service? Service { get; set; }
         public ICollection<Emploi>? Emplois { get; set; }
 
-        // Clé étrangère vers l'employé qui est également un chef de service
-        public int? EmployeeId { get; set; }
-        public Employee? Employee { get; set; }
+        // Propriété de navigation pour les employés qui sont également chefs de service
+        public ICollection<Employee>? Employees { get; set; }
     }
 }

@@ -86,15 +86,11 @@
     <form asp-action="AddPoste" class="container">
         <div class="text center"><h1>Gestion <span> Des poste</span></h1></div>
         <div class="container margin">
-        <div class="row">
-            <div class="col">
+        <div class="col">
         <label asp-for="Postename" class="text"><h5>Nom du poste </h5></label>
-            </div>
-            <div class="col">
-
+         
         <input asp-for="Postename" placeholder="Nom Poste" class="boxx" />
         <span asp-validation-for="Postename"></span>
-            </div>
         </div>
 
         <strong>
@@ -162,6 +158,33 @@
             </div></div>
     </form>
 
+    <form asp-action="DeletePoste" asp-controller="Poste" method="post" class="container margin">
+        <div class="container margin">
+            <div class="row">
+                <div class="col">
+            <label for="nom">Nom du Poste :</label>
+            <input type="text" id="nom" name="nom" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="row margin">
+
+                    <label for="categorieId"></label>
+
+            <select asp-for="CategorieId" class="box" asp-items="@ViewBag.CategorieList">
+                <option value="">Sélectionnez une catégorie</option>
+            </select>
+
+
+                <div class="col">
+
+        <button type="submit" class="btn">Supprimer le poste</button>
+            </div>
+            </div>
+        </div>
+
+
+    </form>
 
    
     <footer id="contact" class="footer">

@@ -37,7 +37,6 @@ namespace Clinic.Models
         public Employee? Employee { get; set; }
 
         // Liste des liens entre les employés et ce supplément
-        public ICollection<EmployeeSupplement> EmployeeSupplement { get; set; } = new List<EmployeeSupplement>();
 
         // ID de l'emploi associé à ce supplément
         public int? EmploiId { get; set; }
@@ -55,7 +54,6 @@ namespace Clinic.Models
         public Supplement()
         {
             // Initialize properties if necessary
-            EmployeeSupplement = new List<EmployeeSupplement>();
             Employee = new Employee();
             Date = DateTime.Now;
 

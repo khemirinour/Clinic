@@ -28,12 +28,18 @@ namespace Clinic.Models
 
         public int? EmployeeId { get; set; }
         public ICollection<Employee>?    Employees { get; set; }
-        public ICollection<EmployeePoste>? EmployeePostes { get; set; } // Renamed from Employee
 
         public int? EmploiId { get; set; }
         public Emploi? Emploi { get; set; }
 
         public int? PositionX { get; set; }
         public int? PositionY { get; set; }
+        public Poste()
+        {
+            Seance1Debut = new TimeSpan(0, 0, 0); // 00:00
+            Seance1Fin = new TimeSpan(0, 0, 0); // 00:00
+            Seance2Debut = new TimeSpan?(new TimeSpan(0, 0, 0)); // 00:00
+            Seance2Fin = new TimeSpan?(new TimeSpan(0, 0, 0)); // 00:00
+        }
     }
 }

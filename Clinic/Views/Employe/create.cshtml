@@ -85,9 +85,9 @@
         <!--/ End Header Inner -->
     </header>
     <div class="center">
-    <form asp-action="Create" class="container margin">
+    <form asp-action="Create" class="container margin box">
         <div class="text center">
-            <h1>Gestion <span> des employées</span></h1>
+            <h1>Ajout <span> des employés</span></h1>
         </div>
             <div class="margin">
 
@@ -152,6 +152,29 @@
                 </div>
             </div>
 
+
+        </form>
+        <form asp-action="DeleteEmployee" method="post" class="box">
+            <div class="text">         <h1>Supprision <span> des employés</span></h1></div>
+   
+
+  
+
+   
+                <label for="employeeName">Nom de l'employé :</label>
+                <input type="text" id="employeeName" name="employeeName" required>
+            <div class="center margin">
+
+            <select asp-for="ServiceId"   asp-items="ViewBag.ServiceList">
+                            <option value="">Sélectionnez un service</option>
+                        </select>
+                        <span asp-validation-for="ServiceId" ></span>
+
+
+            </div>
+
+                <button type="submit" class="btn">Supprimer l'employé</button>
+     
 
         </form>
     </div>
