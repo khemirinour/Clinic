@@ -25,8 +25,15 @@ namespace Clinic
             services.AddDbContext<ClinicDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DbConn")));
 
-            // Add other services as needed
+            services.AddDistributedMemoryCache();
 
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".YourApp.Session";
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             // Add controller services
             services.AddControllersWithViews();
         }

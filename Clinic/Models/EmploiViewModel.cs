@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -31,6 +32,7 @@ namespace Clinic.Models
         public string? EmployeeName { get; set; }
 
         public List<DailyEmployment>? DailyEmployments { get; set; }
+        public SelectList ServiceList { get; set; } // Modifier le type pour SelectList
 
         public int? ReposId { get; set; }
 

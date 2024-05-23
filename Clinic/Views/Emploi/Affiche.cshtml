@@ -1,120 +1,455 @@
 ﻿@model Clinic.Models.EmploiViewModel
+<html>
+<head>
+    <!-- Meta Tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<form id="emploi-form" method="post" class="margin">
-    <input type="date" id="dateOfWeek" name="dateOfWeek">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <div class="extra-boxes">
-        <select class="btn-categories" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
-            <option value="">Sélectionnez une catégorie</option>
-            @if (Model != null && Model.Categories != null)
-            {
-                foreach (var categorie in Model.Categories)
-                {
-                    <option value="@categorie.CategorieId">@categorie.CategorieName</option>
-                }
-            }
-        </select>
-    </div>
+    <!-- Title -->
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.png">
 
-    <div class="buttons-container mt-4">
-        <button type="button" class="btn" id="afficherEmploiButton" onclick="afficherEmploi()">Afficher les emplois</button>
-    </div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="icon" href="img/favicon.png">
 
-    <div class="schedule-table">
-        <div class="table-container">
-            <table class="table" id="tableau">
-                <thead>
-                    <tr>
-                        <th>Nom de l'employé</th>
-                        @foreach (var day in Model.Days)
-                        {
-                            <th>@day.Dayname</th>
-                        }
-                        <th>Total des heures</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Employee != null)
-                    {
-                        <tr id="@Model.Employee.EmployeeId">
-                            <td class="employee-column">@Model.Employee.Name</td>
-                            @foreach (var day in Model.Days)
-                            {
-                                var cellId = $"{Model.Employee.EmployeeId}-{day.Dayname}";
-                                <td id="@cellId" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)" data-employee="@Model.Employee.EmployeeId" data-day="@day.Dayname"></td>
-                            }
-                            <td class="TotalHours-column">@Model.Employee.TotalWeeklyHours</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- Nice Select CSS -->
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- icofont CSS -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- Slicknav -->
+    <link rel="stylesheet" href="~/css/slicknav.min.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="~/css/owl-carousel.css">
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="~/css/datepicker.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+
+    <!-- Medipro CSS -->
+    <link rel="stylesheet" href="~/css/normalize.css">
+    <link rel="stylesheet" href="~/css/Employe.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+</head>
+<body>
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader-outter"></div>
+            <div class="loader-inner"></div>
+
+            <div class="indicator">
+                <svg width="16px" height="12px">
+                    <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                    <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                </svg>
+            </div>
         </div>
     </div>
+    <!-- End Preloader -->
+    <!-- Header Area -->
+    <header class="header">
+        <!-- Topbar -->
+        <!-- End Topbar -->
+        <!-- Header Inner -->
+        <div class="header-inner">
+            <div class="margin">
+                <div class="inner">
+                    <div class="row">
+                        <!-- Ajout de la classe align-items-center pour aligner les éléments verticalement -->
+                        <div class="col">
+                            <!-- Start Logo -->
+                            <a href="" class="logo margin">
+                                <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
+                            </a>
+                            <!-- End Logo -->
+                            <!-- Mobile Nav -->
+                            <div class="mobile-nav"></div>
+                            <!-- End Mobile Nav -->
+                        </div>
+                        <div class="margin">
+                            <!-- Main Menu -->
+                                  
+                                      
+                                            <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn mr-2">Déconnexion</div></a>
 
-    <input type="hidden" id="emploiData" name="emploiData" />
+                                   
+                                    
+                           
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--/ End Header Inner -->
+    </header>
+    <form class="margin container">
+    <div class="center">
+        <div class="row">
+            <div class="date-navigation">
+                <button id="previousWeekBtn" class="btn mx-1" onclick="afficherEmploi()"><span class="fas fa-chevron-left"> </span> Semaine Précédente </button>
+                <input type="date" id="date" class="box mx-1" name="DateofWeek" required>
+                <button id="nextWeekBtn" class="btn mx-1" onclick="afficherEmploi()"> Semaine Prochaine <span class="fas fa-chevron-right">  </span></button>
+            </div>
+        </div></div>
+        <div class="buttons-container mt-4">
+
+            
+
+            <button class="Btn" id="download-pdf" onclick="downloadPDF(event)">
+                <svg class="svgIcon" viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"></path>
+                </svg>
+                <span class="icon2"></span>
+                <span class="tooltip">Télécharger</span>
+            </button>   
+            <select class="btn-categories" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
+                <option value="">Sélectionnez une catégorie</option>
+                @if (Model != null && Model.Categories != null)
+                {
+                    @foreach (var categorie in Model.Categories)
+                    {
+                        <option value="@categorie.CategorieId">@categorie.CategorieName</option>
+                    }
+                }</select>
+            <!-- Bouton pour afficher les emplois -->
+            <button type="button" class="btn" id="afficherEmploiButton" onclick="afficherEmploi()">Afficher les emplois</button>
+
+
+
+        </div>    
+        <div class="row">
+        <div class="schedule-table">
+            <div class="table-container">
+                <table id="tableau" data-days="@string.Join(',', Model.Days.Select(day => day.Dayname))">
+                    <thead>
+                        <tr>
+                            <th class="employee-column">Employée</th>
+                            @foreach (var day in Model.Days)
+                            {
+                                @if (day != null && day.Dayname != null)
+                                {
+                                    <th>@day.Dayname</th>
+                                }
+                            }
+                            <th>Heures totales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+           
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </form>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <footer id="contact" class="footer">
+        <!-- Haut du footer -->
+        <div class="footer-top">
+            <div class="content">
+                <div class="row">
+                    <div class="col">
+                        <div class="single-footer">
+                            <h2>Suivez-nous</h2>
+                            <ul class="social">
+                                <li><a href="#"><i class="icofont-facebook"></i></a></li>
+                                <li><a href="#"><i class="icofont-google-plus"></i></a></li>
+                                <li><a href="#"><i class="icofont-twitter"></i></a></li>
+                                <li><a href="#"><i class="icofont-vimeo"></i></a></li>
+                            </ul>
+                            <!-- Réseaux sociaux -->
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Liens rapides</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Accueil</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>À propos de nous</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos services</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos cas</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Autres liens</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Nos services</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Soins dentaires</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Thérapie par massage</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Cardiologie</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Diagnostic</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services d'ambulance</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="single-footer f-link">
+                            <h2>Contact</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i> 123 Rue de la Santé</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Sfax, Tunisie</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>info@clinique.com</a></li>
+                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>+216 22 24 25 26 </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Fin du haut du footer -->
+        <!-- Contact -->
+        <!--/ Fin du Contact -->
+    </footer>
 
-<script>
-    $(document).ready(function () {
-        if ($("#categorieDropdown").val()) {
-            afficherEmploi();
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+    <!--/ End Footer Area -->
+    <!-- jquery Min JS -->
+    <script src="~/js/jquery.min.js"></script>
+    <!-- jquery Migrate JS -->
+    <script src="~/js/jquery-migrate-3.0.0.js"></script>
+    <!-- jquery Ui JS -->
+    <script src="~/js/jquery-ui.min.js"></script>
+    <!-- Easing JS -->
+    <script src="~/js/easing.js"></script>
+    <!-- Color JS -->
+    <script src="~/js/colors.js"></script>
+    <!-- Popper JS -->
+    <script src="~/js/popper.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    <!-- Jquery Nav JS -->
+    <script src="~/js/jquery.nav.js"></script>
+    <!-- Slicknav JS -->
+    <script src="~/js/slicknav.min.js"></script>
+    <!-- ScrollUp JS -->
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <!-- Niceselect JS -->
+    <script src="~/js/niceselect.js"></script>
+    <!-- Tilt Jquery JS -->
+    <script src="~/js/tilt.jquery.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/js/owl-carousel.js"></script>
+    <!-- counterup JS -->
+    <script src="~/js/jquery.counterup.min.js"></script>
+    <!-- Steller JS -->
+    <script src="~/js/steller.js"></script>
+    <!-- Wow JS -->
+    <script src="~/js/wow.min.js"></script>
+    <!-- Magnific Popup JS -->
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <!-- Counter Up CDN JS -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- Main JS -->
+    <script src="~/js/main.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- Main JS -->
+    <script src="~/js/main.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <script>
+
+        //==========================>  PDF <===========================================//
+        function downloadPDF(event) {
+            event.stopPropagation();
+            const doc = new jsPDF();
+            const table = document.getElementById("tableau");
+            doc.autoTable({ html: table });
+            doc.save("tableau.pdf");
         }
-    });
+        //==========================>  CALENDRER<===========================================//
+        flatpickr.l10ns.default.firstDayOfWeek = 1; // Définit le premier jour de la semaine à lundi
+        flatpickr.localize(flatpickr.l10ns.default); // Définit la locale par défaut
 
-    function afficherEmploi() {
-        var categorieId = $("#categorieDropdown").val();
-        var employeeId = sessionStorage.getItem("employeeId");
-        var serviceId = sessionStorage.getItem("serviceId");
-        var dateOfWeek = $("#dateOfWeek").val();
-
-        if (!categorieId) {
-            alert("Veuillez sélectionner une catégorie.");
-            return;
-        }
-
-        console.log("Catégorie ID :", categorieId);
-        console.log("ID de l'employé :", employeeId);
-        console.log("ID du service :", serviceId);
-        console.log("Date de la semaine :", dateOfWeek);
-
-        $.ajax({
-            url: '/Emploi/GetEmploiByEmployee',
-            type: 'GET',
-            data: { categorieId: categorieId, employeeId: employeeId, serviceId: serviceId, dateOfWeek: dateOfWeek },
-            success: function (response) {
-                if (response.success) {
-                    var emplois = response.data || [];
-                    var tbody = $("#tableau tbody");
-                    tbody.empty();
-
-                    emplois.forEach(function (emploi) {
-                        var cellId = `${emploi.EmployeeId}-${emploi.DayName}`;
-                        var cellContent = '';
-
-                        if (emploi.PosteName) {
-                            cellContent += emploi.PosteName + '<br>';
-                        }
-                        if (emploi.ReposName) {
-                            cellContent += emploi.ReposName + '<br>';
-                        }
-                        if (emploi.SupplementName) {
-                            cellContent += emploi.SupplementName + '<br>';
-                        }
-
-                        $("#" + cellId).html(cellContent);
-                        console.log(cellId);
-                        console.log(cellContent);
-                    });
-                } else {
-                    console.error("Aucun emploi trouvé pour l'employé.");
+        flatpickr("#date", {
+            dateFormat: "Y-m-d", // Format de date, si nécessaire
+            disable: [
+                function (date) {
+                    // Désactiver tous les jours sauf les samedis
+                    return date.getDay() !== 6;
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("Une erreur s'est produite lors de la récupération des emplois de l'employé :", error);
-            }
+            ]
         });
-    }
 
-</script>
+        function checkSaturday(selectedDate) {
+            var date = new Date(selectedDate);
+            var dayOfWeek = date.getDay();
+
+            // Vérifie si le jour sélectionné est un samedi (6 pour samedi)
+            if (dayOfWeek !== 6) {
+                alert("Veuillez sélectionner un samedi.");
+                document.getElementById('date').value = ''; // Réinitialise la valeur de l'input
+            }
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var employeeId = sessionStorage.getItem("employeeId");
+            var serviceId = sessionStorage.getItem("serviceId");
+
+            console.log("Employé ID:", employeeId);
+            console.log("Service ID:", serviceId);
+
+            // AJAX request to get employee and days
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetEmployees", "Emploi")",
+                success: function (response) {
+                    var employee = response.employees.find(emp => emp.employeeId == employeeId);
+
+                    if (!employee) {
+                        alert("Aucun employé trouvé pour cet ID.");
+                        return;
+                    }
+
+                    var tbody = document.querySelector("#tableau tbody");
+                    tbody.innerHTML = "";
+
+                    var row = document.createElement("tr");
+                    row.id = employee.employeeId;
+
+                    var employeeCell = document.createElement("td");
+                    employeeCell.textContent = employee.name;
+                    row.appendChild(employeeCell);
+
+                    response.days.forEach(day => {
+                        if (day != null && day.dayname != null) {
+                            var cellId = `${employee.employeeId}-${day.dayname}`;
+                            var dayCell = document.createElement("td");
+                            dayCell.id = cellId;
+                            dayCell.className = "droppable " + day.dayname.toLowerCase();
+                            dayCell.setAttribute("ondrop", "drop(event)");
+                            dayCell.setAttribute("ondragover", "allowDrop(event)");
+                            dayCell.dataset.employee = employee.employeeId;
+                            dayCell.dataset.day = day.dayname;
+
+                            row.appendChild(dayCell);
+                        }
+                    });
+
+                    var totalHoursCell = document.createElement("td");
+                    totalHoursCell.className = "TotalHours-column";
+                    totalHoursCell.textContent = employee.totalWeeklyHours || 0;
+                    totalHoursCell.setAttribute("title", "Total Weekly Hours");
+                    row.appendChild(totalHoursCell);
+
+                    tbody.appendChild(row);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown);
+                    alert("An error occurred while processing your request.");
+                }
+            });
+        });
+        function afficherEmploi() {
+            var categorieId = $("#categorieDropdown").val();
+            var dateSelected = $("#date").val();
+            var serviceId = sessionStorage.getItem("serviceId");
+            var employeeId = sessionStorage.getItem("employeeId");
+
+            console.log("Service ID :", serviceId);
+            console.log("Catégorie ID :", categorieId);
+            console.log("Date sélectionnée :", dateSelected);
+            console.log("Employee ID :", employeeId);
+
+            $.ajax({
+                url: '/Emploi/GetEmploiByEmployee',
+                type: 'GET',
+                data: { serviceId: serviceId, categorieId: categorieId, dateSelected: dateSelected, employeeId: employeeId },
+                success: function (response) {
+                    console.log("Response from GetEmploiByEmployee:", response);
+
+                    if (response.success) {
+                        var emploiData = response.data;
+
+                        if (emploiData.length === 0) {
+                            alert("Aucun emploi trouvé pour les critères sélectionnés.");
+                            return;
+                        }
+
+                        // Parcourir chaque emploi
+                        $.each(emploiData, function (index, emploi) {
+                            var dayName = emploi.dayName; // Utiliser 'dayName' au lieu de 'DayName'
+                            var cellId = `${employeeId}-${dayName}`;
+                            var cellContent = '';
+
+                            // Sélectionner la cellule en fonction de son ID
+                            var cell = $(`#${cellId}`);
+
+                            // Vérifier les propriétés de l'emploi et ajouter du contenu à la cellule
+                            if (emploi.posteId) { // Utiliser 'posteId' au lieu de 'PosteId'
+                                cellContent += emploi.posteName + '<br>'; // Utiliser 'posteName' au lieu de 'PosteName'
+                            }
+
+                            if (emploi.reposId) { // Utiliser 'reposId' au lieu de 'ReposId'
+                                cellContent += emploi.reposName + '<br>'; // Utiliser 'reposName' au lieu de 'ReposName'
+                            }
+
+                            if (emploi.supplementId) { // Utiliser 'supplementId' au lieu de 'SupplementId'
+                                cellContent += emploi.supplementName + '<br>'; // Utiliser 'supplementName' au lieu de 'SupplementName'
+                            }
+
+                            // Définir le contenu de la cellule avec cellContent
+                            cell.html(cellContent);
+                            console.log("Updated cell content for cellId", cellId, ":", cellContent);
+                        });
+                    } else {
+                        alert("Aucun emploi trouvé pour les critères sélectionnés.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Une erreur s'est produite lors de la récupération des données d'emploi :", error);
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
+
+
+

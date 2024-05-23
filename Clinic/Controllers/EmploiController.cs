@@ -307,6 +307,51 @@ namespace Clinic.Controllers
                 return StatusCode(500, $"Une erreur s'est produite lors de l'enregistrement des données : {ex.Message}");
             }
         }
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            try
+            {
+                var employee = await _context.Employee?
+                    .Include(e => e.Service)
+                    .FirstOrDefaultAsync(e => e.Email == username && e.Password == password);
+
+                if (employee != null && employee.Approved == true)
+                {
+                    // Récupérer le service associé à l'employé
+                    var service = await _context.Services.FindAsync(employee.ServiceId);
+
+                    // Construire les données à renvoyer
+                    var redirectUrl = (bool)employee.IsChefDeService ? Url.Action("Create", "Emploi") : Url.Action("Affiche", "Emploi");
+                    var jsonData = new
+                    {
+                        success = true,
+                        redirectUrl = redirectUrl,
+                        employeeId = employee.EmployeeId,
+                        serviceId = employee.ServiceId,
+                        serviceName = service.Name // Ajouter le nom du service
+                    };
+
+                    return Json(jsonData);
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Nom d'utilisateur ou mot de passe incorrect." });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during login process.");
+                return Json(new { success = false, message = "Une erreur s'est produite lors de la connexion." });
+            }
+        }
+
 
 
         [HttpGet]
@@ -323,63 +368,158 @@ namespace Clinic.Controllers
                 return Json(new { success = false, message = "An error occurred while retrieving services." });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> Affiche(int serviceId)
+        {
+            var employees = await _context.Employee
+                .Where(e => e.ServiceId == serviceId)
+                .ToListAsync();
+
+            return Json(new { success = true, employees = employees });
+        }
+        [HttpGet("GetService")]
+        public async Task<IActionResult> GetService(int chefServiceId)
+        {
+            // Recherche du chef de service par son ID
+            var chefService = await _context.ChefDeServices
+                .Include(c => c.Service)
+                .FirstOrDefaultAsync(c => c.ChefDeServiceId == chefServiceId);
+
+            if (chefService == null)
+            {
+                return NotFound();
+            }
+
+            // Renvoyer le service associé au chef de service
+            var service = chefService.Service;
+            if (service == null)
+            {
+                return NotFound(); // Si le service est null pour ce chef de service, vous pouvez renvoyer NotFound ou une autre réponse appropriée.
+            }
+
+            return Ok(new { success = true, service });
+        }
+        public async Task<IActionResult> DisplayTable()
+        {
+            // Récupérer l'employeeId du chef de service à partir de la session
+            var employeeId = int.Parse(HttpContext.Session.GetString("employeeId"));
+
+            // Récupérer le serviceId de cet employé (chef de service)
+            var serviceId = await _context.Employee?
+                .Where(e => e.EmployeeId == employeeId)
+                .Select(e => e.ServiceId)
+                .FirstOrDefaultAsync();
+
+            // Récupérer tous les employés qui ont le même serviceId
+            var employees = await _context.Employee?
+                .Where(e => e.ServiceId == serviceId)
+                .ToListAsync();
+
+            // Créer le modèle de vue et passer les employés filtrés
+            var model = new EmploiViewModel
+            {
+                Employees = employees,
+                Days = await _context.Days.ToListAsync() // Récupérer les jours selon votre logique
+            };
+
+            return View(model);
+        }
+      
+
+
+
         [HttpGet]
-        public IActionResult GetEmployeesByService(int ServiceId)
+        public async Task<IActionResult> GetEmployeesByService(int serviceId)
         {
             try
             {
-                var employees = _context.Employee?.Where(e => e.ServiceId == ServiceId).ToList();
+                // Récupérer les employés associés au service donné
+                var employees = await _context.Employee
+                    .Where(e => e.ServiceId == serviceId)
+                    .ToListAsync();
+
+                // Renvoyer la liste des employés en JSON
                 return Json(new { success = true, employees });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Une erreur s'est produite lors de la récupération des employés.");
+                // Gérer les erreurs
                 return Json(new { success = false, message = "Une erreur s'est produite lors de la récupération des employés." });
             }
+        } 
+        public async Task<IActionResult> GetEmployees()
+        {
+            var employees = await _context.Employee?.ToListAsync();
+            var days = await _context.Days?.ToListAsync();
+
+            return Json(new { employees = employees, days = days });
         }
         [HttpGet]
-        public IActionResult GetEmploiByEmployee(int categorieId, DateTime dateOfWeek)
+        public IActionResult GetEmploiByEmployee(int serviceId, int categorieId, DateTime dateSelected, int employeeId) // Ajout de l'employeeId
         {
-            var userEmail = User.Identity.Name;
-            var connectedEmployee = _context.Employee?.FirstOrDefault(e => e.Email == userEmail);
-
-            if (connectedEmployee == null)
+            try
             {
-                return Json(new { success = false, message = "Employé connecté non trouvé." });
+                Console.WriteLine($"ServiceId: {serviceId}, CategorieId: {categorieId}, DateSelected: {dateSelected.Date}, EmployeeId: {employeeId}"); // Affichage de l'employeeId
+
+                var emploiData = _context.DailyEmployments
+      .Where(de => de.ServiceId == serviceId
+                && de.CategorieId == categorieId
+                && de.DateOfWeek.HasValue
+                && de.DateOfWeek.Value.Date == dateSelected.Date
+                && de.EmployeeId == employeeId) // Assurez-vous que cette condition filtre correctement par EmployeeId
+      .Include(de => de.Employee)
+      .Include(de => de.Categorie)
+      .Include(de => de.Service)
+      .ToList();
+
+
+                // Log the results of the filtering
+                Console.WriteLine($"Filtered Data Count: {emploiData.Count}");
+
+                // If no data is found, return a message
+                if (emploiData == null || emploiData.Count == 0)
+                {
+                    return Json(new { success = false, message = "Aucune donnée d'emploi trouvée pour les critères sélectionnés." });
+                }
+
+                // Prepare the response data
+                var responseData = emploiData.Select(de => new EmployeData
+                {
+                    EmployeeId = de.EmployeeId,
+                    EmployeeName = de.Employee?.Name,
+                    DayName = de.dayname,
+                    PosteId = !string.IsNullOrEmpty(de.PosteId) ? int.Parse(de.PosteId) : (int?)null,
+                    ReposId = !string.IsNullOrEmpty(de.ReposId) ? int.Parse(de.ReposId) : (int?)null,
+                    SupplementId = !string.IsNullOrEmpty(de.SupplementId) ? int.Parse(de.SupplementId) : (int?)null,
+                    PosteName = GetNameById(de.PosteId, _context.Postes),
+                    ReposName = GetNameById(de.ReposId, _context.Repos),
+                    SupplementName = GetNameById(de.SupplementId, _context.Supplements),
+                    Matin = GetNameById(de.PosteId, _context.Postes),
+                    ApresMidi = GetNameById(de.PosteId, _context.Postes),
+                    GardeSoir = GetNameById(de.PosteId, _context.Postes),
+                    Seance1Debut = GetNameById(de.PosteId, _context.Postes),
+                    Seance1Fin = GetNameById(de.PosteId, _context.Postes),
+                    Seance2Debut = GetNameById(de.PosteId, _context.Postes),
+                    Seance2Fin = GetNameById(de.PosteId, _context.Postes),
+                    Date_Jours = GetNameById(de.ReposId, _context.Repos),
+                    Date_Joursfin = GetNameById(de.ReposId, _context.Repos),
+                }).ToList();
+                Console.WriteLine($"EmployeeId: {employeeId}");
+                Console.WriteLine($"Filtered Data Count: {emploiData.Count}");
+                Console.WriteLine($"Response Data: {Newtonsoft.Json.JsonConvert.SerializeObject(responseData)}");
+
+                // Log the response data
+                Console.WriteLine($"Response Data: {Newtonsoft.Json.JsonConvert.SerializeObject(responseData)}");
+
+                // Return the data as JSON
+                return Json(new { success = true, data = responseData });
             }
-
-          
-
-            var emploiData = _context.DailyEmployments?
-                .Where(e => e.EmployeeId == connectedEmployee.EmployeeId && e.ServiceId == ServiceId && e.CategorieId == categorieId && e.DateOfWeek == dateOfWeek)
-                .Include(e => e.Employee)
-                .ToList();
-
-            var responseData = emploiData?.Select(de => new EmployeData
+            catch (Exception ex)
             {
-
-                EmployeeId = de.EmployeeId,
-                EmployeeName = de.Employee?.Name,
-                DayName = de.dayname,
-                PosteId = !string.IsNullOrEmpty(de.PosteId) ? int.Parse(de.PosteId) : (int?)null,
-                ReposId = !string.IsNullOrEmpty(de.ReposId) ? int.Parse(de.ReposId) : (int?)null,
-                SupplementId = !string.IsNullOrEmpty(de.SupplementId) ? int.Parse(de.SupplementId) : (int?)null,
-                PosteName = GetNameById(de.PosteId, _context.Postes),
-                ReposName = GetNameById(de.ReposId, _context.Repos),
-                SupplementName = GetNameById(de.SupplementId, _context.Supplements),
-                Matin = GetNameById(de.PosteId, _context.Postes),
-                ApresMidi = GetNameById(de.PosteId, _context.Postes),
-                GardeSoir = GetNameById(de.PosteId, _context.Postes),
-                Seance1Debut = GetNameById(de.PosteId, _context.Postes),
-                Seance1Fin = GetNameById(de.PosteId, _context.Postes),
-                Seance2Debut = GetNameById(de.PosteId, _context.Postes),
-                Seance2Fin = GetNameById(de.PosteId, _context.Postes),
-                Date_Jours = GetNameById(de.ReposId, _context.Repos),
-                Date_Joursfin = GetNameById(de.ReposId, _context.Repos),
-            });
-
-            return Json(new { success = true, data = responseData });
+                return Json(new { success = false, message = $"Une erreur s'est produite : {ex.Message}" });
+            }
         }
+
         [HttpGet]
         public IActionResult GetPostesReposAndSupplementsByCategorie(int CategorieId)
         {
@@ -434,16 +574,16 @@ namespace Clinic.Controllers
 
 
         }
-        [HttpGet]
-        public IActionResult GetService(int employeeId)
-        {
-            var employee = _context.Employee.Find(employeeId);
-            if (employee != null)
-            {
-                return Json(new { success = true, data = employee.ServiceId });
-            }
-            return Json(new { success = false });
-        }
+        //[HttpGet]
+        //public IActionResult GetService(int employeeId)
+        //{
+        //    var employee = _context.Employee.Find(employeeId);
+        //    if (employee != null)
+        //    {
+        //        return Json(new { success = true, data = employee.ServiceId });
+        //    }
+        //    return Json(new { success = false });
+        //}
        
     }
 }

@@ -1,25 +1,33 @@
-﻿@if (Model != null && Model.Count > 0)
+﻿@model IEnumerable<Clinic.Models.Employee>
+
+@{
+    ViewData["Title"] = "Approve Registration Requests";
+}
+
+<h1>Approve Registration Requests</h1>
+<input type="hidden" id="serviceId">
+<!-- Value will be set dynamically -->
+@if (Model != null && Model.Any())
 {
     <table class="table">
         <thead>
             <tr>
                 <th>Employee ID</th>
                 <th>Name</th>
-                <th>Email</th>
-                <th>Actions</th>
+                <th>Service</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var request in Model)
+            @foreach (var employee in Model)
             {
                 <tr>
-                    <td>@request.EmployeeId</td>
-                    <td>@request.Name</td>
-                    <td>@request.Email</td>
-                    <!-- Autres colonnes pour afficher d'autres détails de la demande d'inscription -->
+                    <td>@employee.EmployeeId</td>
+                    <td>@employee.Name ?? "No Name"</td>
+                    <td>@employee.Service?.Name ?? "No Service"</td> 
                     <td>
                         <form asp-action="ApproveRegistration" method="post">
-                            <input type="hidden" name="employeeId" value="@request.EmployeeId" />
+                            <input type="hidden" name="employeeId" value="@employee.EmployeeId" />
                             <button type="submit" class="btn btn-success">Approve</button>
                         </form>
                     </td>
@@ -30,5 +38,15 @@
 }
 else
 {
-    <p>Aucune demande d'inscription en attente.</p>
+    <p>No pending registration requests.</p>
 }
+
+<script>
+    // approveRegistrationRequests.js
+    var serviceId = @ViewBag.ServiceId;
+    var chefDeServiceId = @ViewBag.ChefDeServiceId;
+
+    console.log(serviceId);
+    console.log(chefDeServiceId);
+
+</script>

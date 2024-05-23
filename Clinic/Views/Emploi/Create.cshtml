@@ -39,6 +39,42 @@
     <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
 
 </head>
 <body>
@@ -67,24 +103,9 @@
                                         <li><a asp-area="" asp-controller="Employe" asp-action="Create">Employée</a></li>
                                         <li><a asp-area="" asp-controller="Poste" asp-action="AddPoste"> Poste</a></li>
                                         <li><a asp-area="" asp-controller="Poste" asp-action="AddRepos">Pause</a></li>
-                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddSupplement">Heures Supplémentaire</a></li>
-                                        <li>
-                                             <select class="btn-service" id="serviceDropdown" name="ServiceId" onchange="updateEmployees()" required>
-                                            <option value="">
-                                            Service
-                                            </option>
-                                            @if (Model != null && Model.Services != null)
-                                            {
-                                            @foreach (var service in Model.Services)
-                                            {
-                                            <option value="@service.Id">@service.Name</option>
-                                            }
-                                            }
-                                            </select>
-                                        </li>
-                                    </ul>
-
-                                </nav>
+                                        <li><a asp-area="" asp-controller="Home" asp-action="ApproveRegistrationRequests">Approved</a></li>
+                                        </ul>
+                               </nav>
                             </div>
 
                         </div>
@@ -98,9 +119,9 @@
     </header>
 
     <form id="emploi-form" method="post" class="margin">
-        @*         <div class="text">
-        <h4>Planificateur Clinique</h4>
-        </div> *@
+        <input type="hidden" id="chefServiceId"> <!-- Value will be set dynamically -->
+        <input type="hidden" id="serviceId"> <!-- Value will be set dynamically -->
+          
         <div class="center">
             <div class="row">
                 <div class="date-navigation">
@@ -109,18 +130,51 @@
                     <button id="nextWeekBtn" class="btn mx-1"> Semaine Prochaine <span class="fas fa-chevron-right">  </span></button>
                 </div>
             </div>
+        </div>
 
-        </div>
-        <div class="supllement" id="supplementsSection">
-            @if (Model != null && Model.Supplements != null)
-            {
-                @foreach (var supplement in Model.Supplements)
+            <div class="supllement" id="supplementsSection">
+                @if (Model != null && Model.Supplements != null)
                 {
-                    <div id="supplement_@supplement.SupplementId" draggable="true">
-                    </div>
+                    @foreach (var supplement in Model.Supplements)
+                    {
+                        <div id="supplement_@supplement.SupplementId" draggable="true" class="supplement">
+                            <div class="btn">
+                                <strong>@supplement.Nom</strong>
+                            </div>
+                        </div>
+                    }
                 }
-            }
-        </div>
+            </div>
+
+            <div id="modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <div>
+                        <span class="close" onclick="closeModal()">&times;</span>
+                    </div>
+                    <div class="row">
+                        <input type="number" class="box" id="matricule" placeholder="Matricule">
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <strong>start</strong>
+                            <input type="time" class="box" id="heureDebut" placeholder="Heure de début">
+                        </div>
+                        <div class="col-4">
+                            <strong>fin</strong>
+                            <input type="time" class="box" id="heureFin" placeholder="Heure de fin">
+                        </div>
+                        <div class="col-4">
+                            <input type="date" class="box" id="dateJour" placeholder="Date du jour">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 center">
+                            <button class="btn" id="valider"> Valider </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
         <div class="buttons-container mt-4">
 
@@ -169,7 +223,6 @@
         </div>
 
 
-
         <div class="schedule-table">
             <div class="table-container">
                 <table id="tableau" data-days="@string.Join(',', Model.Days.Select(day => day.Dayname))">
@@ -190,36 +243,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Employees != null)
-                        {
-                            @foreach (var employee in Model.Employees)
-                            {
-                                <tr id="@employee.EmployeeId">
-                                    <td class="employee-column">@employee.Name</td>
-                                    @if (Model.Days != null)
-                                    {
-                                        @foreach (var day in Model.Days)
-                                        {
-                                            @if (day != null && day.Dayname != null)
-                                            {
-                                                var cellId = $"{employee.EmployeeId}-{day.Dayname}";
-
-
-                                                <td id="@cellId" class="droppable" ondrop="drop(event)" ondragover="allowDrop(event)" data-employee="@employee.EmployeeId" data-day="@day.Dayname">
-                                                </td>
-                                            }
-                                        }
-                                    }
-
-                                    <td class="TotalHours-column">@employee.TotalWeeklyHours</td>
-                                </tr>
-                            }
-                        }
+                       
                     </tbody>
 
                 </table>
 
             </div>
+
+
+
             <div class="extra-boxes">
 
                 <select class="btn-categories" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
@@ -359,117 +391,132 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
     <script>
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const previousWeekBtn = document.getElementById('previousWeekBtn');
+            const nextWeekBtn = document.getElementById('nextWeekBtn');
+            const dateInput = document.getElementById('date');
 
-        function downloadPDF(event) {
-            event.stopPropagation();
-            const doc = new jsPDF();
-            const table = document.getElementById("tableau");
-            doc.autoTable({ html: table });
-            doc.save("tableau.pdf");
-        }
+            previousWeekBtn.addEventListener('click', function () {
+                changeDate(-7); // Décrémente de 7 jours pour aller à la semaine précédente
+            });
 
-        flatpickr.l10ns.default.firstDayOfWeek = 1; // Définit le premier jour de la semaine à lundi
-        flatpickr.localize(flatpickr.l10ns.default); // Définit la locale par défaut
+            nextWeekBtn.addEventListener('click', function () {
+                changeDate(7); // Incrémente de 7 jours pour aller à la semaine suivante
+            });
 
-        flatpickr("#date", {
-            dateFormat: "Y-m-d", // Format de date, si nécessaire
-            disable: [
-                function (date) {
-                    // Désactiver tous les jours sauf les samedis
-                    return date.getDay() !== 6;
+            function changeDate(offset) {
+                const currentDate = new Date(dateInput.value);
+                if (isNaN(currentDate.getTime())) {
+                    alert('Veuillez sélectionner une date valide.');
+                    return;
                 }
-            ]
+                const newDate = new Date(currentDate.getTime() + (offset * 24 * 60 * 60 * 1000));
+                dateInput.value = newDate.toISOString().split('T')[0]; // Met à jour la valeur de l'input avec la nouvelle date
+                afficherEmploi(); // Appeler la fonction afficherEmploi pour mettre à jour l'affichage
+            }
         });
 
-        function afficherEmploi() {
-            var serviceId = $("#serviceDropdown").val();
-            var categorieId = $("#categorieDropdown").val();
-            var dateSelected = $("#date").val();
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retrieve the employeeId and serviceId from sessionStorage
+            var employeeId = sessionStorage.getItem("employeeId");
+            var serviceId = sessionStorage.getItem("serviceId");
 
-            console.log("Service ID :", serviceId);
-            console.log("Catégorie ID :", categorieId);
-            console.log("Date sélectionnée :", dateSelected);
+            // Log the values to the console
+            console.log("Chef de Service ID:", employeeId);
+            console.log("Service ID:", serviceId);
 
+            // AJAX request to get employees and days
             $.ajax({
-                url: '/Emploi/GetEmploiByServiceCategorieAndDate',
-                type: 'GET',
-                data: { serviceId: serviceId, categorieId: categorieId, dateSelected: dateSelected },
+                type: "GET",
+                url: "@Url.Action("GetEmployees", "Emploi")", // Remplacez par votre nom de contrôleur
                 success: function (response) {
+                    // Filtrer les employés par serviceId
+                    var filteredEmployees = response.employees.filter(employee => employee.serviceId == serviceId);
 
-                    if (response.success) {
-                        $.each(response.data, function (index, emploi) {
-                            var employeeId = emploi.employeeId;
-                            var dayName = emploi.dayName;
-                            var cellId = `${employeeId}-${dayName}`; // Formatage de l'ID de la cellule
-                            var cellContent = '';
-                            var cell = $("#tableau").find("tr#" + employeeId + " td[data-day='" + dayName + "']");
+                    // Récupérer l'élément tbody du tableau
+                    var tbody = document.querySelector("#tableau tbody");
 
-                            if (emploi.posteId) {
-                                cellContent += emploi.posteName + '<br>';
-                            }
+                    // Vider le contenu actuel du tbody
+                    tbody.innerHTML = "";
 
-                            if (emploi.reposId) {
-                                cellContent += emploi.reposName + '<br>';
-                            }
-
-                            if (emploi.supplementId) {
-                                cellContent += emploi.supplementName + '<br>';
-                            }
-
-                            cell.html(cellContent);
-
-                        });
-                    } else {
-                        alert("Aucun emploi trouvé pour les critères sélectionnés.");
+                    // Ajouter dynamiquement les en-têtes de jours
+                    var thead = document.querySelector("#tableau thead tr");
+                    // Supprimer les anciens en-têtes de jour
+                    while (thead.childNodes.length > 2) {
+                        thead.removeChild(thead.childNodes[1]);
                     }
+                    response.days.forEach(day => {
+                        var dayHeader = document.createElement("th");
+                        dayHeader.textContent = day.dayname;
+                        thead.insertBefore(dayHeader, thead.lastElementChild);
+                    });
+
+                    // Ajouter le <th> pour le nom de l'employé
+                    var employeeNameHeader = document.createElement("th");
+                    employeeNameHeader.textContent = "Employee Name";
+                    thead.insertBefore(employeeNameHeader, thead.childNodes[1]);
+
+                    // Ajouter le <th> pour les heures totales
+                    var totalHoursHeader = document.createElement("th");
+                    totalHoursHeader.className = "TotalHours-column";
+                    totalHoursHeader.textContent = "Total Weekly Hours";
+                    totalHoursHeader.setAttribute("title", "Total Weekly Hours");
+                    thead.appendChild(totalHoursHeader);
+
+                    // Ajouter les employés filtrés au tableau
+                    filteredEmployees.forEach(employee => {
+                        var row = document.createElement("tr");
+                        row.id = employee.employeeId;
+
+                        // Ajouter la cellule de l'employé
+                        var employeeCell = document.createElement("td");
+                        employeeCell.textContent = employee.name;
+                        row.appendChild(employeeCell);
+
+                        // Ajouter les cellules pour les jours
+                        response.days.forEach(day => {
+                            var cellId = `${employee.employeeId}-${day.dayname}`;
+                            var dayCell = document.createElement("td");
+                            dayCell.id = cellId;
+                            dayCell.className = "droppable " + day.dayname.toLowerCase();
+                            dayCell.setAttribute("ondrop", "drop(event)");
+                            dayCell.setAttribute("ondragover", "allowDrop(event)");
+                            dayCell.dataset.employee = employee.employeeId;
+                            dayCell.dataset.day = day.dayname;
+
+                            row.appendChild(dayCell);
+                        });
+
+                        // Ajouter la cellule des heures totales
+                        var totalHoursCell = document.createElement("td");
+                        totalHoursCell.className = "TotalHours-column";
+                        totalHoursCell.textContent = employee.totalWeeklyHours || 0;
+                        totalHoursCell.setAttribute("title", "Total Weekly Hours"); // Ajouter un titre
+                        row.appendChild(totalHoursCell);
+
+                        // Ajouter la ligne au tableau
+                        tbody.appendChild(row);
+                    });
                 },
-                error: function (xhr, status, error) {
-                    console.error("Une erreur s'est produite lors de la récupération des données d'emploi :", error);
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown);
+                    alert("An error occurred while processing your request.");
                 }
             });
-        }
-
-
-
-
-        var categorieId = $("#categorieDropdown").val();
-        var dateSelected = $("#date").val();
-
-
-        function checkSaturday(selectedDate) {
-            var date = new Date(selectedDate);
-            var dayOfWeek = date.getDay();
-
-            // Vérifie si le jour sélectionné est un samedi (6 pour samedi)
-            if (dayOfWeek !== 6) {
-                alert("Veuillez sélectionner un samedi.");
-                document.getElementById('date').value = ''; // Réinitialise la valeur de l'input
-            }
-        }
-
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Ajoute un gestionnaire d'événements au clic sur le bouton
-
-            const clearButton = document.getElementById('clearButton');
-            clearButton.addEventListener('click', clearTable);
-
-            function clearTable() {
-                const cells = document.querySelectorAll('.droppable');
-                cells.forEach(cell => {
-                    cell.innerHTML = '';
-                });
-
-                // Réinitialiser les totaux hebdomadaires
-                const totalWeeklyHoursCells = document.querySelectorAll('.total-weekly-hours');
-                totalWeeklyHoursCells.forEach(cell => {
-                    cell.querySelector('.dynamic-hours').textContent = '0';
-                });
-            }
         });
 
+
+
+
+
         var draggedItem;
+         var categorieId = $("#categorieDropdown").val();
+            var dateSelected = $("#date").val();
+        // Définition des fonctions de glisser-déposer
+        function allowDrop(event) {
+            event.preventDefault(); // Empêcher le comportement par défaut
+        }
+
 
         function dragStart(e) {
             draggedItem = this.cloneNode(true);
@@ -498,7 +545,6 @@
                 this.classList.remove('hovered');
             }
         }
-
         function drop(e) {
             e.preventDefault();
             this.classList.remove('hovered');
@@ -507,13 +553,18 @@
                 this.appendChild(clonedItem);
             }
         }
-
         function clearCell() {
             if (this.innerHTML.trim() !== '') {
                 this.innerHTML = '';
             }
         }
 
+        function dragEnd() {
+            this.style.opacity = '1';
+            draggedItem.remove();
+        }
+
+        // Attachement des événements de glisser-déposer aux éléments nécessaires après la sélection de la catégorie
         function attachDragDropEvents() {
             const positions = document.querySelectorAll('.position');
             const repos = document.querySelectorAll('.repos');
@@ -544,9 +595,32 @@
             });
         }
 
+        // Gestionnaire d'événements pour le changement de catégorie
+        $('#categorieDropdown').change(updateDraggableElements);
+
+        // Appel initial pour attacher les événements de glisser-déposer aux éléments existants
+        attachDragDropEvents();
 
 
+        document.addEventListener('DOMContentLoaded', function () {
+            // Ajoute un gestionnaire d'événements au clic sur le bouton
 
+            const clearButton = document.getElementById('clearButton');
+            clearButton.addEventListener('click', clearTable);
+
+            function clearTable() {
+                const cells = document.querySelectorAll('.droppable');
+                cells.forEach(cell => {
+                    cell.innerHTML = '';
+                });
+
+                // Réinitialiser les totaux hebdomadaires
+                const totalWeeklyHoursCells = document.querySelectorAll('.total-weekly-hours');
+                totalWeeklyHoursCells.forEach(cell => {
+                    cell.querySelector('.dynamic-hours').textContent = '0';
+                });
+            }
+        });
         function initDraggableElements() {
             $(".element").draggable({
                 containment: "parent",
@@ -557,44 +631,44 @@
             });
         }
 
+        //==========================>  UPDATE DE CATEGORIE <===========================================//
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Attach click event listeners to supplements on initial load
+            attachSupplementClickEvents();
+        });
 
-
-        function updateServices() {
-            // Récupération des services depuis le serveur
-            fetch('/Emploi/GetServices')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        data.services.forEach(services => {
-                            $('#serviceDropdown').append();
-                        });
-                    } else {
-                        console.error(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur réseau ou de conversion JSON:', error);
+        // Function to attach click event listeners to supplements
+        function attachSupplementClickEvents() {
+            document.querySelectorAll('.supplement').forEach(supplementDiv => {
+                supplementDiv.addEventListener('click', function () {
+                    showModal();
                 });
+            });
         }
 
-        function attachEventHandlers() {
-            // Gestionnaire d'événements pour le changement de catégorie
-            $('#categorieDropdown').change(updatePostesAndRepos);
+        // Function to show the modal
+        function showModal() {
+            var modal = document.getElementById('modal');
+            modal.style.display = 'block';
         }
 
-        // Ailleurs dans votre code...
+        // Function to close the modal
+        function closeModal() {
+            var modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
         var categorieDropdown = document.getElementById("categorieDropdown");
-        categorieDropdown.addEventListener('change', updatePostesAndRepos);
+        categorieDropdown.addEventListener('change', updateDraggableElements);
 
-        function updatePostesAndRepos() {
-            var CategorieId = document.getElementById("categorieDropdown").value;
-            if (CategorieId) {
-                fetch('/Emploi/GetPostesReposAndSupplementsByCategorie?CategorieId=' + CategorieId)
+        function updateDraggableElements() {
+            var categorieId = document.getElementById('categorieDropdown').value;
+            if (categorieId) {
+                // Fetch des données de la catégorie sélectionnée
+                fetch('/Emploi/GetPostesReposAndSupplementsByCategorie?CategorieId=' + categorieId)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
-
-                        // Efface les sections de postes, de repos et de suppléments
+                        // Efface les sections de postes, repos et suppléments
                         var postesSection = document.getElementById("postesSection");
                         postesSection.innerHTML = '';
 
@@ -609,115 +683,89 @@
                             // Afficher les postes
                             if (data.postes && data.postes.length > 0) {
                                 data.postes.forEach(poste => {
-                                    // Créer un élément HTML pour chaque poste
                                     var posteDiv = document.createElement('div');
                                     posteDiv.className = "position";
                                     posteDiv.draggable = "true";
                                     posteDiv.id = poste.posteId;
 
-                                    // Construire la chaîne de caractères pour afficher les valeurs
-                                    var posteContent =
-                                        `
-                                        <div class="box holiday-box"> `
-                                    posteContent += `
-                                                                   <strong>${poste.postename}</strong><br />`
+                                    var posteContent = `<div class="box holiday-box">
+                                            <strong>${poste.postename}</strong><br />`;
+
                                     if (poste.matin) {
                                         posteContent += ' Matin  ';
                                     }
 
-                                    // Vérifier si ApresMidi est vrai, puis ajouter le champ "Après-midi" à la chaîne de caractères
                                     if (poste.apresMidi) {
                                         posteContent += ' Après-midi  ';
                                     }
 
-                                    // Vérifier si GardeSoir est vrai, puis ajouter le champ "Garde Soir" à la chaîne de caractères
                                     if (poste.gardeSoir) {
                                         posteContent += ' Garde Soir';
                                     }
-                                    posteContent += `<br />`;
+                                    posteContent += `<br />
+                                            S1 : <span>${poste.seance1Debut} /</span>
+                                            <span>${poste.seance1Fin}</span><br />`;
 
-
-                                    posteContent += `
-                                    S1 :
-                                    <span>${poste.seance1Debut} /</span>
-                                    <span>${poste.seance1Fin}</span><br />
-                                    `;
-
-                                    // Vérifier si seance2Debut est vide, puis l'ajouter à la chaîne de caractères
                                     if (poste.seance2Debut) {
                                         posteContent += `<span>${poste.seance2Debut} /</span>`;
                                     }
 
-                                    // Vérifier si seance2Fin est vide, puis l'ajouter à la chaîne de caractères
                                     if (poste.seance2Fin) {
                                         posteContent += `  S2 :<span>${poste.seance2Fin}</span>`;
                                     }
 
-
-                                    // Fermer la balise div
                                     posteContent += `</div>`;
 
-                                    // Ajouter le contenu à l'élément HTML
                                     posteDiv.innerHTML = posteContent;
-
-                                    // Ajouter l'élément à la section des postes
                                     postesSection.appendChild(posteDiv);
                                 });
                             }
-                            // Afficher les repos
+
                             // Afficher les repos
                             if (data.repos && data.repos.length > 0) {
                                 data.repos.forEach(repo => {
-                                    // Créer un élément HTML pour chaque repos
                                     var repoDiv = document.createElement('div');
                                     repoDiv.className = "repos";
                                     repoDiv.draggable = "true";
                                     repoDiv.id = repo.reposId;
 
-                                    // Vérifier si le champ date_Jours est présent
                                     var dateJoursContent = repo.date_Jours ? `<span> ${repo.date_Jours}</span>` : '';
 
-                                    // Vérifier si le champ Date_Joursfin est présent
+                                    repoDiv.innerHTML = `<div class="box repo-box">
+                                            <strong>${repo.reposName}</strong><br />
+                                            ${dateJoursContent}
+                                        </div>`;
 
-                                    // Ajouter les données dans l'élément HTML
-                                    repoDiv.innerHTML = `
-                            <div class="box repo-box">
-                                <strong>${repo.reposName}</strong><br />
-                                ${dateJoursContent}
-                            </div>
-                        `;
-
-                                    // Ajouter l'élément à la section des repos
                                     reposSection.appendChild(repoDiv);
                                 });
                             }
 
+                            // Afficher les suppléments
                             if (data.supplements && data.supplements.length > 0) {
                                 data.supplements.forEach(supplement => {
-                                    // Créer un élément HTML pour chaque supplément
                                     var supplementDiv = document.createElement('div');
                                     supplementDiv.className = "supplement";
                                     supplementDiv.draggable = "true";
-                                    supplementDiv.id = supplement.supplementId;
-                                    // Correction de la variable ici ↓
-                                    supplementDiv.innerHTML = `
-                            <div class="btn">
-                                <strong>${supplement.nom}</strong>
-                            </div>
-                        `;
+                                    supplementDiv.id = 'supplement_' + supplement.supplementId;
+
+                                    supplementDiv.innerHTML = `<div class="btn">
+                                            <strong>${supplement.nom}</strong>
+                                        </div>`;
+
                                     supplementsSection.appendChild(supplementDiv);
                                 });
-                            } else {
-                                console.error('Erreur lors de la récupération des données: ', data.message);
-                            }
 
+                                // Attach click event listeners to the new supplements
+                                attachSupplementClickEvents();
+                            }
+                        } else {
+                            console.error('Erreur lors de la récupération des données: ', data.message);
                         }
                     })
                     .catch(error => {
                         console.error('Erreur lors de la récupération des postes, repos et suppléments:', error);
                     });
             } else {
-                // Efface les sections de postes, de repos et de suppléments si aucune catégorie n'est sélectionnée
                 var postesSection = document.getElementById("postesSection");
                 postesSection.innerHTML = '';
 
@@ -727,58 +775,93 @@
                 var supplementsSection = document.getElementById("supplementsSection");
                 supplementsSection.innerHTML = '';
             }
-            attachDragDropEvents();
         }
 
 
-        function updateEmployees() {
-            const serviceId = document.getElementById("serviceDropdown").value;
+        //==========================>  PDF <===========================================//
+        function downloadPDF(event) {
+            event.stopPropagation();
+            const doc = new jsPDF();
+            const table = document.getElementById("tableau");
+            doc.autoTable({ html: table });
+            doc.save("tableau.pdf");
+        }
+        //==========================>  CALENDRER<===========================================//
+        flatpickr.l10ns.default.firstDayOfWeek = 1; // Définit le premier jour de la semaine à lundi
+        flatpickr.localize(flatpickr.l10ns.default); // Définit la locale par défaut
 
-            if (serviceId) {
-                fetch('/Emploi/GetEmployeesByService?ServiceId=' + serviceId)
-                    .then(response => response.json())
-                    .then(data => {
-                        const tableBody = document.querySelector('#tableau tbody');
-                        tableBody.innerHTML = '';
+        flatpickr("#date", {
+            dateFormat: "Y-m-d", // Format de date, si nécessaire
+            disable: [
+                function (date) {
+                    // Désactiver tous les jours sauf les samedis
+                    return date.getDay() !== 6;
+                }
+            ]
+        });
 
-                        const days = document.getElementById("tableau").dataset.days.split(',');
+    function checkSaturday(selectedDate) {
+            var date = new Date(selectedDate);
+            var dayOfWeek = date.getDay();
 
-                        if (typeof data === 'object' && data.employees) {
-                            data.employees.forEach(employee => {
-                                const employeeRow = document.createElement('tr');
-                                employeeRow.id = employee.employeeId;
-
-                                const employeeNameCell = document.createElement('td');
-                                employeeNameCell.textContent = employee.name;
-                                employeeRow.appendChild(employeeNameCell);
-
-                                days.forEach(day => {
-                                    const dayCell = document.createElement('td');
-                                    dayCell.className = "droppable";
-                                    dayCell.dataset.day = day;
-                                    employeeRow.appendChild(dayCell);
-                                });
-
-                                const totalHoursCell = document.createElement('td');
-                                totalHoursCell.className = "TotalHours-column";
-                                totalHoursCell.textContent = employee.totalWeeklyHours;
-                                employeeRow.appendChild(totalHoursCell);
-
-                                tableBody.appendChild(employeeRow);
-                            });
-                        } else {
-                            console.error('Erreur: Les données ne sont pas dans le format attendu.');
-                        }
-
-                        attachDragDropEvents();
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la récupération des employés:', error);
-                    });
-            } else {
-                document.querySelector('#tableau tbody').innerHTML = '';
+            // Vérifie si le jour sélectionné est un samedi (6 pour samedi)
+            if (dayOfWeek !== 6) {
+                alert("Veuillez sélectionner un samedi.");
+                document.getElementById('date').value = ''; // Réinitialise la valeur de l'input
             }
         }
+
+        //==========================> AFFICHAGE DU L'EMPLOI <===========================================//
+
+        function afficherEmploi() {
+            var categorieId = $("#categorieDropdown").val();
+            var dateSelected = $("#date").val();
+            var serviceId = sessionStorage.getItem("serviceId");
+
+            console.log("Service ID :", serviceId);
+            console.log("Catégorie ID :", categorieId);
+            console.log("Date sélectionnée :", dateSelected);
+
+            $.ajax({
+                url: '/Emploi/GetEmploiByServiceCategorieAndDate',
+                type: 'GET',
+                data: { serviceId: serviceId, categorieId: categorieId, dateSelected: dateSelected },
+                success: function (response) {
+                    if (response.success) {
+                        $.each(response.data, function (index, emploi) {
+                            var employeeId = emploi.employeeId;
+                            var dayName = emploi.dayName;
+                            var cellId = `${employeeId}-${dayName}`;
+                            var cellContent = '';
+                            var cell = $("#tableau").find("tr#" + employeeId + " td[data-day='" + dayName + "']");
+
+                            if (emploi.posteId) {
+                                cellContent += emploi.posteName + '<br>';
+                            }
+
+                            if (emploi.reposId) {
+                                cellContent += emploi.reposName + '<br>';
+                            }
+
+                            if (emploi.supplementId) {
+                                cellContent += emploi.supplementName + '<br>';
+                            }
+
+                            cell.html(cellContent);
+                        });
+                    } else {
+                        alert("Aucun emploi trouvé pour les critères sélectionnés.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Une erreur s'est produite lors de la récupération des données d'emploi :", error);
+                }
+            });
+        }
+        
+
+
+       //==========================> ENREGISTREMENT DU L'EMPLOI <===========================================//
         function getTableData() {
             var emploiData = [];
             $("#tableau tbody tr").each(function () {
@@ -813,10 +896,11 @@
 
         // Récupérer les données du tableau
         var emploiData = getTableData();
+            var serviceId = sessionStorage.getItem("serviceId");
 
         // Construction de l'objet à envoyer au serveur
         var dataToSend = {
-            ServiceSelected: $("#serviceDropdown").val(),
+                ServiceSelected: serviceId,
             DateSelected: $("#date").val(),
             CategorieSelected: $("#categorieDropdown").val(),
             EmploiData: emploiData
@@ -843,45 +927,8 @@
         });
         });
 
-
     </script>
 </body>
 </html>
 
 
-
-
-@*            <div id="modal" class="modal">
-
-        <div class="modal-content">
-            <div>
-                <span class="close" onclick="closeModal('model')">&times;</span>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <input type="text" class="boxx" id="nom" placeholder="Nom">
-                </div>
-                <div class="col-6">
-                    <input type="number" class="boxx" id="matricule" placeholder="Matricule">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <strong>start</strong>
-                    <input type="time" class="boxx" id="heureDebut" placeholder="Heure de début">
-                </div>
-                <div class="col-4">
-                    <strong>fin</strong>
-                    <input type="time" class="boxx" id="heureFin" placeholder="Heure de fin">
-                </div>
-                <div class="col-4">
-                    <input type="date" class="boxx" id="dateJour" placeholder="Date du jour">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 center">
-                    <button class="btn" id="valider"> Valider </button>
-                </div>
-            </div>
-        </div>
-    </div> *@
