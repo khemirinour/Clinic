@@ -34,8 +34,7 @@ namespace Clinic.Models
 
         // Propriété de navigation pour les Suppléments
         public List<Supplement>? Supplements { get; set; }
-        public bool? Approved { get; set; } // Indique si l'inscription a été approuvée par l'administrateur (chef de service)
-
+        public bool? Approved { get; set; } 
 
         [ForeignKey("Emploi")]
         public int? EmploiId { get; set; }

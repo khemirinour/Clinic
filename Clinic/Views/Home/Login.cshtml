@@ -18,14 +18,15 @@
                     <h2 class="title">Se connecter</h2>
                     <div class="input-field">
                         <i class="fas fa-user"></i>
-                        <input type="email" placeholder="Nom d'utilisateur" id="username" />
+                        <input type="email" name="username" placeholder="Nom d'utilisateur" id="username" />
                     </div>
                     <div class="input-field">
                         <i class="fas fa-lock"></i>
-                        <input type="password" placeholder="Mot de passe" id="password" autocomplete="current-password">
+                        <input type="password" name="password" placeholder="Mot de passe" id="password" autocomplete="current-password">
                     </div>
                     <input type="submit" value="Connexion" class="btn solid" />
                 </form>
+
 
                 <form asp-action="Register" method="post" class="sign-up-form" id="register-form">
                     <h2 class="title">S'inscrire</h2>
@@ -87,39 +88,38 @@
                 container.classList.remove("sign-up-mode");
             });// Convertir la chaîne JSON des services en objet JavaScript
 
+
             document.getElementById("login-form").addEventListener("submit", function (event) {
                 event.preventDefault(); // Prevent default form submission
-                // Get username and password from form inputs
+
                 var username = document.getElementById("username").value;
                 var password = document.getElementById("password").value;
 
-                // AJAX request to submit login credentials
+                console.log("Logging in with username:", username, "and password:", password);
+
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("Login", "Account")", // Replace with your controller action URL
+                    url: "/Account/Login",
                     data: { username: username, password: password },
                     success: function (response) {
-                        // Handle successful login response
                         if (response.success) {
-                            // Save employeeId and serviceId in session storage or a similar storage
+                            // Stockez les identifiants dans sessionStorage
                             sessionStorage.setItem("employeeId", response.employeeId);
                             sessionStorage.setItem("serviceId", response.serviceId);
 
-                            // Redirect user to the desired page
+                            // Redirection vers la page appropriée
                             window.location.href = response.redirectUrl;
                         } else {
-                            // Display error message to the user
                             alert("Error: " + response.message);
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
-                        // Handle AJAX error
                         console.error("Error:", textStatus, errorThrown);
                         alert("An error occurred while processing your request.");
                     }
                 });
-            });
 
+            });
 
 
             document.getElementById("register-form").addEventListener("submit", function (event) {

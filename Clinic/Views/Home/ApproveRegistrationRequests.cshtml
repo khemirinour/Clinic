@@ -1,20 +1,16 @@
-﻿@model IEnumerable<Clinic.Models.Employee>
+﻿@model List<Clinic.Models.EmploiViewModel>
 
-@{
-    ViewData["Title"] = "Approve Registration Requests";
-}
+<input type="hidden" id="serviceId" value="@ViewBag.ServiceId" />
 
 <h1>Approve Registration Requests</h1>
-<input type="hidden" id="serviceId">
-<!-- Value will be set dynamically -->
-@if (Model != null && Model.Any())
+
+@if (Model != null && Model.Count > 0)
 {
     <table class="table">
         <thead>
             <tr>
                 <th>Employee ID</th>
                 <th>Name</th>
-                <th>Service</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -23,11 +19,11 @@
             {
                 <tr>
                     <td>@employee.EmployeeId</td>
-                    <td>@employee.Name ?? "No Name"</td>
-                    <td>@employee.Service?.Name ?? "No Service"</td> 
+                    <td>@employee.EmployeeName</td>
                     <td>
-                        <form asp-action="ApproveRegistration" method="post">
+                        <form asp-controller="Account" asp-action="ApproveRegistration" method="post">
                             <input type="hidden" name="employeeId" value="@employee.EmployeeId" />
+                            <input type="hidden" name="serviceId" value="@ViewBag.ServiceId" />
                             <button type="submit" class="btn btn-success">Approve</button>
                         </form>
                     </td>
@@ -38,15 +34,12 @@
 }
 else
 {
-    <p>No pending registration requests.</p>
+    <p>No registration requests to approve.</p>
 }
 
 <script>
-    // approveRegistrationRequests.js
-    var serviceId = @ViewBag.ServiceId;
-    var chefDeServiceId = @ViewBag.ChefDeServiceId;
+    var serviceId = sessionStorage.getItem("serviceId");
+    console.log("Service ID:", serviceId);
 
-    console.log(serviceId);
-    console.log(chefDeServiceId);
-
+    document.getElementById("serviceId").value = serviceId;
 </script>

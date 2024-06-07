@@ -1,4 +1,6 @@
 ﻿using Clinic.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,9 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace Clinic.Controllers
 {
@@ -14,17 +19,44 @@ namespace Clinic.Controllers
     {
         private readonly ClinicDbContext _context;
         private readonly ILogger<AccountController> _logger;
+        private readonly IConfiguration _configuration; // Add this field
+        private IEnumerable<object> pendingEmployees;
 
-        public AccountController(ClinicDbContext context, ILogger<AccountController> logger)
+        public AccountController(ClinicDbContext context, ILogger<AccountController> logger, IConfiguration configuration) // Add IConfiguration parameter
         {
             _context = context;
             _logger = logger;
+            _configuration = configuration; // Assign the injected IConfiguration instance
         }
 
         [HttpGet]
         public IActionResult Login()
         {
             return View();
+        }
+        private string GenerateJwtToken(Employee user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddHours(Convert.ToDouble(_configuration["Jwt:ExpireHours"]));
+
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.EmployeeId.ToString()),
+            new Claim(ClaimTypes.Name, user.Name),
+            new Claim("ServiceId", user.ServiceId.ToString()),
+            new Claim("IsChefDeService", user.IsChefDeService.ToString())
+        };
+
+            var token = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: expires,
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         [HttpPost]
@@ -38,8 +70,24 @@ namespace Clinic.Controllers
 
                 if (employee != null && employee.Approved == true)
                 {
-                    // Authentication successful
-                    var redirectUrl = (bool)employee.IsChefDeService ? Url.Action("Create", "Emploi") : Url.Action("Affiche", "Emploi");
+                    // Create claims
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()),
+                new Claim(ClaimTypes.Name, employee.Name),
+                new Claim("ServiceId", employee.ServiceId.ToString()),
+                new Claim("IsChefDeService", employee.IsChefDeService.ToString())
+            };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, "Login");
+
+                    // Sign in the user
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                    // Determine redirect URL based on role, handling nullable bool
+                    var isChefDeService = employee.IsChefDeService ?? false;
+                    var redirectUrl = isChefDeService ? Url.Action("Create", "Emploi") : Url.Action("Affiche", "Emploi");
+
                     return Json(new
                     {
                         success = true,
@@ -50,62 +98,17 @@ namespace Clinic.Controllers
                 }
                 else
                 {
-                    return Json(new { success = false, message = "Nom d'utilisateur ou mot de passe incorrect." });
+                    _logger.LogWarning("Login failed: Invalid username or password for {username}", username);
+                    return Json(new { success = false, message = "Invalid username or password." });
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during login process.");
-                return Json(new { success = false, message = "Une erreur s'est produite lors de la connexion." });
+                _logger.LogError(ex, "Error during login process for {username}", username);
+                return Json(new { success = false, message = "An error occurred during login." });
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> ApproveRegistrationRequests()
-        {
-            try
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return RedirectToAction("Login", "Account");
-                }
-
-                int userIdInt = int.Parse(userId);
-
-                // Vérifier si l'utilisateur connecté est un chef de service
-                var chefDeService = await _context.Employee
-                    .Include(c => c.Service) // Assurez-vous d'inclure les détails du service du chef de service
-                    .FirstOrDefaultAsync(c => c.EmployeeId == userIdInt && c.IsChefDeService == true);
-
-                if (chefDeService != null)
-                {
-                    // Récupérer les employés en attente d'approbation pour le même service que le chef de service
-                    var pendingEmployees = await _context.Employee
-                        .Include(e => e.Service) // Assurez-vous d'inclure les détails du service de chaque employé
-                        .Where(e => e.ServiceId == chefDeService.ServiceId && e.Approved == false)
-                        .ToListAsync();
-
-                    // Passer le ServiceId et le ChefDeServiceId à la vue
-                    ViewBag.ServiceId = chefDeService.ServiceId;
-                    ViewBag.ChefDeServiceId = chefDeService.EmployeeId;
-
-                    return View(pendingEmployees);
-                }
-                else
-                {
-                    // L'utilisateur connecté n'est pas un chef de service
-                    return RedirectToAction("AccessDenied", "Account");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving pending registration requests.");
-                ModelState.AddModelError(string.Empty, "Une erreur s'est produite lors de la récupération des demandes d'inscription en attente.");
-                return View(new List<Employee>());
-            }
-        }
-
-
+   
         [HttpGet]
         public IActionResult Register()
         {
@@ -138,53 +141,39 @@ namespace Clinic.Controllers
 
             return Json(new { success = false, message = "Registration failed. Please check the form." });
         }
-        
-
-
-        [HttpPost]
-        public async Task<IActionResult> ApproveRegistration(int employeeId)
+        public async Task<IActionResult> ApproveRegistrationRequests(int serviceId)
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
+                var pendingEmployees = await _context.Employee
+                    .Include(e => e.Service)
+                    .Where(e => e.ServiceId == serviceId && (e.Approved == false || e.Approved == null))
+                    .ToListAsync();
+
+                if (pendingEmployees == null || !pendingEmployees.Any())
                 {
-                    return RedirectToAction("Login", "Account");
+                    _logger.LogInformation("No pending employees found for serviceId: {serviceId}", serviceId);
+                    return View(new List<EmploiViewModel>());
                 }
 
-                int userIdInt = int.Parse(userId);
-
-                var chefDeService = await _context.Employee
-                    .FirstOrDefaultAsync(c => c.EmployeeId == userIdInt && c.IsChefDeService == true);
-
-                if (chefDeService != null)
+                var model = pendingEmployees.Select(employee => new EmploiViewModel
                 {
-                    var employee = await _context.Employee
-                        .Include(e => e.Service)
-                        .FirstOrDefaultAsync(e => e.EmployeeId == employeeId && e.Service.ChefDeServiceId == userIdInt);
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.Name,
+                    ServiceId = employee.ServiceId
+                }).ToList();
 
-                    if (employee != null)
-                    {
-                        employee.Approved = true;
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("ApproveRegistrationRequests");
-                    }
-                    else
-                    {
-                        return RedirectToAction("AccessDenied", "Account");
-                    }
-                }
-                else
-                {
-                    return RedirectToAction("AccessDenied", "Account");
-                }
+                _logger.LogInformation("Model type: {type}", model.GetType());
+                ViewBag.ServiceId = serviceId;
+                return View(model);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error approving registration request.");
-                ModelState.AddModelError(string.Empty, "Une erreur s'est produite lors de l'approbation de la demande d'inscription.");
-                return RedirectToAction("ApproveRegistrationRequests");
+                _logger.LogError(ex, "Error retrieving pending registration requests.");
+                ModelState.AddModelError(string.Empty, "An error occurred while retrieving pending registration requests.");
+                return View(new List<EmploiViewModel>());
             }
         }
+
     }
 }

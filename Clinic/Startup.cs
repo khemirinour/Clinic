@@ -1,78 +1,92 @@
-﻿// Startup.cs
-
-using Clinic.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using Clinic.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-namespace Clinic
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Add the database context
+        services.AddDbContext<ClinicDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+        // Other service registrations
+        services.AddControllersWithViews();
+        services.AddRazorPages();
+
+        // Configure JWT authentication
+        var key = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
+        services.AddAuthentication(options =>
         {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
         {
-            // Add DbContext service
-            services.AddDbContext<ClinicDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DbConn")));
-
-            services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.Cookie.Name = ".YourApp.Session";
-                options.IdleTimeout = TimeSpan.FromHours(1);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = Configuration["Jwt:Issuer"],
+                ValidAudience = Configuration["Jwt:Audience"]
+            };
+        });
+
+        // Configure cookie authentication
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
             });
-            // Add controller services
-            services.AddControllersWithViews();
-        }
+    }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        // Configure the HTTP request pipeline
+        if (env.IsDevelopment())
         {
-            // Configure the HTTP request pipeline
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                // Utilisez un nom de route différent pour éviter les conflits
-                endpoints.MapControllerRoute(
-                    name: "emploi",
-                    pattern: "Emploi/{action=Affiche}/{id?}");
-                // Définissez la route spécifique pour la méthode d'action AfficherEmploi
-                endpoints.MapControllerRoute(
-                    name: "afficherEmploi",
-                    pattern: "Emploi/AfficherEmploi",
-                    defaults: new { controller = "Emploi", action = "AfficherEmploi" });
-            });
+            app.UseDeveloperExceptionPage();
         }
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+ endpoints.MapControllerRoute(
+                name: "emploi",
+                pattern: "Emploi/{action=Affiche}/{id?}");
+
+            endpoints.MapControllerRoute(
+                name: "afficherEmploi",
+                pattern: "Emploi/AfficherEmploi",
+                defaults: new { controller = "Emploi", action = "AfficherEmploi" });
+        });
     }
 }

@@ -32,9 +32,12 @@ using System.ComponentModel.DataAnnotations.Schema;
         public Service? Service { get; set; }
         [ForeignKey("EmployeeId")]
         public Employee? Employee { get; set; }
-
-        // Add EmployeeId property to serve as the foreign key
-        public int EmployeeId { get; set; }
+        public string? DateDuJour { get; set; }
+         public int EmployeeId { get; set; }
+        public string? Matricule { get; set; }
+        public TimeSpan? StartHour { get; set; }
+        public TimeSpan? EndHour { get; set; }
+        public DateTime? Date { get; set; }
 
 
     }

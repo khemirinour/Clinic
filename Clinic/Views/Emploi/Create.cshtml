@@ -40,26 +40,31 @@
     <link rel="stylesheet" href="~/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0,0.4);
-    }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-    }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; /* Ajustez cette valeur pour la largeur souhaitée */
+            height: 50%; /* Ajustez cette valeur pour la hauteur souhaitée */
+            max-width: 90%; /* Ajoutez un maximum de largeur pour le rendre réactif */
+            max-height: 90%; /* Ajoutez un maximum de hauteur pour le rendre réactif */
+            box-sizing: border-box; /* Assurez-vous que le padding est inclus dans les dimensions */
+            overflow-y: auto; /* Ajoutez un défilement vertical si le contenu dépasse la hauteur */
+        }
+
 
     .close {
         color: #aaa;
@@ -121,59 +126,63 @@
     <form id="emploi-form" method="post" class="margin">
         <input type="hidden" id="chefServiceId"> <!-- Value will be set dynamically -->
         <input type="hidden" id="serviceId"> <!-- Value will be set dynamically -->
-          
+
         <div class="center">
             <div class="row">
                 <div class="date-navigation">
-                    <button id="previousWeekBtn" class="btn mx-1"><span class="fas fa-chevron-left"> </span> Semaine Précédente </button>
+                    <button id="previousWeekBtn" class="btn mx-1">
+                        <span class="fas fa-chevron-left"></span> Semaine Précédente
+                    </button>
                     <input type="date" id="date" class="box mx-1" name="DateofWeek" required>
-                    <button id="nextWeekBtn" class="btn mx-1"> Semaine Prochaine <span class="fas fa-chevron-right">  </span></button>
+                    <button id="nextWeekBtn" class="btn mx-1">
+                        Semaine Prochaine <span class="fas fa-chevron-right"></span>
+                    </button>
                 </div>
             </div>
         </div>
 
-            <div class="supllement" id="supplementsSection">
-                @if (Model != null && Model.Supplements != null)
+        <div class="supllement" id="supplementsSection">
+            @if (Model != null && Model.Supplements != null)
+            {
+                @foreach (var supplement in Model.Supplements)
                 {
-                    @foreach (var supplement in Model.Supplements)
-                    {
-                        <div id="supplement_@supplement.SupplementId" draggable="true" class="supplement">
-                            <div class="btn">
-                                <strong>@supplement.Nom</strong>
-                            </div>
+                    <div id="@supplement.SupplementId" draggable="true" class="supplement">
+                        <div class="btn">
+                            <strong>@supplement.Nom</strong>
                         </div>
-                    }
+                    </div>
                 }
-            </div>
+            }
+        </div>
 
-            <div id="modal" class="modal" style="display: none;">
-                <div class="modal-content">
-                    <div>
-                        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div>
+                    <span class="close" onclick="closeModal()">&times;</span>
+                </div>
+                <div class="row">
+                    <input type="number" class="box" id="matricule" placeholder="Matricule">
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <strong>start</strong>
+                        <input type="time" class="box" id="heureDebut" placeholder="Heure de début">
                     </div>
-                    <div class="row">
-                        <input type="number" class="box" id="matricule" placeholder="Matricule">
+                    <div class="col-4">
+                        <strong>fin</strong>
+                        <input type="time" class="box" id="heureFin" placeholder="Heure de fin">
                     </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <strong>start</strong>
-                            <input type="time" class="box" id="heureDebut" placeholder="Heure de début">
-                        </div>
-                        <div class="col-4">
-                            <strong>fin</strong>
-                            <input type="time" class="box" id="heureFin" placeholder="Heure de fin">
-                        </div>
-                        <div class="col-4">
-                            <input type="date" class="box" id="dateJour" placeholder="Date du jour">
-                        </div>
+                    <div class="col-4">
+                        <input type="date" class="box" id="dateJour" placeholder="Date du jour">
                     </div>
-                    <div class="row">
-                        <div class="col-12 center">
-                            <button class="btn" id="valider"> Valider </button>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 center">
+                        <button class="btn" id="valider"> Valider </button>
                     </div>
                 </div>
             </div>
+        </div>
 
 
         <div class="buttons-container mt-4">
@@ -216,7 +225,7 @@
                 <span class="tooltip">Télécharger</span>
             </button>
             <!-- Bouton pour afficher les emplois -->
-            <button type="button" class="btn" id="afficherEmploiButton" onclick="afficherEmploi()">Afficher les emplois</button>
+            <button type="button" class="btn" id="afficherEmploiButton" onclick="afficherEmploi(event)">Afficher les emplois</button>
 
 
 
@@ -227,7 +236,7 @@
             <div class="table-container">
                 <table id="tableau" data-days="@string.Join(',', Model.Days.Select(day => day.Dayname))">
                     <thead>
-                        <tr>
+                        <tr id="days-row">
                             @if (Model.Employees != null)
                             {
                                 <th class="employee-column">Employée</th>
@@ -236,20 +245,19 @@
                             {
                                 @if (day != null && day.Dayname != null)
                                 {
-                                    <th>@day.Dayname</th>
+                                    <th>
+                                        <div>@day.Dayname</div>
+                                        <div class="day-date"></div>
+                                    </th>
                                 }
                             }
                             <th>Heures totales</th>
                         </tr>
                     </thead>
                     <tbody>
-                       
                     </tbody>
-
                 </table>
-
             </div>
-
 
 
             <div class="extra-boxes">
@@ -296,83 +304,12 @@
 
 
 
+
+
         <input type="hidden" id="emploiData" name="emploiData" />
 
 
-    </form>   <!-- Preloader -->
-
-
-    <footer id="contact" class="footer">
-        <!-- Haut du footer -->
-        <div class="footer-top">
-            <div class="content">
-                <div class="row">
-                    <div class="col">
-                        <div class="single-footer">
-                            <h2>Suivez-nous</h2>
-                            <ul class="social">
-                                <li><a href="#"><i class="icofont-facebook"></i></a></li>
-                                <li><a href="#"><i class="icofont-google-plus"></i></a></li>
-                                <li><a href="#"><i class="icofont-twitter"></i></a></li>
-                                <li><a href="#"><i class="icofont-vimeo"></i></a></li>
-                            </ul>
-                            <!-- Réseaux sociaux -->
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="single-footer f-link">
-                            <h2>Liens rapides</h2>
-                            <div class="row">
-                                <div class="col">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Accueil</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>À propos de nous</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos services</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos cas</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Autres liens</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="single-footer f-link">
-                            <h2>Nos services</h2>
-                            <div class="row">
-                                <div class="col">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Soins dentaires</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Thérapie par massage</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Cardiologie</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Diagnostic</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services d'ambulance</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="single-footer f-link">
-                            <h2>Contact</h2>
-                            <div class="row">
-                                <div class="col">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i> 123 Rue de la Santé</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Sfax, Tunisie</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>info@clinique.com</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>+216 22 24 25 26 </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/ Fin du haut du footer -->
-        <!-- Contact -->
-        <!--/ Fin du Contact -->
-    </footer>
+    </form>
 
     <!--/ End Footer Area -->
     <!-- jquery Min JS -->
@@ -390,254 +327,355 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
     <script>
-
         document.addEventListener("DOMContentLoaded", function () {
-            const previousWeekBtn = document.getElementById('previousWeekBtn');
-            const nextWeekBtn = document.getElementById('nextWeekBtn');
-            const dateInput = document.getElementById('date');
-
-            previousWeekBtn.addEventListener('click', function () {
-                changeDate(-7); // Décrémente de 7 jours pour aller à la semaine précédente
-            });
-
-            nextWeekBtn.addEventListener('click', function () {
-                changeDate(7); // Incrémente de 7 jours pour aller à la semaine suivante
-            });
-
-            function changeDate(offset) {
-                const currentDate = new Date(dateInput.value);
-                if (isNaN(currentDate.getTime())) {
-                    alert('Veuillez sélectionner une date valide.');
-                    return;
+            function checkSaturday(selectedDate) {
+                var date = new Date(selectedDate);
+                var dayOfWeek = date.getDay();
+                if (dayOfWeek !== 6) {
+                    alert("Veuillez sélectionner un samedi.");
+                    flatpickr("#date").clear();
                 }
-                const newDate = new Date(currentDate.getTime() + (offset * 24 * 60 * 60 * 1000));
-                dateInput.value = newDate.toISOString().split('T')[0]; // Met à jour la valeur de l'input avec la nouvelle date
-                afficherEmploi(); // Appeler la fonction afficherEmploi pour mettre à jour l'affichage
             }
-        });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            // Retrieve the employeeId and serviceId from sessionStorage
-            var employeeId = sessionStorage.getItem("employeeId");
-            var serviceId = sessionStorage.getItem("serviceId");
+            function fetchAndDisplayEmployees() {
+                var employeeId = sessionStorage.getItem("employeeId");
+                var serviceId = sessionStorage.getItem("serviceId");
+                const previousWeekBtn = document.getElementById('previousWeekBtn');
+                const nextWeekBtn = document.getElementById('nextWeekBtn');
+                const dateInput = document.getElementById('date');
 
-            // Log the values to the console
-            console.log("Chef de Service ID:", employeeId);
-            console.log("Service ID:", serviceId);
+                function getNextSaturday(date) {
+                    const day = date.getDay();
+                    const offsetDays = (6 - day + 7) % 7;
+                    return new Date(date.getTime() + offsetDays * 24 * 60 * 60 * 1000);
+                }
 
-            // AJAX request to get employees and days
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("GetEmployees", "Emploi")", // Remplacez par votre nom de contrôleur
-                success: function (response) {
-                    // Filtrer les employés par serviceId
-                    var filteredEmployees = response.employees.filter(employee => employee.serviceId == serviceId);
+                previousWeekBtn.addEventListener('click', function () {
+                    changeDate(-7);
+                });
 
-                    // Récupérer l'élément tbody du tableau
-                    var tbody = document.querySelector("#tableau tbody");
+                nextWeekBtn.addEventListener('click', function () {
+                    changeDate(7);
+                });
 
-                    // Vider le contenu actuel du tbody
-                    tbody.innerHTML = "";
-
-                    // Ajouter dynamiquement les en-têtes de jours
-                    var thead = document.querySelector("#tableau thead tr");
-                    // Supprimer les anciens en-têtes de jour
-                    while (thead.childNodes.length > 2) {
-                        thead.removeChild(thead.childNodes[1]);
+                function changeDate(offset) {
+                    const currentDate = new Date(dateInput.value);
+                    if (isNaN(currentDate.getTime())) {
+                        alert('Veuillez sélectionner une date valide.');
+                        return;
                     }
-                    response.days.forEach(day => {
-                        var dayHeader = document.createElement("th");
-                        dayHeader.textContent = day.dayname;
-                        thead.insertBefore(dayHeader, thead.lastElementChild);
-                    });
+                    const newDate = new Date(currentDate.getTime() + (offset * 24 * 60 * 60 * 1000));
+                    dateInput.value = newDate.toISOString().split('T')[0];
+                    updateHeaderDates(newDate.toISOString().split('T')[0]);
+                }
 
-                    // Ajouter le <th> pour le nom de l'employé
-                    var employeeNameHeader = document.createElement("th");
-                    employeeNameHeader.textContent = "Employee Name";
-                    thead.insertBefore(employeeNameHeader, thead.childNodes[1]);
+                const today = new Date();
+                dateInput.value = getNextSaturday(today).toISOString().split('T')[0];
 
-                    // Ajouter le <th> pour les heures totales
-                    var totalHoursHeader = document.createElement("th");
-                    totalHoursHeader.className = "TotalHours-column";
-                    totalHoursHeader.textContent = "Total Weekly Hours";
-                    totalHoursHeader.setAttribute("title", "Total Weekly Hours");
-                    thead.appendChild(totalHoursHeader);
+                console.log("Chef de Service ID:", employeeId);
+                console.log("Service ID:", serviceId);
 
-                    // Ajouter les employés filtrés au tableau
-                    filteredEmployees.forEach(employee => {
-                        var row = document.createElement("tr");
-                        row.id = employee.employeeId;
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetEmployees", "Emploi")",
+                    success: function (response) {
+                        var filteredEmployees = response.employees.filter(employee => employee.serviceId == serviceId);
+                        var tbody = document.querySelector("#tableau tbody");
+                        tbody.innerHTML = "";
 
-                        // Ajouter la cellule de l'employé
-                        var employeeCell = document.createElement("td");
-                        employeeCell.textContent = employee.name;
-                        row.appendChild(employeeCell);
-
-                        // Ajouter les cellules pour les jours
+                        var thead = document.querySelector("#tableau thead tr");
+                        while (thead.childNodes.length > 2) {
+                            thead.removeChild(thead.childNodes[1]);
+                        }
                         response.days.forEach(day => {
-                            var cellId = `${employee.employeeId}-${day.dayname}`;
-                            var dayCell = document.createElement("td");
-                            dayCell.id = cellId;
-                            dayCell.className = "droppable " + day.dayname.toLowerCase();
-                            dayCell.setAttribute("ondrop", "drop(event)");
-                            dayCell.setAttribute("ondragover", "allowDrop(event)");
-                            dayCell.dataset.employee = employee.employeeId;
-                            dayCell.dataset.day = day.dayname;
-
-                            row.appendChild(dayCell);
+                            var dayHeader = document.createElement("th");
+                            dayHeader.textContent = day.dayname;
+                            var dayDateElement = document.createElement('span');
+                            dayDateElement.className = 'day-date';
+                            dayHeader.appendChild(dayDateElement);
+                            thead.insertBefore(dayHeader, thead.lastElementChild);
                         });
 
-                        // Ajouter la cellule des heures totales
-                        var totalHoursCell = document.createElement("td");
-                        totalHoursCell.className = "TotalHours-column";
-                        totalHoursCell.textContent = employee.totalWeeklyHours || 0;
-                        totalHoursCell.setAttribute("title", "Total Weekly Hours"); // Ajouter un titre
-                        row.appendChild(totalHoursCell);
+                        var employeeNameHeader = document.createElement("th");
+                        employeeNameHeader.textContent = "Employée";
+                        thead.insertBefore(employeeNameHeader, thead.childNodes[1]);
 
-                        // Ajouter la ligne au tableau
-                        tbody.appendChild(row);
-                    });
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    console.error("Error:", textStatus, errorThrown);
-                    alert("An error occurred while processing your request.");
+                        var totalHoursHeader = document.createElement("th");
+                        totalHoursHeader.className = "TotalHours-column";
+                        totalHoursHeader.textContent = "Heures totales";
+                        totalHoursHeader.setAttribute("title", "Heures totales");
+                        thead.appendChild(totalHoursHeader);
+
+                        filteredEmployees.forEach(employee => {
+                            var row = document.createElement("tr");
+                            row.id = employee.employeeId;
+
+                            var employeeCell = document.createElement("td");
+                            employeeCell.textContent = employee.name;
+                            row.appendChild(employeeCell);
+
+                            response.days.forEach(day => {
+                                var cellId = `${employee.employeeId}-${day.dayname}`;
+                                var dayCell = document.createElement("td");
+                                dayCell.id = cellId;
+                                dayCell.className = "droppable " + day.dayname.toLowerCase();
+                                dayCell.dataset.employee = employee.employeeId;
+                                dayCell.dataset.day = day.dayname;
+                                row.appendChild(dayCell);
+                            });
+
+                            var totalHoursCell = document.createElement("td");
+                            totalHoursCell.className = "TotalHours-column";
+                            totalHoursCell.textContent = employee.totalWeeklyHours || 0;
+                            totalHoursCell.setAttribute("title", "Heures totales");
+                            row.appendChild(totalHoursCell);
+
+                            tbody.appendChild(row);
+                        });
+
+                        attachDragDropEvents();
+                        updateHeaderDates(dateInput.value);
+                        attachSupplementClickEvents(); // Call the function here as well
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error("Error:", textStatus, errorThrown);
+                        alert("Une erreur s'est produite lors du traitement de votre demande.");
+                    }
+                });
+            }
+
+            function updateHeaderDates(selectedDate) {
+                const startDate = new Date(selectedDate);
+                const days = document.querySelectorAll('#days-row th');
+                days.forEach((day, index) => {
+                    if (index > 0 && index < days.length - 1) {
+                        const dayDate = new Date(startDate.getTime() + (index - 1) * 24 * 60 * 60 * 1000);
+                        let dayDateElement = day.querySelector('.day-date');
+                        if (!dayDateElement) {
+                            dayDateElement = document.createElement('span');
+                            dayDateElement.className = 'day-date';
+                            day.appendChild(dayDateElement);
+                        }
+                        dayDateElement.textContent = dayDate.toISOString().split('T')[0];
+                    }
+                });
+            }
+
+            flatpickr("#date", {
+                dateFormat: "Y-m-d",
+                disable: [
+                    function (date) {
+                        return date.getDay() !== 6;
+                    }
+                ],
+                onChange: function (selectedDates, dateStr, instance) {
+                    checkSaturday(dateStr);
+                    updateHeaderDates(dateStr);
                 }
             });
-        });
 
+            let draggedItem = null;
 
+            function allowDrop(event) {
+                event.preventDefault();
+            }
 
+            function dragStart(event) {
+                draggedItem = this;
+                this.classList.add('dragging');
+                event.dataTransfer.effectAllowed = 'move';
+            }
 
+            function dragEnd() {
+                this.classList.remove('dragging');
+                draggedItem = null;
+            }
 
-        var draggedItem;
-         var categorieId = $("#categorieDropdown").val();
-            var dateSelected = $("#date").val();
-        // Définition des fonctions de glisser-déposer
-        function allowDrop(event) {
-            event.preventDefault(); // Empêcher le comportement par défaut
-        }
+            function drop(event) {
+                event.preventDefault();
+                if (draggedItem) {
+                    // Clone the dragged item
+                    let clone = draggedItem.cloneNode(true);
+                    clone.classList.remove('dragging');
+                    clone.removeAttribute('id'); // Remove id to avoid duplicates
+                    event.currentTarget.innerHTML = ''; // Clear the cell
+                    event.currentTarget.appendChild(clone); // Append the clone to the target
+                }
+            }
 
+            function dragOver(event) {
+                event.preventDefault();
+            }
 
-        function dragStart(e) {
-            draggedItem = this.cloneNode(true);
-            draggedItem.classList.add('dragged');
-            this.style.opacity = '0';
-            e.dataTransfer.setData('text/plain', '');
-            document.body.appendChild(draggedItem);
-        }
+            function dragEnter(event) {
+                event.preventDefault();
+                this.classList.add('hovered');
+            }
 
-        function dragEnd() {
-            this.style.opacity = '1';
-            draggedItem.remove();
-        }
-
-        function dragOver(e) {
-            e.preventDefault();
-        }
-
-        function dragEnter(e) {
-            e.preventDefault();
-            this.classList.add('hovered');
-        }
-
-        function dragLeave() {
-            if (this) {
+            function dragLeave() {
                 this.classList.remove('hovered');
             }
-        }
-        function drop(e) {
-            e.preventDefault();
-            this.classList.remove('hovered');
-            if (draggedItem) {
-                var clonedItem = draggedItem.cloneNode(true);
-                this.appendChild(clonedItem);
+
+            function clearCell() {
+                if (this.innerHTML.trim() !== '') {
+                    this.innerHTML = '';
+                }
             }
-        }
-        function clearCell() {
-            if (this.innerHTML.trim() !== '') {
-                this.innerHTML = '';
+
+            function attachDragDropEvents() {
+                const positions = document.querySelectorAll('.position');
+                const repos = document.querySelectorAll('#reposSection .repos');
+                const cells = document.querySelectorAll('.droppable');
+                const supplements = document.querySelectorAll('.supplement');
+
+                positions.forEach(position => {
+                    position.addEventListener('dragstart', dragStart);
+                    position.addEventListener('dragend', dragEnd);
+                });
+
+                repos.forEach(repo => {
+                    repo.addEventListener('dragstart', dragStart);
+                    repo.addEventListener('dragend', dragEnd);
+                });
+
+                cells.forEach(cell => {
+                    cell.addEventListener('dragover', allowDrop);
+                    cell.addEventListener('dragenter', dragEnter);
+                    cell.addEventListener('dragleave', dragLeave);
+                    cell.addEventListener('drop', drop);
+                    cell.addEventListener('click', clearCell);
+                });
+
+                supplements.forEach(supplement => {
+                    supplement.addEventListener('dragstart', dragStart);
+                    supplement.addEventListener('dragend', dragEnd);
+                });
             }
-        }
 
-        function dragEnd() {
-            this.style.opacity = '1';
-            draggedItem.remove();
-        }
-
-        // Attachement des événements de glisser-déposer aux éléments nécessaires après la sélection de la catégorie
-        function attachDragDropEvents() {
-            const positions = document.querySelectorAll('.position');
-            const repos = document.querySelectorAll('.repos');
-            const cells = document.querySelectorAll('.droppable');
-            const supplements = document.querySelectorAll('.supplement');
-
-            positions.forEach(position => {
-                position.addEventListener('dragstart', dragStart);
-                position.addEventListener('dragend', dragEnd);
-            });
-
-            repos.forEach(repo => {
-                repo.addEventListener('dragstart', dragStart);
-                repo.addEventListener('dragend', dragEnd);
-            });
-
-            cells.forEach(cell => {
-                cell.addEventListener('dragover', dragOver);
-                cell.addEventListener('dragenter', dragEnter);
-                cell.addEventListener('dragleave', dragLeave);
-                cell.addEventListener('drop', drop);
-                cell.addEventListener('click', clearCell);
-            });
-
-            supplements.forEach(supplement => {
-                supplement.addEventListener('dragstart', dragStart);
-                supplement.addEventListener('dragend', dragEnd);
-            });
-        }
-
-        // Gestionnaire d'événements pour le changement de catégorie
-        $('#categorieDropdown').change(updateDraggableElements);
-
-        // Appel initial pour attacher les événements de glisser-déposer aux éléments existants
-        attachDragDropEvents();
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Ajoute un gestionnaire d'événements au clic sur le bouton
-
-            const clearButton = document.getElementById('clearButton');
-            clearButton.addEventListener('click', clearTable);
+            document.getElementById('clearButton').addEventListener('click', clearTable);
 
             function clearTable() {
                 const cells = document.querySelectorAll('.droppable');
                 cells.forEach(cell => {
                     cell.innerHTML = '';
                 });
-
-                // Réinitialiser les totaux hebdomadaires
-                const totalWeeklyHoursCells = document.querySelectorAll('.total-weekly-hours');
-                totalWeeklyHoursCells.forEach(cell => {
-                    cell.querySelector('.dynamic-hours').textContent = '0';
-                });
             }
-        });
-        function initDraggableElements() {
-            $(".element").draggable({
-                containment: "parent",
-                stop: function (event, ui) {
-                    $(this).data("posX", ui.position.left);
-                    $(this).data("posY", ui.position.top);
-                },
-            });
-        }
 
-        //==========================>  UPDATE DE CATEGORIE <===========================================//
-        document.addEventListener('DOMContentLoaded', (event) => {
-            // Attach click event listeners to supplements on initial load
-            attachSupplementClickEvents();
+            function updateDraggableElements() {
+                var categorieId = document.getElementById('categorieDropdown').value;
+                if (categorieId) {
+                    fetch('/Emploi/GetPostesReposAndSupplementsByCategorie?CategorieId=' + categorieId)
+                        .then(response => response.json())
+                        .then(data => {
+                            var postesSection = document.getElementById("postesSection");
+                            postesSection.innerHTML = '';
+
+                            var reposSection = document.getElementById("reposSection");
+                            reposSection.innerHTML = '';
+
+                            var supplementsSection = document.getElementById("supplementsSection");
+                            supplementsSection.innerHTML = '';
+
+                            if (data.success) {
+                                if (data.postes && data.postes.length > 0) {
+                                    data.postes.forEach(poste => {
+                                        var posteDiv = document.createElement('div');
+                                        posteDiv.className = "position";
+                                        posteDiv.draggable = "true";
+                                        posteDiv.id = poste.posteId;
+
+                                        var posteContent = `<div class="box holiday-box">
+                                                <strong>${poste.postename}</strong><br />`;
+
+                                        if (poste.matin) {
+                                            posteContent += ' Matin  ';
+                                        }
+
+                                        if (poste.apresMidi) {
+                                            posteContent += ' Après-midi  ';
+                                        }
+
+                                        if (poste.gardeSoir) {
+                                            posteContent += ' Garde Soir';
+                                        }
+                                        posteContent += `<br />
+                                                S1 : <span>${poste.seance1Debut} /</span>
+                                                <span>${poste.seance1Fin}</span><br />`;
+
+                                        if (poste.seance2Debut) {
+                                            posteContent += `<span>${poste.seance2Debut} /</span>`;
+                                        }
+
+                                        if (poste.seance2Fin) {
+                                            posteContent += `  S2 :<span>${poste.seance2Fin}</span>`;
+                                        }
+
+                                        posteContent += `</div>`;
+
+                                        posteDiv.innerHTML = posteContent;
+                                        postesSection.appendChild(posteDiv);
+                                    });
+                                }
+
+                                if (data.repos && data.repos.length > 0) {
+                                    data.repos.forEach(repo => {
+                                        var repoDiv = document.createElement('div');
+                                        repoDiv.className = "repos";
+                                        repoDiv.draggable = "true";
+                                        repoDiv.id = repo.reposId;
+
+                                        var dateJoursContent = repo.date_Jours ? `<span> ${repo.date_Jours}</span>` : '';
+
+                                        repoDiv.innerHTML = `<div class="box repo-box">
+                                                <strong>${repo.reposName}</strong><br />
+                                                ${dateJoursContent}
+                                            </div>`;
+
+                                        reposSection.appendChild(repoDiv);
+                                    });
+                                }
+
+                                if (data.supplements && data.supplements.length > 0) {
+                                    data.supplements.forEach(supplement => {
+                                        var supplementDiv = document.createElement('div');
+                                        supplementDiv.className = "supplement";
+                                        supplementDiv.draggable = "true";
+                                        supplementDiv.id = supplement.supplementId;
+
+                                        supplementDiv.innerHTML = `<div class="btn">
+                                                <strong>${supplement.nom}</strong>
+                                            </div>`;
+
+                                        supplementsSection.appendChild(supplementDiv);
+                                    });
+
+                                    attachDragDropEvents();
+                                }
+                            } else {
+                                console.error('Erreur lors de la récupération des données: ', data.message);
+                            }
+                            attachSupplementClickEvents(); // Call the function here
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération des postes, repos et suppléments:', error);
+                        });
+                } else {
+                    var postesSection = document.getElementById("postesSection");
+                    postesSection.innerHTML = '';
+
+                    var reposSection = document.getElementById("reposSection");
+                    reposSection.innerHTML = '';
+
+                    var supplementsSection = document.getElementById("supplementsSection");
+                    supplementsSection.innerHTML = '';
+                }
+            }
+
+            fetchAndDisplayEmployees();
+            document.getElementById('categorieDropdown').addEventListener('change', updateDraggableElements);
+            updateDraggableElements();
         });
 
-        // Function to attach click event listeners to supplements
         function attachSupplementClickEvents() {
             document.querySelectorAll('.supplement').forEach(supplementDiv => {
                 supplementDiv.addEventListener('click', function () {
@@ -646,136 +684,16 @@
             });
         }
 
-        // Function to show the modal
         function showModal() {
             var modal = document.getElementById('modal');
             modal.style.display = 'block';
         }
 
-        // Function to close the modal
         function closeModal() {
             var modal = document.getElementById('modal');
             modal.style.display = 'none';
         }
 
-        var categorieDropdown = document.getElementById("categorieDropdown");
-        categorieDropdown.addEventListener('change', updateDraggableElements);
-
-        function updateDraggableElements() {
-            var categorieId = document.getElementById('categorieDropdown').value;
-            if (categorieId) {
-                // Fetch des données de la catégorie sélectionnée
-                fetch('/Emploi/GetPostesReposAndSupplementsByCategorie?CategorieId=' + categorieId)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Efface les sections de postes, repos et suppléments
-                        var postesSection = document.getElementById("postesSection");
-                        postesSection.innerHTML = '';
-
-                        var reposSection = document.getElementById("reposSection");
-                        reposSection.innerHTML = '';
-
-                        var supplementsSection = document.getElementById("supplementsSection");
-                        supplementsSection.innerHTML = '';
-
-                        // Traite les données reçues
-                        if (data.success) {
-                            // Afficher les postes
-                            if (data.postes && data.postes.length > 0) {
-                                data.postes.forEach(poste => {
-                                    var posteDiv = document.createElement('div');
-                                    posteDiv.className = "position";
-                                    posteDiv.draggable = "true";
-                                    posteDiv.id = poste.posteId;
-
-                                    var posteContent = `<div class="box holiday-box">
-                                            <strong>${poste.postename}</strong><br />`;
-
-                                    if (poste.matin) {
-                                        posteContent += ' Matin  ';
-                                    }
-
-                                    if (poste.apresMidi) {
-                                        posteContent += ' Après-midi  ';
-                                    }
-
-                                    if (poste.gardeSoir) {
-                                        posteContent += ' Garde Soir';
-                                    }
-                                    posteContent += `<br />
-                                            S1 : <span>${poste.seance1Debut} /</span>
-                                            <span>${poste.seance1Fin}</span><br />`;
-
-                                    if (poste.seance2Debut) {
-                                        posteContent += `<span>${poste.seance2Debut} /</span>`;
-                                    }
-
-                                    if (poste.seance2Fin) {
-                                        posteContent += `  S2 :<span>${poste.seance2Fin}</span>`;
-                                    }
-
-                                    posteContent += `</div>`;
-
-                                    posteDiv.innerHTML = posteContent;
-                                    postesSection.appendChild(posteDiv);
-                                });
-                            }
-
-                            // Afficher les repos
-                            if (data.repos && data.repos.length > 0) {
-                                data.repos.forEach(repo => {
-                                    var repoDiv = document.createElement('div');
-                                    repoDiv.className = "repos";
-                                    repoDiv.draggable = "true";
-                                    repoDiv.id = repo.reposId;
-
-                                    var dateJoursContent = repo.date_Jours ? `<span> ${repo.date_Jours}</span>` : '';
-
-                                    repoDiv.innerHTML = `<div class="box repo-box">
-                                            <strong>${repo.reposName}</strong><br />
-                                            ${dateJoursContent}
-                                        </div>`;
-
-                                    reposSection.appendChild(repoDiv);
-                                });
-                            }
-
-                            // Afficher les suppléments
-                            if (data.supplements && data.supplements.length > 0) {
-                                data.supplements.forEach(supplement => {
-                                    var supplementDiv = document.createElement('div');
-                                    supplementDiv.className = "supplement";
-                                    supplementDiv.draggable = "true";
-                                    supplementDiv.id = 'supplement_' + supplement.supplementId;
-
-                                    supplementDiv.innerHTML = `<div class="btn">
-                                            <strong>${supplement.nom}</strong>
-                                        </div>`;
-
-                                    supplementsSection.appendChild(supplementDiv);
-                                });
-
-                                // Attach click event listeners to the new supplements
-                                attachSupplementClickEvents();
-                            }
-                        } else {
-                            console.error('Erreur lors de la récupération des données: ', data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors de la récupération des postes, repos et suppléments:', error);
-                    });
-            } else {
-                var postesSection = document.getElementById("postesSection");
-                postesSection.innerHTML = '';
-
-                var reposSection = document.getElementById("reposSection");
-                reposSection.innerHTML = '';
-
-                var supplementsSection = document.getElementById("supplementsSection");
-                supplementsSection.innerHTML = '';
-            }
-        }
 
 
         //==========================>  PDF <===========================================//
@@ -787,29 +705,7 @@
             doc.save("tableau.pdf");
         }
         //==========================>  CALENDRER<===========================================//
-        flatpickr.l10ns.default.firstDayOfWeek = 1; // Définit le premier jour de la semaine à lundi
-        flatpickr.localize(flatpickr.l10ns.default); // Définit la locale par défaut
-
-        flatpickr("#date", {
-            dateFormat: "Y-m-d", // Format de date, si nécessaire
-            disable: [
-                function (date) {
-                    // Désactiver tous les jours sauf les samedis
-                    return date.getDay() !== 6;
-                }
-            ]
-        });
-
-    function checkSaturday(selectedDate) {
-            var date = new Date(selectedDate);
-            var dayOfWeek = date.getDay();
-
-            // Vérifie si le jour sélectionné est un samedi (6 pour samedi)
-            if (dayOfWeek !== 6) {
-                alert("Veuillez sélectionner un samedi.");
-                document.getElementById('date').value = ''; // Réinitialise la valeur de l'input
-            }
-        }
+       
 
         //==========================> AFFICHAGE DU L'EMPLOI <===========================================//
 
@@ -858,74 +754,98 @@
                 }
             });
         }
-        
 
 
-       //==========================> ENREGISTREMENT DU L'EMPLOI <===========================================//
-        function getTableData() {
-            var emploiData = [];
-            $("#tableau tbody tr").each(function () {
-                var employeeId = $(this).attr("id");
-                var name = $(this).closest("tr").find(".employee-column").text().trim();
 
-                $(this).find("td.droppable").each(function (index, cell) {
-                    var dayName = $(this).data("day");
+        //==========================> ENREGISTREMENT DU L'EMPLOI <===========================================//document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener("DOMContentLoaded", function () {
 
-                    var posteId = $(cell).find(".position").attr("id") || "";
-                    var reposId = $(cell).find(".repos").attr("id") || "";
-                    var supplementId = $(cell).find(".supplement").attr("id") || "";
+        const form = document.getElementById('emploi-form');
+        const saveButton = document.getElementById('myButton');
 
-                    var dailyEmployment = {
-                        EmployeeId: employeeId,
-                        EmployeName: name,
-                        DayName: dayName,
-                        PosteId: posteId,
-                        ReposId: reposId,
-                        SupplementId: supplementId
-                    };
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
 
-                    emploiData.push(dailyEmployment);
-                });
-            });
-            return emploiData;
-        }
+        saveButton.addEventListener('click', function (event) {
+            event.preventDefault();
 
-
-        $("#emploi-form").submit(function (event) {
-        event.preventDefault(); // Empêche la soumission du formulaire par défaut
-
-        // Récupérer les données du tableau
-        var emploiData = getTableData();
+            var emploiData = getTableData();
             var serviceId = sessionStorage.getItem("serviceId");
 
-        // Construction de l'objet à envoyer au serveur
-        var dataToSend = {
+            var dataToSend = {
                 ServiceSelected: serviceId,
-            DateSelected: $("#date").val(),
-            CategorieSelected: $("#categorieDropdown").val(),
-            EmploiData: emploiData
-        };
+                DateSelected: document.getElementById("date").value,
+                CategorieSelected: document.getElementById("categorieDropdown").value,
+                EmploiData: emploiData
+            };
 
-        console.log("Données d'emploi à envoyer au serveur :", dataToSend); // Affiche les données à envoyer dans la console
+            console.log("Données d'emploi à envoyer au serveur :", dataToSend);
 
-        // Envoi des données au serveur via $.post()
-        $.ajax({
-            url: '@Url.Action("EnregistrerEmploi", "Emploi")',
-            type: 'POST',
-            contentType: 'application/json', // Spécifie le type de contenu comme JSON
-            data: JSON.stringify(dataToSend), // Convertit les données en JSON
-            success: function (result) {
-                console.log("Résultat :", result);
-                // Gérer le résultat si nécessaire
-                alert(result.message); // Affichez un message d'alerte avec le message reçu du serveur
-            },
-            error: function (xhr, status, error) {
-                console.error("Erreur lors de l'envoi des données :", error);
-                alert("Erreur lors de l'envoi des données. Consultez la console pour plus de détails.");
-                // Gérer l'erreur si nécessaire
+            $.ajax({
+                url: '@Url.Action("EnregistrerEmploi", "Emploi")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dataToSend),
+                success: function (result) {
+                    console.log("Résultat :", result);
+                    alert(result.message);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Erreur lors de l'envoi des données :", error);
+                    alert("Erreur lors de l'envoi des données. Consultez la console pour plus de détails.");
+                }
+            });
+        });
+
+            function getTableData() {
+                var emploiData = [];
+                $("#tableau tbody tr").each(function () {
+                    var employeeId = $(this).attr("id");
+                    var name = $(this).closest("tr").find(".employee-column").text().trim();
+
+                    $(this).find("td.droppable").each(function (index, cell) {
+                        var dayName = $(this).data("day");
+                        var dayDate = $(`#tableau thead th:contains(${dayName}) .day-date`).text().trim();
+
+                        // Récupération des identifiants des postes, repos et suppléments
+                        var posteId = "";
+                        var reposId = "";
+                        var supplementId = "";
+
+                        var posteElement = $(cell).find(".position");
+                        if (posteElement.length > 0) {
+                            posteId = posteElement.attr("id");
+                        }
+
+                        var reposElement = $(cell).find(".repos");
+                        if (reposElement.length > 0) {
+                            reposId = reposElement.attr("id");
+                        }
+
+                        var supplementElement = $(cell).find(".supplement");
+                        if (supplementElement.length > 0) {
+                            supplementId = supplementElement.attr("id");
+                        }
+
+                        var dailyEmployment = {
+                            EmployeeId: employeeId,
+                            EmployeName: name,
+                            DayName: dayName,
+                            DateDuJour: dayDate,
+                            PosteId: posteId,
+                            ReposId: reposId,
+                            SupplementId: supplementId
+                        };
+                        emploiData.push(dailyEmployment);
+                    });
+                });
+                return emploiData;
             }
+
+        
         });
-        });
+
 
     </script>
 </body>

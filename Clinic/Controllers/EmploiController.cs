@@ -1,6 +1,7 @@
 ﻿using Clinic.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using static Clinic.Controllers.EmploiController;
 
 
@@ -240,7 +241,6 @@ namespace Clinic.Controllers
             return "";
         }
 
-        // POST: api/Emploi/EnregistrerEmploi
         [HttpPost("EnregistrerEmploi")]
         public async Task<IActionResult> EnregistrerEmploi([FromBody] EnregistrerEmploiModel emploiModel)
         {
@@ -248,14 +248,13 @@ namespace Clinic.Controllers
             {
                 return BadRequest("Données invalides ou manquantes.");
             }
-            // Convertir ServiceSelected en int (ServiceId)
+
             int? serviceId = null;
             if (!string.IsNullOrEmpty(emploiModel.ServiceSelected) && int.TryParse(emploiModel.ServiceSelected, out int parsedServiceId))
             {
                 serviceId = parsedServiceId;
             }
 
-            // Convertir CategorieSelected en int (CategorieId)
             int? categorieId = null;
             if (!string.IsNullOrEmpty(emploiModel.CategorieSelected) && int.TryParse(emploiModel.CategorieSelected, out int parsedCategorieId))
             {
@@ -264,35 +263,39 @@ namespace Clinic.Controllers
 
             try
             {
-                // Créer un nouvel objet Emploi
                 var emploi = new Emploi
                 {
-                    DateOfWeek = DateTime.Parse(emploiModel.DateSelected), // Convertir la chaîne en DateTime
+                    DateOfWeek = DateTime.Parse(emploiModel.DateSelected),
                     ServiceSelected = emploiModel.ServiceSelected,
                     CategorieSelected = emploiModel.CategorieSelected,
                     ServiceId = serviceId,
                     CategorieId = categorieId
                 };
 
-                // Ajouter l'emploi à la base de données
                 _context.Emplois.Add(emploi);
-                await _context.SaveChangesAsync(); // Sauvegarder les changements pour générer l'ID de l'emploi
+                await _context.SaveChangesAsync();
 
-                // Enregistrer les données d'emploi quotidien pour chaque employé
                 foreach (var dailyEmploymentModel in emploiModel.EmploiData)
                 {
-                    // Créer un nouvel objet DailyEmployment
+                    DateTime? dateDuJour = null;
+                    if (!string.IsNullOrEmpty(dailyEmploymentModel.DateDuJour) &&
+                        DateTime.TryParseExact(dailyEmploymentModel.DateDuJour, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                    {
+                        dateDuJour = parsedDate;
+                    }
+
                     var dailyEmployment = new DailyEmployment
                     {
+                        DateOfWeek = DateTime.Parse(emploiModel.DateSelected),
                         EmployeeId = dailyEmploymentModel.EmployeeId,
-                        DateOfWeek = DateTime.Parse(emploiModel.DateSelected), // Convertir la chaîne en DateTime
-                        ServiceId = serviceId, // Utiliser la variable serviceId convertie
-                        CategorieId = categorieId, // Utiliser la variable categorieId convertie
+                        DateDuJour = dateDuJour?.ToString("yyyy-MM-dd"), // Ensure the date is converted back to string format if needed
+                        ServiceId = serviceId,
+                        CategorieId = categorieId,
                         dayname = dailyEmploymentModel.dayname,
                         PosteId = dailyEmploymentModel.PosteId,
                         ReposId = dailyEmploymentModel.ReposId,
                         SupplementId = dailyEmploymentModel.SupplementId,
-                        EmploiId = emploi.EmploiId // Associer au même emploi
+                        EmploiId = emploi.EmploiId
                     };
 
                     _context.DailyEmployments.Add(dailyEmployment);
@@ -307,6 +310,49 @@ namespace Clinic.Controllers
                 return StatusCode(500, $"Une erreur s'est produite lors de l'enregistrement des données : {ex.Message}");
             }
         }
+
+        public class SupplementDataViewModel
+        {
+            public int? SupplementId { get; set; }
+            public string? Nom { get; set; }
+            public string? Matricule { get; set; }
+            public TimeSpan? HeureDebut { get; set; }
+            public TimeSpan? HeureFin { get; set; }
+            public DateTime? DateJour { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveSupplementData(SupplementDataViewModel supplementData)
+        {
+            try
+            {
+                // Vérifier l'existence du supplément
+                var supplement = await _context.Supplements.FindAsync(supplementData.SupplementId);
+                if (supplement == null)
+                {
+                    return Json(new { success = false, message = "Supplément non trouvé." });
+                }
+
+                // Mettre à jour les informations du supplément
+                supplement.Nom = supplementData.Nom;
+                supplement.Matricule = supplementData.Matricule;
+                supplement.StartHour = supplementData.HeureDebut;
+                supplement.EndHour = supplementData.HeureFin;
+                supplement.Date = supplementData.DateJour;
+
+                // Enregistrement des modifications dans la base de données
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Données du supplément mises à jour avec succès." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Une erreur s'est produite lors de la mise à jour des données du supplément : " + ex.Message });
+            }
+        }
+
+
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -424,7 +470,7 @@ namespace Clinic.Controllers
 
             return View(model);
         }
-      
+
 
 
 
@@ -446,7 +492,7 @@ namespace Clinic.Controllers
                 // Gérer les erreurs
                 return Json(new { success = false, message = "Une erreur s'est produite lors de la récupération des employés." });
             }
-        } 
+        }
         public async Task<IActionResult> GetEmployees()
         {
             var employees = await _context.Employee?.ToListAsync();
@@ -584,6 +630,6 @@ namespace Clinic.Controllers
         //    }
         //    return Json(new { success = false });
         //}
-       
+
     }
 }
