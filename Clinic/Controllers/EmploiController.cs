@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+
+using System;
 using static Clinic.Controllers.EmploiController;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Clinic.Controllers
@@ -240,7 +243,6 @@ namespace Clinic.Controllers
             }
             return "";
         }
-
         [HttpPost("EnregistrerEmploi")]
         public async Task<IActionResult> EnregistrerEmploi([FromBody] EnregistrerEmploiModel emploiModel)
         {
@@ -284,73 +286,43 @@ namespace Clinic.Controllers
                         dateDuJour = parsedDate;
                     }
 
+                    // Convert TimeSpan directly from the string without parsing to nullable TimeSpan
+                    var startHour = dailyEmploymentModel.StartHour;
+                    var endHour = dailyEmploymentModel.EndHour;
+
+                    // Log for debugging
+                    Console.WriteLine($"StartHour: {startHour}, EndHour: {endHour}");
+
                     var dailyEmployment = new DailyEmployment
                     {
                         DateOfWeek = DateTime.Parse(emploiModel.DateSelected),
                         EmployeeId = dailyEmploymentModel.EmployeeId,
-                        DateDuJour = dateDuJour?.ToString("yyyy-MM-dd"), // Ensure the date is converted back to string format if needed
+                        DateDuJour = dateDuJour?.ToString("yyyy-MM-dd"),
                         ServiceId = serviceId,
                         CategorieId = categorieId,
                         dayname = dailyEmploymentModel.dayname,
                         PosteId = dailyEmploymentModel.PosteId,
                         ReposId = dailyEmploymentModel.ReposId,
                         SupplementId = dailyEmploymentModel.SupplementId,
-                        EmploiId = emploi.EmploiId
+                        EmployeName = dailyEmploymentModel.EmployeName,
+                        EmploiId = emploi.EmploiId,
+                        StartHour = startHour,
+                        EndHour = endHour
                     };
 
+                    Console.WriteLine($"Adding DailyEmployment: StartHour={dailyEmployment.StartHour}, EndHour={dailyEmployment.EndHour}");
                     _context.DailyEmployments.Add(dailyEmployment);
                 }
 
                 await _context.SaveChangesAsync();
-
                 return Ok(new { message = "Données d'emploi enregistrées avec succès." });
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Une erreur s'est produite : {ex.Message}");
                 return StatusCode(500, $"Une erreur s'est produite lors de l'enregistrement des données : {ex.Message}");
             }
         }
-
-        public class SupplementDataViewModel
-        {
-            public int? SupplementId { get; set; }
-            public string? Nom { get; set; }
-            public string? Matricule { get; set; }
-            public TimeSpan? HeureDebut { get; set; }
-            public TimeSpan? HeureFin { get; set; }
-            public DateTime? DateJour { get; set; }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SaveSupplementData(SupplementDataViewModel supplementData)
-        {
-            try
-            {
-                // Vérifier l'existence du supplément
-                var supplement = await _context.Supplements.FindAsync(supplementData.SupplementId);
-                if (supplement == null)
-                {
-                    return Json(new { success = false, message = "Supplément non trouvé." });
-                }
-
-                // Mettre à jour les informations du supplément
-                supplement.Nom = supplementData.Nom;
-                supplement.Matricule = supplementData.Matricule;
-                supplement.StartHour = supplementData.HeureDebut;
-                supplement.EndHour = supplementData.HeureFin;
-                supplement.Date = supplementData.DateJour;
-
-                // Enregistrement des modifications dans la base de données
-                await _context.SaveChangesAsync();
-
-                return Json(new { success = true, message = "Données du supplément mises à jour avec succès." });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Une erreur s'est produite lors de la mise à jour des données du supplément : " + ex.Message });
-            }
-        }
-
 
 
         [HttpGet]
@@ -487,7 +459,7 @@ namespace Clinic.Controllers
                 // Renvoyer la liste des employés en JSON
                 return Json(new { success = true, employees });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Gérer les erreurs
                 return Json(new { success = false, message = "Une erreur s'est produite lors de la récupération des employés." });

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clinic.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    [Migration("20240517005322_DATa754")]
-    partial class DATa754
+    [Migration("20240609044734_addmi")]
+    partial class addmi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,14 +80,23 @@ namespace Clinic.Migrations
                     b.Property<int?>("CategorieId")
                         .HasColumnType("int");
 
+                    b.Property<string>("DateDuJour")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("DateOfWeek")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("EmploiId")
                         .HasColumnType("int");
 
+                    b.Property<string>("EmployeName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("EndHour")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PosteId")
                         .HasColumnType("nvarchar(max)");
@@ -98,6 +107,9 @@ namespace Clinic.Migrations
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
 
+                    b.Property<string>("StartHour")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SupplementId")
                         .HasColumnType("nvarchar(max)");
 
@@ -106,9 +118,13 @@ namespace Clinic.Migrations
 
                     b.HasKey("DailyEmploymentId");
 
+                    b.HasIndex("CategorieId");
+
                     b.HasIndex("EmploiId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("DailyEmployments");
                 });
@@ -154,7 +170,7 @@ namespace Clinic.Migrations
                     b.Property<DateTime?>("DateOfWeek")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("HRId")
+                    b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ServiceId")
@@ -168,8 +184,6 @@ namespace Clinic.Migrations
                     b.HasIndex("CategorieId");
 
                     b.HasIndex("ChefDeServiceId");
-
-                    b.HasIndex("HRId");
 
                     b.HasIndex("ServiceId");
 
@@ -244,29 +258,6 @@ namespace Clinic.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Employee");
-                });
-
-            modelBuilder.Entity("Clinic.Models.HR", b =>
-                {
-                    b.Property<int>("HRId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HRId"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HRName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HRId");
-
-                    b.ToTable("HR");
                 });
 
             modelBuilder.Entity("Clinic.Models.Poste", b =>
@@ -387,9 +378,6 @@ namespace Clinic.Migrations
                     b.Property<int?>("ChefDeServiceId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("HRId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -399,8 +387,6 @@ namespace Clinic.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ChefDeServiceId");
-
-                    b.HasIndex("HRId");
 
                     b.ToTable("Services");
                 });
@@ -484,6 +470,10 @@ namespace Clinic.Migrations
 
             modelBuilder.Entity("Clinic.Models.DailyEmployment", b =>
                 {
+                    b.HasOne("Clinic.Models.Categorie", "Categorie")
+                        .WithMany()
+                        .HasForeignKey("CategorieId");
+
                     b.HasOne("Clinic.Models.Emploi", "Emploi")
                         .WithMany("DailyEmployments")
                         .HasForeignKey("EmploiId")
@@ -496,9 +486,17 @@ namespace Clinic.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Clinic.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId");
+
+                    b.Navigation("Categorie");
+
                     b.Navigation("Emploi");
 
                     b.Navigation("Employee");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Clinic.Models.Day", b =>
@@ -517,10 +515,6 @@ namespace Clinic.Migrations
                     b.HasOne("Clinic.Models.ChefDeService", null)
                         .WithMany("Emplois")
                         .HasForeignKey("ChefDeServiceId");
-
-                    b.HasOne("Clinic.Models.HR", null)
-                        .WithMany("Emplois")
-                        .HasForeignKey("HRId");
 
                     b.HasOne("Clinic.Models.Service", "Service")
                         .WithMany("Emplois")
@@ -602,10 +596,6 @@ namespace Clinic.Migrations
                         .WithMany()
                         .HasForeignKey("ChefDeServiceId");
 
-                    b.HasOne("Clinic.Models.HR", null)
-                        .WithMany("Services")
-                        .HasForeignKey("HRId");
-
                     b.Navigation("ChefDeService");
                 });
 
@@ -683,13 +673,6 @@ namespace Clinic.Migrations
                     b.Navigation("Repos");
 
                     b.Navigation("Supplements");
-                });
-
-            modelBuilder.Entity("Clinic.Models.HR", b =>
-                {
-                    b.Navigation("Emplois");
-
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Clinic.Models.Service", b =>

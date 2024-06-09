@@ -21,7 +21,7 @@ using System.ComponentModel.DataAnnotations.Schema;
         public string? SupplementId { get; set; }
         [ForeignKey("EmploiId")]
         public int EmploiId { get; set; }
-
+     public string? EmployeName { get; set; }
         public Emploi? Emploi { get; set; }
         [ForeignKey("CategorieId")]
         public int? CategorieId { get; set; }
@@ -34,10 +34,8 @@ using System.ComponentModel.DataAnnotations.Schema;
         public Employee? Employee { get; set; }
         public string? DateDuJour { get; set; }
          public int EmployeeId { get; set; }
-        public string? Matricule { get; set; }
-        public TimeSpan? StartHour { get; set; }
-        public TimeSpan? EndHour { get; set; }
-        public DateTime? Date { get; set; }
+        public string? StartHour { get; set; }
+        public string? EndHour { get; set; }
 
 
     }

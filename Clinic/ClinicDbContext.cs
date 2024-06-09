@@ -15,7 +15,6 @@ namespace Clinic.Models
         public DbSet<ChefDeService>? ChefDeServices   { get; set; }
         public DbSet<Day>? Days   { get; set; }
         public DbSet<Service>? Services { get; set; }
-        public DbSet<HR>? HR { get; set; }
          public DbSet<DailyEmployment>? DailyEmployments { get; set; }
 
         public ClinicDbContext(DbContextOptions<ClinicDbContext> options) : base(options)

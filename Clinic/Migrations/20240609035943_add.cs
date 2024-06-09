@@ -23,18 +23,19 @@ namespace Clinic.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HR",
+                name: "ChefDeServices",
                 columns: table => new
                 {
-                    HRId = table.Column<int>(type: "int", nullable: false)
+                    ChefDeServiceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    HRName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ServiceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HR", x => x.HRId);
+                    table.PrimaryKey("PK_ChefDeServices", x => x.ChefDeServiceId);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,42 +44,18 @@ namespace Clinic.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HRId = table.Column<int>(type: "int", nullable: true)
+                    ChefDeServiceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Services_HR_HRId",
-                        column: x => x.HRId,
-                        principalTable: "HR",
-                        principalColumn: "HRId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ChefsDeService",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ChefDeServiceName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ServiceId = table.Column<int>(type: "int", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChefsDeService", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ChefsDeService_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Services_ChefDeServices_ChefDeServiceId",
+                        column: x => x.ChefDeServiceId,
+                        principalTable: "ChefDeServices",
+                        principalColumn: "ChefDeServiceId");
                 });
 
             migrationBuilder.CreateTable(
@@ -90,10 +67,10 @@ namespace Clinic.Migrations
                     DateOfWeek = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ServiceSelected = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategorieSelected = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: true),
                     CategorieId = table.Column<int>(type: "int", nullable: true),
-                    ChefDeServiceId = table.Column<int>(type: "int", nullable: true),
-                    HRId = table.Column<int>(type: "int", nullable: true)
+                    ChefDeServiceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -104,15 +81,10 @@ namespace Clinic.Migrations
                         principalTable: "Categories",
                         principalColumn: "CategorieId");
                     table.ForeignKey(
-                        name: "FK_Emplois_ChefsDeService_ChefDeServiceId",
+                        name: "FK_Emplois_ChefDeServices_ChefDeServiceId",
                         column: x => x.ChefDeServiceId,
-                        principalTable: "ChefsDeService",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Emplois_HR_HRId",
-                        column: x => x.HRId,
-                        principalTable: "HR",
-                        principalColumn: "HRId");
+                        principalTable: "ChefDeServices",
+                        principalColumn: "ChefDeServiceId");
                     table.ForeignKey(
                         name: "FK_Emplois_Services_ServiceId",
                         column: x => x.ServiceId,
@@ -126,10 +98,7 @@ namespace Clinic.Migrations
                 {
                     Id_day = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    dayname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PosteId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReposId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SupplementId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Dayname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmploiId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -157,12 +126,13 @@ namespace Clinic.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecruitmentDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsChefDeService = table.Column<bool>(type: "bit", nullable: true),
                     TotalWeeklyHours = table.Column<int>(type: "int", nullable: true),
                     CategorieId = table.Column<int>(type: "int", nullable: true),
+                    Approved = table.Column<bool>(type: "bit", nullable: true),
                     EmploiId = table.Column<int>(type: "int", nullable: true),
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    ChefDeServiceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -172,6 +142,11 @@ namespace Clinic.Migrations
                         column: x => x.CategorieId,
                         principalTable: "Categories",
                         principalColumn: "CategorieId");
+                    table.ForeignKey(
+                        name: "FK_Employee_ChefDeServices_ChefDeServiceId",
+                        column: x => x.ChefDeServiceId,
+                        principalTable: "ChefDeServices",
+                        principalColumn: "ChefDeServiceId");
                     table.ForeignKey(
                         name: "FK_Employee_Emplois_EmploiId",
                         column: x => x.EmploiId,
@@ -234,13 +209,22 @@ namespace Clinic.Migrations
                     ReposId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SupplementId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EmploiId = table.Column<int>(type: "int", nullable: false),
+                    EmployeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategorieId = table.Column<int>(type: "int", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: true),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                    DateDuJour = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    StartHour = table.Column<TimeSpan>(type: "time", nullable: true),
+                    EndHour = table.Column<TimeSpan>(type: "time", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DailyEmployments", x => x.DailyEmploymentId);
+                    table.ForeignKey(
+                        name: "FK_DailyEmployments_Categories_CategorieId",
+                        column: x => x.CategorieId,
+                        principalTable: "Categories",
+                        principalColumn: "CategorieId");
                     table.ForeignKey(
                         name: "FK_DailyEmployments_Emplois_EmploiId",
                         column: x => x.EmploiId,
@@ -253,6 +237,11 @@ namespace Clinic.Migrations
                         principalTable: "Employee",
                         principalColumn: "EmployeeId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DailyEmployments_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -263,7 +252,8 @@ namespace Clinic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ReposName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Date_Jours = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Date_Joursfin = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    hdebut = table.Column<TimeSpan>(type: "time", nullable: true),
+                    hFin = table.Column<TimeSpan>(type: "time", nullable: true),
                     CategorieId = table.Column<int>(type: "int", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: true),
                     EmploiId = table.Column<int>(type: "int", nullable: true),
@@ -355,14 +345,14 @@ namespace Clinic.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChefsDeService_EmployeeId",
-                table: "ChefsDeService",
-                column: "EmployeeId");
+                name: "IX_ChefDeServices_ServiceId",
+                table: "ChefDeServices",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChefsDeService_ServiceId",
-                table: "ChefsDeService",
-                column: "ServiceId");
+                name: "IX_DailyEmployments_CategorieId",
+                table: "DailyEmployments",
+                column: "CategorieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DailyEmployments_EmploiId",
@@ -373,6 +363,11 @@ namespace Clinic.Migrations
                 name: "IX_DailyEmployments_EmployeeId",
                 table: "DailyEmployments",
                 column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DailyEmployments_ServiceId",
+                table: "DailyEmployments",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Days_EmploiId",
@@ -390,11 +385,6 @@ namespace Clinic.Migrations
                 column: "ChefDeServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Emplois_HRId",
-                table: "Emplois",
-                column: "HRId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Emplois_ServiceId",
                 table: "Emplois",
                 column: "ServiceId");
@@ -403,6 +393,11 @@ namespace Clinic.Migrations
                 name: "IX_Employee_CategorieId",
                 table: "Employee",
                 column: "CategorieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employee_ChefDeServiceId",
+                table: "Employee",
+                column: "ChefDeServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employee_EmploiId",
@@ -445,9 +440,9 @@ namespace Clinic.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_HRId",
+                name: "IX_Services_ChefDeServiceId",
                 table: "Services",
-                column: "HRId");
+                column: "ChefDeServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Supplements_CategorieId",
@@ -465,18 +460,18 @@ namespace Clinic.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ChefsDeService_Employee_EmployeeId",
-                table: "ChefsDeService",
-                column: "EmployeeId",
-                principalTable: "Employee",
-                principalColumn: "EmployeeId");
+                name: "FK_ChefDeServices_Services_ServiceId",
+                table: "ChefDeServices",
+                column: "ServiceId",
+                principalTable: "Services",
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_ChefsDeService_Employee_EmployeeId",
-                table: "ChefsDeService");
+                name: "FK_ChefDeServices_Services_ServiceId",
+                table: "ChefDeServices");
 
             migrationBuilder.DropTable(
                 name: "DailyEmployments");
@@ -506,13 +501,10 @@ namespace Clinic.Migrations
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "ChefsDeService");
-
-            migrationBuilder.DropTable(
                 name: "Services");
 
             migrationBuilder.DropTable(
-                name: "HR");
+                name: "ChefDeServices");
         }
     }
 }
