@@ -772,6 +772,7 @@
                     }
                 });
             });
+
             function getTableData() {
                 var emploiData = [];
                 $("#tableau tbody tr").each(function () {
@@ -789,31 +790,29 @@
                         var heureDebut = $(cell).find('.supplement').data('heureDebut') || "";
                         var heureFin = $(cell).find('.supplement').data('heureFin') || "";
 
-                        // Logiquement, on ne prend que les cellules avec des heures valides
-                        if (heureDebut && heureFin) {
-                            console.log(`Cell for ${dayName}: HeureDebut=${heureDebut}, HeureFin=${heureFin}`);
+                        console.log(`Cell for ${dayName}: HeureDebut=${heureDebut}, HeureFin=${heureFin}`);
 
-                            var dailyEmployment = {
-                                EmployeeId: employeeId,
-                                EmployeName: name,
-                                DayName: dayName,
-                                DateDuJour: dayDate,
-                                PosteId: posteId,
-                                ReposId: reposId,
-                                SupplementId: supplementId,
-                                HeureDebut: heureDebut,
-                                HeureFin: heureFin,
-                            };
-                            emploiData.push(dailyEmployment);
-                        }
+                        var dailyEmployment = {
+                            EmployeeId: employeeId,
+                            EmployeName: name,
+                            DayName: dayName,
+                            DateDuJour: dayDate,
+                            PosteId: posteId,
+                            ReposId: reposId,
+                            SupplementId: supplementId,
+                            StartHour: heureDebut,
+                            EndHour: heureFin,
+                        };
+
+                        emploiData.push(dailyEmployment);
                     });
                 });
                 return emploiData;
             }
 
             $('#valider').click(function () {
-                const heureDebut = convertirFormatHeure($('#heureDebut').val());
-                const heureFin = convertirFormatHeure($('#heureFin').val());
+                const heureDebut = $('#heureDebut').val();
+                const heureFin = $('#heureFin').val();
 
                 console.log("Heure de début récupérée:", heureDebut);
                 console.log("Heure de fin récupérée:", heureFin);
@@ -823,19 +822,14 @@
                     currentCell.data('heureFin', heureFin);
 
                     currentCell.html(`
-                    <div class="supplement" draggable="true" id="${currentCell.find('.supplement').attr('id')}" data-heure-debut="${heureDebut}" data-heure-fin="${heureFin}">
-                    </div>
-                `);
+                <div class="supplement" draggable="true" id="${currentCell.find('.supplement').attr('id')}" data-heure-debut="${heureDebut}" data-heure-fin="${heureFin}">
+                </div>
+            `);
                 }
 
                 closeModal();
                 attachSupplementClickEvents(); // Réattache les événements de clic sur les suppléments
             });
-            function convertirFormatHeure(heure) {
-                var heureFormat24h = moment(heure, ["HH:mm", "h:mm A"]).format("HH:mm");
-                return heureFormat24h;
-            }
-
 
 
 
@@ -858,7 +852,6 @@
        
 
         //==========================> AFFICHAGE DU L'EMPLOI <===========================================//
-
         function afficherEmploi() {
             var categorieId = $("#categorieDropdown").val();
             var dateSelected = $("#date").val();
@@ -893,6 +886,10 @@
                                 cellContent += emploi.supplementName + '<br>';
                             }
 
+                            if (emploi.startHour && emploi.endHour) {
+                                cellContent += `Start: ${emploi.startHour} - End: ${emploi.endHour}<br>`;
+                            }
+
                             cell.html(cellContent);
                         });
                     } else {
@@ -905,6 +902,7 @@
             });
         }
 
+     
 
 
         //==========================> ENREGISTREMENT DU L'EMPLOI <===========================================//document.addEventListener('DOMContentLoaded', function() {

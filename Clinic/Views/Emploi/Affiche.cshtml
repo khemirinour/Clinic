@@ -1,27 +1,15 @@
 ﻿@model Clinic.Models.EmploiViewModel
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-    <!-- Meta Tags -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Title -->
-    <!-- Favicon -->
-    <link rel="icon" href="img/favicon.png">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <link rel="icon" href="img/favicon.png">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
     <!-- Nice Select CSS -->
     <link rel="stylesheet" href="~/css/nice-select.css">
@@ -39,35 +27,19 @@
     <link rel="stylesheet" href="~/css/animate.min.css">
     <!-- Magnific Popup CSS -->
     <link rel="stylesheet" href="~/css/magnific-popup.css">
-
     <!-- Medipro CSS -->
+
     <link rel="stylesheet" href="~/css/normalize.css">
-    <link rel="stylesheet" href="~/css/Employe.css">
+    <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
 <body>
 
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="loader">
-            <div class="loader-outter"></div>
-            <div class="loader-inner"></div>
-
-            <div class="indicator">
-                <svg width="16px" height="12px">
-                    <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
-                    <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
-                </svg>
-            </div>
-        </div>
-    </div>
-    <!-- End Preloader -->
-    <!-- Header Area -->
+  
     <header class="header">
-        <!-- Topbar -->
-        <!-- End Topbar -->
-        <!-- Header Inner -->
+
         <div class="header-inner">
             <div class="margin">
                 <div class="inner">
@@ -102,14 +74,20 @@
         <!--/ End Header Inner -->
     </header>
     <form class="margin container">
-    <div class="center">
-        <div class="row">
-            <div class="date-navigation">
-                <button id="previousWeekBtn" class="btn mx-1" onclick="afficherEmploi()"><span class="fas fa-chevron-left"> </span> Semaine Précédente </button>
-                <input type="date" id="date" class="box mx-1" name="DateofWeek" required>
-                <button id="nextWeekBtn" class="btn mx-1" onclick="afficherEmploi()"> Semaine Prochaine <span class="fas fa-chevron-right">  </span></button>
+        <div class="center">
+            <div class="row">
+                <div class="date-navigation">
+                    <button id="previousWeekBtn" class="btn mx-1">
+                        <span class="fas fa-chevron-left"></span> Semaine Précédente
+                    </button>
+                    <input type="date" id="date" class="box mx-1" name="DateofWeek" required>
+                    <button id="nextWeekBtn" class="btn mx-1">
+                        Semaine Prochaine <span class="fas fa-chevron-right"></span>
+                    </button>
+                </div>
             </div>
-        </div></div>
+        </div>
+
         <div class="buttons-container mt-4">
 
             
@@ -121,17 +99,7 @@
                 <span class="icon2"></span>
                 <span class="tooltip">Télécharger</span>
             </button>   
-            <select class="btn-categories" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
-                <option value="">Sélectionnez une catégorie</option>
-                @if (Model != null && Model.Categories != null)
-                {
-                    @foreach (var categorie in Model.Categories)
-                    {
-                        <option value="@categorie.CategorieId">@categorie.CategorieName</option>
-                    }
-                }</select>
-            <!-- Bouton pour afficher les emplois -->
-            <button type="button" class="btn" id="afficherEmploiButton" onclick="afficherEmploi()">Afficher les emplois</button>
+          
 
 
 
@@ -139,20 +107,26 @@
         <div class="row">
         <div class="schedule-table">
             <div class="table-container">
-                <table id="tableau" data-days="@string.Join(',', Model.Days.Select(day => day.Dayname))">
-                    <thead>
-                        <tr>
-                            <th class="employee-column">Employée</th>
-                            @foreach (var day in Model.Days)
-                            {
-                                @if (day != null && day.Dayname != null)
+                    <table id="tableau" data-days="@string.Join(',', Model.Days.Select(day => day.Dayname))">
+                        <thead>
+                            <tr id="days-row">
+                                @if (Model.Employees != null)
                                 {
-                                    <th>@day.Dayname</th>
+                                    <th class="employee-column">Employée</th>
                                 }
-                            }
-                            <th>Heures totales</th>
-                        </tr>
-                    </thead>
+                                @foreach (var day in Model.Days)
+                                {
+                                    @if (day != null && day.Dayname != null)
+                                    {
+                                        <th>
+                                            <div>@day.Dayname</div>
+                                            <div class="day-date"></div>
+                                        </th>
+                                    }
+                                }
+                                <th>Heures totales</th>
+                            </tr>
+                        </thead>
                     <tbody>
            
                     </tbody>
@@ -161,78 +135,6 @@
         </div>
     </div>
 </form>
-
-    <footer id="contact" class="footer">
-        <!-- Haut du footer -->
-        <div class="footer-top">
-            <div class="content">
-                <div class="row">
-                    <div class="col">
-                        <div class="single-footer">
-                            <h2>Suivez-nous</h2>
-                            <ul class="social">
-                                <li><a href="#"><i class="icofont-facebook"></i></a></li>
-                                <li><a href="#"><i class="icofont-google-plus"></i></a></li>
-                                <li><a href="#"><i class="icofont-twitter"></i></a></li>
-                                <li><a href="#"><i class="icofont-vimeo"></i></a></li>
-                            </ul>
-                            <!-- Réseaux sociaux -->
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="single-footer f-link">
-                            <h2>Liens rapides</h2>
-                            <div class="row">
-                                <div class="col">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Accueil</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>À propos de nous</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos services</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Nos cas</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Autres liens</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="single-footer f-link">
-                            <h2>Nos services</h2>
-                            <div class="row">
-                                <div class="col">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Soins dentaires</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Thérapie par massage</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Cardiologie</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Diagnostic</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Services d'ambulance</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="single-footer f-link">
-                            <h2>Contact</h2>
-                            <div class="row">
-                                <div class="col">
-                                    <ul>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i> 123 Rue de la Santé</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>Sfax, Tunisie</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>info@clinique.com</a></li>
-                                        <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i>+216 22 24 25 26 </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/ Fin du haut du footer -->
-        <!-- Contact -->
-        <!--/ Fin du Contact -->
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -243,99 +145,99 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
-    <!--/ End Footer Area -->
-    <!-- jquery Min JS -->
-    <script src="~/js/jquery.min.js"></script>
-    <!-- jquery Migrate JS -->
-    <script src="~/js/jquery-migrate-3.0.0.js"></script>
-    <!-- jquery Ui JS -->
-    <script src="~/js/jquery-ui.min.js"></script>
-    <!-- Easing JS -->
-    <script src="~/js/easing.js"></script>
-    <!-- Color JS -->
-    <script src="~/js/colors.js"></script>
-    <!-- Popper JS -->
-    <script src="~/js/popper.min.js"></script>
-    <!-- Bootstrap Datepicker JS -->
-    <script src="~/js/bootstrap-datepicker.js"></script>
-    <!-- Jquery Nav JS -->
-    <script src="~/js/jquery.nav.js"></script>
-    <!-- Slicknav JS -->
-    <script src="~/js/slicknav.min.js"></script>
-    <!-- ScrollUp JS -->
-    <script src="~/js/jquery.scrollUp.min.js"></script>
-    <!-- Niceselect JS -->
-    <script src="~/js/niceselect.js"></script>
-    <!-- Tilt Jquery JS -->
-    <script src="~/js/tilt.jquery.min.js"></script>
-    <!-- Owl Carousel JS -->
-    <script src="~/js/owl-carousel.js"></script>
-    <!-- counterup JS -->
-    <script src="~/js/jquery.counterup.min.js"></script>
-    <!-- Steller JS -->
-    <script src="~/js/steller.js"></script>
-    <!-- Wow JS -->
-    <script src="~/js/wow.min.js"></script>
-    <!-- Magnific Popup JS -->
-    <script src="~/js/jquery.magnific-popup.min.js"></script>
-    <!-- Counter Up CDN JS -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="~/js/bootstrap.min.js"></script>
-    <!-- Main JS -->
-    <script src="~/js/main.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="~/js/bootstrap.min.js"></script>
-    <!-- Main JS -->
-    <script src="~/js/main.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
     <script>
-
-        //==========================>  PDF <===========================================//
-        function downloadPDF(event) {
-            event.stopPropagation();
-            const doc = new jsPDF();
-            const table = document.getElementById("tableau");
-            doc.autoTable({ html: table });
-            doc.save("tableau.pdf");
-        }
-        //==========================>  CALENDRER<===========================================//
-        flatpickr.l10ns.default.firstDayOfWeek = 1; // Définit le premier jour de la semaine à lundi
-        flatpickr.localize(flatpickr.l10ns.default); // Définit la locale par défaut
-
-        flatpickr("#date", {
-            dateFormat: "Y-m-d", // Format de date, si nécessaire
-            disable: [
-                function (date) {
-                    // Désactiver tous les jours sauf les samedis
-                    return date.getDay() !== 6;
-                }
-            ]
-        });
-
-        function checkSaturday(selectedDate) {
-            var date = new Date(selectedDate);
-            var dayOfWeek = date.getDay();
-
-            // Vérifie si le jour sélectionné est un samedi (6 pour samedi)
-            if (dayOfWeek !== 6) {
-                alert("Veuillez sélectionner un samedi.");
-                document.getElementById('date').value = ''; // Réinitialise la valeur de l'input
-            }
-        }
-
+  
 
         document.addEventListener("DOMContentLoaded", function () {
-            var employeeId = sessionStorage.getItem("employeeId");
-            var serviceId = sessionStorage.getItem("serviceId");
+            const dateInput = document.getElementById('date');
+            const previousWeekBtn = document.getElementById('previousWeekBtn');
+            const nextWeekBtn = document.getElementById('nextWeekBtn');
 
-            console.log("Employé ID:", employeeId);
-            console.log("Service ID:", serviceId);
+            // Get the stored date or use the next Saturday as default
+            const storedDate = sessionStorage.getItem('selectedDate');
+            const today = new Date();
+            const defaultDate = storedDate ? new Date(storedDate) : getNextSaturday(today);
+            dateInput.value = defaultDate.toISOString().split('T')[0];
+            updateHeaderDates(dateInput.value);
+
+            // Store the selected date in session storage
+            dateInput.addEventListener('change', function () {
+                sessionStorage.setItem('selectedDate', dateInput.value);
+                updateHeaderDates(dateInput.value);
+                afficherEmploi();
+            });
+
+            previousWeekBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+                changeDate(-7);
+            });
+
+            nextWeekBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+                changeDate(7);
+            });
+
+            function changeDate(offset) {
+                const currentDate = new Date(dateInput.value);
+                if (isNaN(currentDate.getTime())) {
+                    alert('Veuillez sélectionner une date valide.');
+                    return;
+                }
+                const newDate = new Date(currentDate.getTime() + (offset * 24 * 60 * 60 * 1000));
+                dateInput.value = newDate.toISOString().split('T')[0];
+                sessionStorage.setItem('selectedDate', dateInput.value);
+                updateHeaderDates(dateInput.value);
+                afficherEmploi();
+            }
+
+            function getNextSaturday(date) {
+                const day = date.getDay();
+                const offsetDays = (6 - day + 7) % 7;
+                return new Date(date.getTime() + offsetDays * 24 * 60 * 60 * 1000);
+            }
+
+            function updateHeaderDates(selectedDate) {
+                const startDate = new Date(selectedDate);
+                const days = document.querySelectorAll('#days-row th');
+                days.forEach((day, index) => {
+                    if (index > 0 && index < days.length - 1) {
+                        const dayDate = new Date(startDate.getTime() + (index - 1) * 24 * 60 * 60 * 1000);
+                        let dayDateElement = day.querySelector('.day-date');
+                        if (!dayDateElement) {
+                            dayDateElement = document.createElement('span');
+                            dayDateElement.className = 'day-date';
+                            day.appendChild(dayDateElement);
+                        }
+                        dayDateElement.textContent = dayDate.toISOString().split('T')[0];
+                    }
+                });
+            }
+
+            flatpickr("#date", {
+                dateFormat: "Y-m-d",
+                disable: [
+                    function (date) {
+                        return date.getDay() !== 6;
+                    }
+                ],
+                onChange: function (selectedDates, dateStr) {
+                    sessionStorage.setItem('selectedDate', dateStr);
+                    updateHeaderDates(dateStr);
+                    afficherEmploi();
+                }
+            });
+           
+            afficherEmploi();
+
 
             // AJAX request to get employee and days
-            $.ajax({
+           
+        });
+            // Fonction pour obtenir la prochaine date de samedi à partir de la date actuelle
+
+ var serviceId = sessionStorage.getItem("serviceId");
+            var employeeId = sessionStorage.getItem("employeeId"); $.ajax({
                 type: "GET",
                 url: "@Url.Action("GetEmployees", "Emploi")",
                 success: function (response) {
@@ -357,19 +259,15 @@
                     row.appendChild(employeeCell);
 
                     response.days.forEach(day => {
-                        if (day != null && day.dayname != null) {
-                            var cellId = `${employee.employeeId}-${day.dayname}`;
-                            var dayCell = document.createElement("td");
-                            dayCell.id = cellId;
-                            dayCell.className = "droppable " + day.dayname.toLowerCase();
-                            dayCell.setAttribute("ondrop", "drop(event)");
-                            dayCell.setAttribute("ondragover", "allowDrop(event)");
-                            dayCell.dataset.employee = employee.employeeId;
-                            dayCell.dataset.day = day.dayname;
-
-                            row.appendChild(dayCell);
-                        }
+                        var cellId = `${employee.employeeId}-${day.dayname}`;
+                        var dayCell = document.createElement("td");
+                        dayCell.id = cellId;
+                        dayCell.className = day.dayname.toLowerCase();
+                        dayCell.dataset.employee = employee.employeeId;
+                        dayCell.dataset.day = day.dayname;
+                        row.appendChild(dayCell);
                     });
+
 
                     var totalHoursCell = document.createElement("td");
                     totalHoursCell.className = "TotalHours-column";
@@ -384,68 +282,81 @@
                     alert("An error occurred while processing your request.");
                 }
             });
-        });
-        function afficherEmploi() {
-            var categorieId = $("#categorieDropdown").val();
-            var dateSelected = $("#date").val();
-            var serviceId = sessionStorage.getItem("serviceId");
-            var employeeId = sessionStorage.getItem("employeeId");
+            function downloadPDF(event) {
+                event.stopPropagation();
+                const doc = new jsPDF();
+                const table = document.getElementById("tableau");
+                doc.autoTable({ html: table });
+                doc.save("tableau.pdf");
+            }
 
-            console.log("Service ID :", serviceId);
-            console.log("Catégorie ID :", categorieId);
-            console.log("Date sélectionnée :", dateSelected);
-            console.log("Employee ID :", employeeId);
+            // Événement pour le bouton de téléchargement PDF
+            const downloadBtn = document.getElementById('download-pdf');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', downloadPDF);
+            }
+            // Fonction pour afficher les emplois
+            function afficherEmploi() {
+                var dateSelected = $("#date").val();
+                var serviceId = sessionStorage.getItem("serviceId");
+                var employeeId = sessionStorage.getItem("employeeId");
 
-            $.ajax({
-                url: '/Emploi/GetEmploiByEmployee',
-                type: 'GET',
-                data: { serviceId: serviceId, categorieId: categorieId, dateSelected: dateSelected, employeeId: employeeId },
+                console.log("Service ID :", serviceId);
+                console.log("Date sélectionnée :", dateSelected);
+                console.log("Employee ID :", employeeId);
+
+                $.ajax({
+                    url: '/Emploi/GetEmploiByEmployee',
+                    type: 'GET',
+                data: { serviceId: serviceId, dateSelected: dateSelected, employeeId: employeeId },
                 success: function (response) {
-                    console.log("Response from GetEmploiByEmployee:", response);
+                        console.log("Response from GetEmploiByEmployee:", response);
 
-                    if (response.success) {
-                        var emploiData = response.data;
+                        if (response.success) {
+                            var emploiData = response.data;
 
-                        if (emploiData.length === 0) {
-                            alert("Aucun emploi trouvé pour les critères sélectionnés.");
-                            return;
-                        }
+                            if (emploiData.length === 0) {
+                                alert("Aucun emploi trouvé pour les critères sélectionnés.");
+                                return;
+                            }
 
+                            // Parcourir chaque emploi
                         // Parcourir chaque emploi
                         $.each(emploiData, function (index, emploi) {
-                            var dayName = emploi.dayName; // Utiliser 'dayName' au lieu de 'DayName'
+                            var dayName = emploi.dayName;
                             var cellId = `${employeeId}-${dayName}`;
                             var cellContent = '';
+                            var cell = $("#tableau").find("tr#" + employeeId + " td[data-day='" + dayName + "']");
 
-                            // Sélectionner la cellule en fonction de son ID
-                            var cell = $(`#${cellId}`);
-
-                            // Vérifier les propriétés de l'emploi et ajouter du contenu à la cellule
-                            if (emploi.posteId) { // Utiliser 'posteId' au lieu de 'PosteId'
-                                cellContent += emploi.posteName + '<br>'; // Utiliser 'posteName' au lieu de 'PosteName'
+                            // Construire le contenu de la cellule en fonction des données de l'emploi
+                            if (emploi.posteId) {
+                                cellContent += emploi.posteName + '<br>';
+                            }
+                            if (emploi.reposId) {
+                                cellContent += emploi.reposName + '<br>';
+                            }
+                            if (emploi.supplementId) {
+                                cellContent += emploi.supplementName + '<br>';
+                            }
+                            if (emploi.startHour && emploi.endHour) {
+                                cellContent += `Start: ${emploi.startHour} - End: ${emploi.endHour}<br>`;
                             }
 
-                            if (emploi.reposId) { // Utiliser 'reposId' au lieu de 'ReposId'
-                                cellContent += emploi.reposName + '<br>'; // Utiliser 'reposName' au lieu de 'ReposName'
-                            }
-
-                            if (emploi.supplementId) { // Utiliser 'supplementId' au lieu de 'SupplementId'
-                                cellContent += emploi.supplementName + '<br>'; // Utiliser 'supplementName' au lieu de 'SupplementName'
-                            }
-
-                            // Définir le contenu de la cellule avec cellContent
                             cell.html(cellContent);
-                            console.log("Updated cell content for cellId", cellId, ":", cellContent);
                         });
-                    } else {
-                        alert("Aucun emploi trouvé pour les critères sélectionnés.");
+
+                        } else {
+                            alert("Aucun emploi trouvé pour les critères sélectionnés.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Une erreur s'est produite lors de la récupération des données d'emploi :", error);
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Une erreur s'est produite lors de la récupération des données d'emploi :", error);
-                }
-            });
-        }
+                });
+            }
+    
+        
+      
 
     </script>
 </body>

@@ -107,6 +107,8 @@ namespace Clinic.Controllers
                         Seance2Fin = GetNameById(de.PosteId, _context.Postes),
                         Date_Jours = GetNameById(de.ReposId, _context.Repos),
                         Date_Joursfin = GetNameById(de.ReposId, _context.Repos),
+                        StartHour = de.StartHour,
+                        EndHour = de.EndHour
 
                     }).ToList();
 
@@ -286,13 +288,6 @@ namespace Clinic.Controllers
                         dateDuJour = parsedDate;
                     }
 
-                    // Convert TimeSpan directly from the string without parsing to nullable TimeSpan
-                    var startHour = dailyEmploymentModel.StartHour;
-                    var endHour = dailyEmploymentModel.EndHour;
-
-                    // Log for debugging
-                    Console.WriteLine($"StartHour: {startHour}, EndHour: {endHour}");
-
                     var dailyEmployment = new DailyEmployment
                     {
                         DateOfWeek = DateTime.Parse(emploiModel.DateSelected),
@@ -306,11 +301,10 @@ namespace Clinic.Controllers
                         SupplementId = dailyEmploymentModel.SupplementId,
                         EmployeName = dailyEmploymentModel.EmployeName,
                         EmploiId = emploi.EmploiId,
-                        StartHour = startHour,
-                        EndHour = endHour
+                        StartHour = dailyEmploymentModel.StartHour,  // Ensure property names match
+                        EndHour = dailyEmploymentModel.EndHour,      // Ensure property names match
                     };
 
-                    Console.WriteLine($"Adding DailyEmployment: StartHour={dailyEmployment.StartHour}, EndHour={dailyEmployment.EndHour}");
                     _context.DailyEmployments.Add(dailyEmployment);
                 }
 
@@ -477,11 +471,9 @@ namespace Clinic.Controllers
         {
             try
             {
-                Console.WriteLine($"ServiceId: {serviceId}, CategorieId: {categorieId}, DateSelected: {dateSelected.Date}, EmployeeId: {employeeId}"); // Affichage de l'employeeId
 
                 var emploiData = _context.DailyEmployments
       .Where(de => de.ServiceId == serviceId
-                && de.CategorieId == categorieId
                 && de.DateOfWeek.HasValue
                 && de.DateOfWeek.Value.Date == dateSelected.Date
                 && de.EmployeeId == employeeId) // Assurez-vous que cette condition filtre correctement par EmployeeId
@@ -521,6 +513,9 @@ namespace Clinic.Controllers
                     Seance2Fin = GetNameById(de.PosteId, _context.Postes),
                     Date_Jours = GetNameById(de.ReposId, _context.Repos),
                     Date_Joursfin = GetNameById(de.ReposId, _context.Repos),
+                    StartHour = de.StartHour,
+                    EndHour = de.EndHour
+
                 }).ToList();
                 Console.WriteLine($"EmployeeId: {employeeId}");
                 Console.WriteLine($"Filtered Data Count: {emploiData.Count}");
@@ -578,7 +573,8 @@ namespace Clinic.Controllers
             public string? SupplementName { get; set; }
             public string? Matin { get; set; }
             public string? ApresMidi { get; set; }
-
+            public string? StartHour {  get; set; }
+            public string? EndHour { get; set; }    
             public string? GardeSoir { get; set; }
             public string? Seance1Debut { get; set; }
             public string? Seance1Fin { get; set; }
