@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Clinic.Models
 {
     public class ClinicDbContext : DbContext
     {
-        // DbSet pour chaque entité
+       
         public DbSet<Categorie>? Categories { get; set; }
         public DbSet<Employee>? Employee { get; set; }
 
@@ -16,51 +18,22 @@ namespace Clinic.Models
         public DbSet<Day>? Days   { get; set; }
         public DbSet<Service>? Services { get; set; }
          public DbSet<DailyEmployment>? DailyEmployments { get; set; }
+        public DbSet<SelectListGroup> SelectListGroups { get; set; }
+        public DbSet<SelectListItem> SelectListItems { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Ignorer complètement les classes SelectListItem et SelectListGroup
+            modelBuilder.Ignore<SelectListItem>();
+            modelBuilder.Ignore<SelectListGroup>();
+
+            // Autres configurations de modèle
+        }
         public ClinicDbContext(DbContextOptions<ClinicDbContext> options) : base(options)
         {
             
         }
 
 
-      
-    //protected override void OnModelCreating(ModelBuilder modelBuilder)
-    //    {
-    //    }
-
-    //    public override int SaveChanges()
-    //    {
-    //        UpdateChefDeService();
-    //        return base.SaveChanges();
-    //    }
-
-    //    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-    //    {
-    //        UpdateChefDeService();
-    //        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-    //    }
-
-    //    private void UpdateChefDeService()
-    //    {
-    //        var employees = ChangeTracker.Entries<Employee>().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
-    //        foreach (var entry in employees)
-    //        {
-    //            var employee = entry.Entity;
-    //            if (employee.IsChefDeService == true)
-    //            {
-    //                var chefDeService = ChefDeServices?.FirstOrDefault(c => c.ChefDeServiceId == employee.EmployeeId);
-    //                if (chefDeService == null)
-    //                {
-    //                    chefDeService = new ChefDeService { ChefDeServiceId = employee.EmployeeId };
-    //                    ChefDeServices.Add(chefDeService);
-    //                }
-
-    //                chefDeService.Name = employee.Name;
-    //                chefDeService.Email = employee.Email;
-    //                chefDeService.Password = employee.Password;
-    //                chefDeService.ServiceId = employee.ServiceId;
-    //            }
-    //        }
-    //    }
     }
 }

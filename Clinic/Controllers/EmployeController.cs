@@ -19,9 +19,7 @@ namespace Clinic.Controllers
             _context = context;
             _logger = logger;
         }
-
-        // Actions pour créer et supprimer un employé
-
+       
         public IActionResult Create()
         {
             PopulateServiceList();

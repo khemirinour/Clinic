@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,19 +21,18 @@ namespace Clinic.Models
         public TimeSpan? Seance2Debut { get; set; }
         public TimeSpan? Seance2Fin { get; set; }
         public bool Actif { get; set; }
+        public SelectList CategorieList { get; set; } 
 
         [ForeignKey("Categorie")]
         public int CategorieId { get; set; }
         public Categorie? Categorie { get; set; }
 
         public int? EmployeeId { get; set; }
-        public ICollection<Employee>?    Employees { get; set; }
+        public ICollection<Employee>? Employees { get; set; }
 
-        public int? EmploiId { get; set; }
         public Emploi? Emploi { get; set; }
 
-        public int? PositionX { get; set; }
-        public int? PositionY { get; set; }
+     
         public Poste()
         {
             Seance1Debut = new TimeSpan(0, 0, 0); // 00:00

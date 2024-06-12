@@ -20,9 +20,12 @@ namespace Clinic.Controllers
             _context = context;
             _logger = logger;
         }
+       
 
         public IActionResult Index()
+
         {
+
             var emplois = _context.Emplois?.ToList();
             return View(emplois);
         }
@@ -47,6 +50,7 @@ namespace Clinic.Controllers
         {
             var emploiViewModel = new EmploiViewModel
             {
+
                 Services = _context.Services?.ToList(),
                 Categories = _context.Categories?.ToList(),
                 Postes = _context.Postes?.ToList(),

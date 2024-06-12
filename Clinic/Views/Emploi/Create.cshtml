@@ -8,7 +8,7 @@
     <title>CliniSys</title>
 
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="styleshee                                          kt" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="icon" href="img/favicon.png">
 
@@ -40,6 +40,32 @@
     <link rel="stylesheet" href="~/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        .alert-container {
+            position: fixed;
+            top: 20%; /* Position verticale centrée */
+            left: 50%; /* Position horizontale centrée */
+            transform: translate(-50%, -50%);
+            z-index: 1000; /* Assure que l'alerte est au-dessus de tout autre contenu */
+            display: none; /* Par défaut, l'alerte est cachée */
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre pour effet de profondeur */
+            max-width: 400px; /* Largeur maximale de l'alerte */
+        }
+
+            .alert strong {
+                font-weight: bold;
+            }
+
+     
+
+        .text-info {
+            color: #17a2b8; /* Couleur du texte */
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -128,6 +154,8 @@
     <form id="emploi-form" method="post" class="margin">
         <input type="hidden" id="chefServiceId"> <!-- Value will be set dynamically -->
         <input type="hidden" id="serviceId"> <!-- Value will be set dynamically -->
+        <!-- Nouvel élément pour afficher l'alerte en dehors de l'interface -->
+        <div id="alertContainer" class="alert-container"></div>
 
         <div class="center">
             <div class="row">
@@ -168,6 +196,11 @@
             <button type="button" class="btn" id="valider">Valider</button>
         </form>
         </div>
+        </div>
+        <div id="alertContainer" class="alert-container">
+            <div id="alertFrame" class="alert border-info bg-transparent text-info">
+                <strong>Info!</strong> Alert for passing information to user.
+            </div>
         </div>
 
        
@@ -339,6 +372,13 @@
 
         // Reste du code inchangé
 
+        // Fonction pour afficher l'alerte
+        function afficherAlerte() {
+            $('#alertContainer').css('display', 'block');
+        }
+
+        // Appel de la fonction pour afficher l'alerte
+        afficherAlerte();
 
         function showModal() {
             var modal = $('#modal');
@@ -559,10 +599,11 @@
                     clone.dataset.heureDebut = heureDebut;
                     clone.dataset.heureFin = heureFin;
 
-                    event.currentTarget.innerHTML = ''; // Clear the cell
-                    event.currentTarget.appendChild(clone); // Append the clone to the target
+                    // Append the clone to the target
+                    event.currentTarget.appendChild(clone);
                 }
             }
+
 
 
             function dragOver(event) {
@@ -893,7 +934,12 @@
                             cell.html(cellContent);
                         });
                     } else {
-                        alert("Aucun emploi trouvé pour les critères sélectionnés.");
+                        var alertMessage = "Aucun emploi trouvé pour les critères sélectionnés.";
+                        var alertDiv = $('<div class="alert border-info bg-transparent text-info">').text(alertMessage);
+                        $("#alertContainer").empty().append(alertDiv);
+                        setTimeout(function () {
+                            alertDiv.remove();
+                        }, 1000);// Supprimer le message après 3 secondes
                     }
                 },
                 error: function (xhr, status, error) {
@@ -905,7 +951,6 @@
      
 
 
-        //==========================> ENREGISTREMENT DU L'EMPLOI <===========================================//document.addEventListener('DOMContentLoaded', function() {
    
 
     </script>

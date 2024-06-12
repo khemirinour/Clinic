@@ -33,8 +33,11 @@ namespace Clinic.Models
 
         public List<DailyEmployment>? DailyEmployments { get; set; }
         public SelectList ServiceList { get; set; } // Modifier le type pour SelectList
+        public ChefDeService? ChefDeServices { get; set; }
 
         public int? ReposId { get; set; }
+        public int? TotalWeeklyHours { get; set; }
+        public string? Email { get; set; }
 
         public int? CategorieId { get;  set; }
 

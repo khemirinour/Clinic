@@ -108,7 +108,7 @@ namespace Clinic.Controllers
                 return Json(new { success = false, message = "An error occurred during login." });
             }
         }
-   
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -140,6 +140,58 @@ namespace Clinic.Controllers
             }
 
             return Json(new { success = false, message = "Registration failed. Please check the form." });
+        }
+        public class ApproveEmployeeRequest
+        {
+            public int EmployeeId { get; set; }
+            public int TotalHours { get; set; }
+        }
+
+        [HttpPost]
+        public IActionResult ApproveEmployee([FromBody] ApproveEmployeeRequest request)
+        {
+            try
+            {
+                var employee = _context.Employee.FirstOrDefault(e => e.EmployeeId == request.EmployeeId);
+
+                if (employee != null)
+                {
+                    employee.Approved = true;
+                    employee.TotalWeeklyHours = request.TotalHours;
+                    _context.SaveChanges();
+                    return Ok(new { message = "Employee approved successfully." });
+                }
+                else
+                {
+                    return NotFound("Employee not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while approving the employee.", details = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetUnapprovedEmployees(int serviceId)
+        {
+            try
+            {
+                var unapprovedEmployees = _context.Employee
+                    .Where(e => e.ServiceId == serviceId && !(bool)e.Approved)
+                    .Select(e => new EmploiViewModel
+                    {
+                        EmployeeId = e.EmployeeId,
+                        EmployeeName = e.Name,
+                        Email = e.Email // Assurez-vous d'inclure l'email
+                    }).ToList();
+
+                return Json(unapprovedEmployees);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while fetching unapproved employees.", details = ex.Message });
+            }
         }
         public async Task<IActionResult> ApproveRegistrationRequests(int serviceId)
         {

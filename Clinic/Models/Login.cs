@@ -6,6 +6,6 @@ namespace Clinic.Models
     {
         public int? ServiceId { get; set; }
 
-        public SelectList ServiceList { get; set; } // Modifier le type pour SelectList
+        public SelectList? ServiceList { get; set; } // Modifier le type pour SelectList
     }
 }

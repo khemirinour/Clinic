@@ -20,7 +20,6 @@ namespace Clinic.Models
         public Service? Service { get; set; }
         public ICollection<Emploi>? Emplois { get; set; }
 
-        // Propriété de navigation pour les employés qui sont également chefs de service
         public ICollection<Employee>? Employees { get; set; }
     }
 }
