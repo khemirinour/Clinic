@@ -8,7 +8,7 @@
     <title>CliniSys</title>
 
 
-    <link rel="styleshee                                          kt" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="icon" href="img/favicon.png">
 
@@ -132,8 +132,10 @@
                                 <nav class="navigation">
                                     <ul class="nav menu">
                                         <li><a asp-area="" asp-controller="Employe" asp-action="Create">Employée</a></li>
-                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddPoste"> Poste</a></li>
-                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddRepos">Pause</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="Index"> Poste</a></li>
+                                        <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
+                                        <li><a asp-area="" asp-controller="Supplement" asp-action="Index">Supplement</a></li>
+
                                         <li><a asp-area="" asp-controller="Home" asp-action="ApproveRegistrationRequests">Approved</a></li>
                                         <li>                                            <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn mr-2">Déconnexion</div></a>
 </li>

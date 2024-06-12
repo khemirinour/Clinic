@@ -1,0 +1,181 @@
+﻿@model Clinic.Models.Repos
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="~/css/style.css">
+
+
+
+    <link rel="icon" href="img/favicon.png">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- Nice Select CSS -->
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- icofont CSS -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- Slicknav -->
+    <link rel="stylesheet" href="~/css/slicknav.min.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="~/css/owl-carousel.css">
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="~/css/datepicker.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <!-- Medipro CSS -->
+
+    <link rel="stylesheet" href="~/css/normalize.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <div class="heading">
+                <div class="inner">
+                    <div class="row">
+                        <!-- Start Logo -->
+                        <div class="col">
+                            <!-- Start Logo -->
+                            <a href="" class="logo">
+                                <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
+                            </a>
+                            <!-- End Logo -->
+                            <!-- Mobile Nav -->
+                            <div class="mobile-nav"></div>
+                            <!-- End Mobile Nav -->
+                        </div>
+
+                        <div class="col">
+                            <!-- Main Menu -->
+                            <div class="main-menu">
+                                <nav class="navigation">
+                                    <ul class="nav menu">
+                                        <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Employée</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="Index">Poste</a></li>
+                                        <li><a asp-area="" asp-controller="Poste" asp-action="AddSupplement">Heures Supplémentaire</a></li>
+                                        <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a></li>
+                                        <li>
+                                            <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn">Déconnexion  </div></a>
+                                        </li>
+                                    </ul>
+
+                                </nav>
+                            </div>
+
+                        </div>
+                        <!--/ End Main Menu -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ End Header Inner -->
+    </header>
+    <form asp-action="Create" method="post" class="container">
+        <div class="text center"><h1>Gestion <span>Des Pauses</span></h1></div>
+        <div class="container margin">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="ReposName">Nom du repos :</label>
+                </div>
+                <div class="col">
+                    <input asp-for="ReposName" type="text" required>
+                    <span asp-validation-for="ReposName"></span>
+                </div>
+            </div>
+
+            <strong>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Date_Jours">Date du jour :</label>
+                    </div>
+                    <div class="col">
+                        <input asp-for="Date_Jours" type="date" required>
+                        <span asp-validation-for="Date_Jours"></span>
+                    </div>
+                </div>
+                <div class="row margin">
+                    <div class="col">
+                        <label>Catégorie :</label>
+                        @if (ViewBag.CategorieList != null)
+                        {
+                            <select asp-for="CategorieId" asp-items="@ViewBag.CategorieList" class="box">
+                                <option value="">Sélectionnez une catégorie</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <p>Aucune catégorie disponible.</p>
+                        }
+                    </div>
+                </div>
+
+            </strong>
+
+            <div class="row center margin">
+                <button type="submit" class="btn">Ajouter</button>
+            </div>
+        </div>
+    </form>
+    <form asp-action="Update" method="post" class="container">
+        <div class="text center"><h1>Gestion <span>Des Pauses</span></h1></div>
+        <div class="container margin">
+            <div class="row">
+                <div class="col">
+                    <label>Sélectionnez le repos :</label>
+                    <select asp-for="ReposId" asp-items="@ViewBag.ReposList" class="box" required>
+                        <option value="">Sélectionnez un repos</option>
+                    </select>
+                </div>
+            </div><div class="col">
+                <input asp-for="Date_Jours" type="date" required>
+                <span asp-validation-for="Date_Jours"></span>
+            </div>
+            <div class="row margin">
+                <div class="col">
+                    <label>Catégorie :</label>
+                    <select asp-for="CategorieId" class="box" asp-items="@ViewBag.CategorieList" required>
+                        <option value="">Sélectionnez une catégorie</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row center margin">
+            <button type="submit" class="btn">Mettre à jour</button>
+        </div>
+    </form>
+
+
+    <form asp-action="Delete" method="post" class="container">
+        <select asp-for="ReposId" asp-items="@ViewBag.ReposList" class="box" required>
+            <option value="">Sélectionnez un repos</option>
+        </select>
+        <div class="form-group">
+            <label for="categorieId">Catégorie :</label>
+            <select asp-for="CategorieId" class="box" asp-items="ViewBag.CategorieList" required>
+                <option value="">Sélectionnez une catégorie</option>
+            </select>
+            <span asp-validation-for="CategorieId" class="text-danger"></span>
+
+        </div>
+        <button type="submit" class="btn">Supprimer</button>
+    </form>
+
+  
+</body>
+</html>
+
