@@ -36,10 +36,688 @@
     <!-- Medipro CSS -->
 
     <link rel="stylesheet" href="~/css/normalize.css">
-    <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"><!-- Google Fonts -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- Nice Select CSS -->
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- icofont CSS -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- Slicknav -->
+    <link rel="stylesheet" href="~/css/slicknav.min.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="~/css/owl-carousel.css">
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="~/css/datepicker.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <!-- Medipro CSS -->
+    <link rel="icon" href="img/favicon.png">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <!-- Nice Select CSS -->
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <!-- icofont CSS -->
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <!-- Slicknav -->
+    <link rel="stylesheet" href="~/css/slicknav.min.css">
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="~/css/owl-carousel.css">
+    <!-- Datepicker CSS -->
+    <link rel="stylesheet" href="~/css/datepicker.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <!-- Magnific Popup CSS -->
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <!-- Medipro CSS -->
+    <link rel="stylesheet" href="~/css/normalize.css">
+    <link rel="stylesheet" href="~/css/style-index.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        .header .logo {
+            font-size: 2em;
+            color: var(--black);
+            margin: 20px;
+            margin-bottom: 10px;
+        }
+
+            .header .logo i {
+                margin-top: 15px;
+                color: #1A76D1;
+            }
+.overlay {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 600;
+}
+
+.overlay-content {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 60%;
+    padding: 10px;
+}
+
+.droppable.hovered {
+    background-color: #e0f7fa;
+}
+
+.buttons-container {
+    display: flex;
+    gap: 20px; /* Espacement entre les boutons */
+}
+
+.form {
+    --input-text-color: #000;
+    --input-bg-color: #1A76D1;
+    --focus-input-bg-color: transparent;
+    --text-color: #f0f0f0;
+    --active-color: #1A76D1;
+    --width-of-input: 200px;
+    --inline-padding-of-input: 1.3em;
+    --gap: 0.9rem;
+}
+/* form style */
+.form {
+    font-size: 0.9rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    width: var(--width-of-input);
+    position: relative;
+    isolation: isolate;
+}
+/* a fancy bg for showing background and border when focus. */
+.fancy-bg {
+    position: absolute;
+    width: 100%;
+    inset: 0;
+    background: var(--input-bg-color);
+    border-radius: 30px;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+/* label styling */
+label {
+    width: 100%;
+    padding: 0.8em;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.search, .close-btn {
+    position: absolute;
+}
+/* styling search-icon */
+.search {
+    fill: var(--text-color);
+    border: none;
+    border-color: #1A76D1;
+}
+/* svg -- size */
+svg {
+    width: 15px;
+    display: block;
+    border: none;
+    border-color: #1A76D1;
+}
+/* styling of close button */
+.close-btn {
+    border: none;
+    right: var(--inline-padding-of-input);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 0.1em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--active-color);
+    opacity: 0;
+    visibility: hidden;
+    border-color: #1A76D1;
+}
+/* styling of input */
+.input {
+    color: #1A76D1;
+    width: 90%;
+    margin-inline: min(2em,calc(var(--inline-padding-of-input) + var(--gap)));
+    background: none;
+    border: none;
+}
+
+.container {
+    margin-top: 35px;
+}
+
+.input:focus {
+    outline: none;
+    border: none;
+ 
+    border-color: #1A76D1;
+}
+
+.input::placeholder {
+    color: var(--text-color);
+    border-color: #1A76D1;
+}
+/* input background change in focus */
+.input:focus ~ .fancy-bg {
+    border: 1px solid #1A76D1;
+    background: var(--focus-input-bg-color);
+}
+/* search icon color change in focus */
+.input:focus ~ .search {
+    fill: var(--active-color);
+    border-color: #1A76D1;
+}
+/* showing close button when typing */
+.input:valid ~ .close-btn {
+    opacity: 1;
+    visibility: visible;
+}
+/* this is for the default background in input,when selecting autofill options -- you can remove this code if you do not want to override the browser style.  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
+}
+
+.bookmarkBtn {
+    width: 102px;
+    height: 30px;
+    border-radius: 30px;
+    border: 1.2px solid #1A76D1;
+    background-color: #1A76D1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+}
+
+.IconContainer {
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(to bottom, white, #ddd);
+    border-radius: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+    transition-duration: 0.3s;
+}
+
+.icon {
+    border-radius: 1px;
+}
+
+.textt {
+    height: 100%;
+    width: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+    transition-duration: 0.3s;
+    font-size: .7rem;
+}
+
+.bookmarkBtn:hover .IconContainer {
+    width: 80px;
+    transition-duration: 0.3s;
+}
+
+.bookmarkBtn:hover .text {
+    transform: translate(12px);
+    width: 0;
+    font-size: 0;
+    transition-duration: 0.3s;
+}
+
+.bookmarkBtn:active {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+}
+
+
+.button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #1A76D1;
+    border: none;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 20px #1A76D1;
+    cursor: pointer;
+    transition-duration: .3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.svgIcon {
+    width: 10px;
+    transition-duration: .3s;
+}
+
+    .svgIcon path {
+        fill: white;
+    }
+
+.button:hover {
+    width: 70px;
+    border-radius: 40px;
+    transition-duration: .3s;
+    background-color: #1A76D1;
+    align-items: center;
+}
+
+    .button:hover .svgIcon {
+        width: 20px;
+        transition-duration: .3s;
+        transform: translateY(75%);
+    }
+
+.button::before {
+    position: absolute;
+    top: -25px;
+    content: "Supprimer";
+    color: white;
+    transition-duration: .3s;
+    font-size: 1px;
+}
+
+.button:hover::before {
+    font-size: 10px;
+    opacity: 1;
+    transform: translateY(30px);
+    transition-duration: .3s;
+}
+
+.Btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background-color: #1A76D1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition-duration: .3s;
+    box-shadow: 2px 2px 10px #1A76D1;
+}
+
+.svgIcon {
+    fill: white;
+}
+
+.icon2 {
+    width: 15px;
+    height: 5px;
+    border-bottom: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+}
+
+.tooltip {
+    position: absolute;
+    right: -105px;
+    opacity: 0;
+    background-color: #1A76D1;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-duration: .2s;
+    pointer-events: none;
+    letter-spacing: 1px;
+}
+
+    .tooltip::before {
+        position: absolute;
+        content: "";
+        width: 10px;
+        height: 10px;
+        background-color: #1A76D1;
+        background-size: 800%;
+        background-position: center;
+        transform: rotate(45deg);
+        left: -5%;
+        transition-duration: .3s;
+    }
+
+.Btn:hover .tooltip {
+    opacity: 1;
+    transition-duration: .3s;
+}
+
+.Btn:hover {
+    background-color: #1A76D1;
+    transition-duration: .3s;
+}
+
+    .Btn:hover .icon2 {
+        border-bottom: 2px solid rgb(235, 235, 235);
+        border-left: 2px solid rgb(235, 235, 235);
+        border-right: 2px solid rgb(235, 235, 235);
+    }
+
+    .Btn:hover .svgIcon {
+        fill: rgb(255, 255, 255);
+        animation: slide-in-top 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            }
+
+        .header .header-inner .logo {
+            margin: 15px;
+            font-size: 1.5rem;
+            color: #2C2D3F;
+        }
+
+        .header-inner {
+            height: 73px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+  
+
+        .main-menu nav {
+            display: flex;
+        }
+
+        .nav.menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .nav.menu li {
+                margin-left: 20px;
+            }
+
+                .nav.menu li a {
+                    text-decoration: none;
+                    color: #2C2D3F;
+                    font-size: 12px;
+                }
+
+        .btn-dx {
+           
+            margin: 15px;
+        }
+.table-container {
+    overflow: auto;
+    flex: 1; /* Le tableau prendra autant d'espace que possible */
+}
+
+
+.hidden {
+    display: none;
+}
+
+.holiday-box {
+    background: white;
+    border-radius: .5rem;
+    border-color: #1A76D1;
+    font-size: .7rem;
+            padding: 1rem;
+            margin: 1px;
+            margin top:30px;
+        }
+
+            .holiday-box p {
+              color: rgba(0, 0, 0, 0.2);
+        font-size: .7rem;
+                padding: .5rem 0;
+    }
+
+.repos {
+ margin-bottom:0px;
+    display: flex;
+    display: inline-block;
+flex-wrap: nowrap; /* Empêche le retour à la ligne */
+    overflow-x: auto; /* Ajoute une barre de défilement horizontale si nécessaire */
+    max-width: 5000px;
+}
+
+.repo-box {
+margin-top:25px;    font-size: .7rem;
+    background-color: #89898914;
+    border: #1A76D1;
+    padding: .5rem;
+}
+
+
+.date-navigation {
+    display: inline-block;
+    margin: 10px;
+}
+
+.date-navigation .box {
+    width: 120px;
+    border-radius: .5rem;
+    border: solid;
+    border-color: #1A76D1;
+    font-size: .8rem;
+}
+.schedule-table {
+    margin-top: 10px;
+    display: flex;
+   max-height:430px;
+}
+
+
+
+
+.extra-boxes {
+    display: flex;
+    width:140px;
+    padding:1px;
+    flex-direction: column;
+    overflow-y: auto;
+    margin-right: 5px;
+            background-color: #89898914;
+            flex-shrink: 0; /* Empêche les boîtes supplémentaires de rétrécir */
+}
+
+
+table { 
+    width:1100px;
+    margin-left:10px;
+    overflow-x: auto;
+    border-collapse: collapse;
+    overflow-y: auto;
+    max-height:270px/* Ajoute une barre de défilement vertical si nécessaire */
+}
+
+
+th, td {
+    padding: 4px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: .8rem;
+}
+
+th {
+    background-color:#2C2D3F;
+    color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #ddd;
+}
+
+.supllement {
+    float:right;
+    display: grid;
+    grid-template-columns: repeat(6, 0fr); /* 6 colonnes avec largeur égale */
+    gap: 0px; /* Espacement entre les éléments de la grille */
+}
+    .supllement .btn {
+        margin: 1px;
+        padding:5px
+    }
+    .logo-content {
+        display: flex;
+        align-items: center; /* Aligner verticalement les éléments */
+    }
+
+.logo-content i {
+    margin: 15px; /* Espacement entre l'icône et le texte */
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Assurez-vous que le texte est centré horizontalement */
+}
+.content {
+    margin: 20px;
+}
+
+.box {
+    margin:1px;
+    border: 2px solid #1A76D1;
+    background-color: white;
+    border-radius: .7rem;
+    padding: 0.5rem;
+}
+.margin {
+    margin:15px;
+}
+form .text {
+     
+    margin-top: 30px;
+}
+
+form .text h1 {
+    color: #2C2D3F;
+    font-size: 38px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+    line-height: 42px;
+}
+
+    form .text h1 span {
+        color: #1a76d1;
+    }
+ .text {
+    margin-top: 30px;
+}
+
+  .text h2 {
+        color: #2C2D3F;
+        font-size: 38px;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
+        line-height: 42px;
+    }
+
+     .text h2 span {
+            color: #1a76d1;
+        }
+    .text h4 {
+        color: #2C2D3F;
+        font-size: 25px;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
+        line-height: 42px;
+    }
+
+        .text h4 span {
+            color: #1a76d1;
+        }
+.btn-date{
+    height:35px;
+    padding:1px;
+    width:180px;
+    font-size:.82rem;
+}
+    
+
+        footer.footer {
+            position:fixed;
+            text-align: center;
+            height:59px;
+            width: 100%;
+            bottom: 0;
+        }
+        .text h4 {
+            color: #2C2D3F;
+            font-size: 25px;
+            font-weight: 700;
+            margin: 0;
+            padding: 0;
+            line-height: 42px;
+        }
+
+            .text h4 span {
+                color: #1a76d1;
+            }
+
+        body {
+            background-color: #f0f0f0; /* Fond gris */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+ 
         .alert-container {
             position: fixed;
             top: 20%; /* Position verticale centrée */
@@ -60,7 +738,7 @@
                 font-weight: bold;
             }
 
-     
+ }
 
         .text-info {
             color: #17a2b8; /* Couleur du texte */
@@ -68,8 +746,6 @@
 
         .modal {
             display: none;
-            position: fixed;
-            z-index: 1;
             left: 0;
             top: 0;
             width: 100%;
@@ -83,19 +759,18 @@
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 40%; /* Ajustez cette valeur pour la largeur souhaitée */
-            height: 30%; /* Ajustez cette valeur pour la hauteur souhaitée */
+            width: 30%; /* Ajustez cette valeur pour la largeur souhaitée */
+            height: 35%; /* Ajustez cette valeur pour la hauteur souhaitée */
             max-width: 90%; /* Ajoutez un maximum de largeur pour le rendre réactif */
             max-height: 90%; /* Ajoutez un maximum de hauteur pour le rendre réactif */
             box-sizing: border-box; /* Assurez-vous que le padding est inclus dans les dimensions */
             overflow-y: auto; /* Ajoutez un défilement vertical si le contenu dépasse la hauteur */
         }
-
+        9 
 
     .close {
         color: #aaa;
-        float: right;
-        font-size: 28px;
+margin-right:5px;        font-size: 30px;
         font-weight: bold;
     }
 
@@ -104,69 +779,100 @@
         color: black;
         text-decoration: none;
         cursor: pointer;
-    }
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            margin: 25px;
+            font-size: 20px; /* Agrandit l'icône */
+        }
+
+            .notification-icon .counter {
+                position: absolute;
+                top: -10px; /* Ajuste la position vers le haut */
+                right: -10px; /* Ajuste la position vers la droite */
+                background-color: red;
+                color: white;
+                border-radius: 50%; /* Transforme en cercle */
+                width:18px; /* Largeur et hauteur du cercle */
+                height: 18px;
+                text-align: center; /* Centre le texte */
+                line-height: 20px; /* Centre vertical du texte */
+                font-size: 10px; /* Ajuste la taille du texte du compteur */
+            }
+
+        
+
+        .notification-card {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            width: 300px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+            .notification-card .notification {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+
+                .notification-card .notification:last-child {
+                    border-bottom: none;
+                }
+
+                .notification-card .notification .date {
+                    font-size: 12px;
+                    color: #888;
+                }
 </style>
 
 </head>
 <body>
     <header class="header">
-        <div class="header-innner">
-            <div class="heading">
-                <div class="inner">
-                    <div class="row">
-                        <!-- Start Logo -->
-                        <div class="col">
-                            <!-- Start Logo -->
-                            <a href="" class="logo">
-                                <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
-                            </a>
-                            <!-- End Logo -->
-                            <!-- Mobile Nav -->
-                            <div class="mobile-nav"></div>
-                            <!-- End Mobile Nav -->
-                        </div>
-
-                        <div class="col">
-                            <!-- Main Menu -->
-                            <div class="main-menu">
-                                <nav class="navigation">
-                                    <ul class="nav menu">
-                                        <li><a asp-area="" asp-controller="Employe" asp-action="Create">Employée</a></li>
-                                        <li><a asp-area="" asp-controller="Poste" asp-action="Index"> Poste</a></li>
-                                        <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
-                                        <li><a asp-area="" asp-controller="Supplement" asp-action="Index">Supplement</a></li>
-
-                                        <li><a asp-area="" asp-controller="Home" asp-action="ApproveRegistrationRequests">Approved</a></li>
-                                        <li>                                            <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn mr-2">Déconnexion</div></a>
-</li>
-                                        </ul>
-                               </nav>
+        <div class="header-inner">
+            <a href="" class="logo">
+                <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
+            </a>
+            <div class="main-menu">
+                <nav>
+                    <ul class="nav menu">
+                        <li><a asp-area="" asp-controller="Poste" asp-action="Index">Poste</a></li>
+                        <li><a asp-area="" asp-controller="Repos" asp-action="Index">Repos</a></li>
+                        <li><a asp-area="" asp-controller="Supplement" asp-action="Index">Heures supplémentaires</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="ApproveRegistrationRequests">Confirmation d'inscription</a></li>
+                        <li>
+                            <div class="notification-icon" id="notificationIcon">
+                                <i class="fa fa-bell"></i>
+                                <span class="counter" id="notificationCounter">0</span>
+                                <div class="notification-card" id="notificationCard"></div>
                             </div>
+                        </li>
 
-                        </div>
-                        <!--/ End Main Menu -->
-
-                    </div>
-                </div>
+                        <a asp-area="" asp-controller="Home" asp-action="Index"><div class="btn-dx btn">Déconnexion</div></a>
+                    </ul>
+                </nav>
             </div>
         </div>
-        <!--/ End Header Inner -->
     </header>
-
     <form id="emploi-form" method="post" class="margin">
         <input type="hidden" id="chefServiceId"> <!-- Value will be set dynamically -->
         <input type="hidden" id="serviceId"> <!-- Value will be set dynamically -->
-        <!-- Nouvel élément pour afficher l'alerte en dehors de l'interface -->
         <div id="alertContainer" class="alert-container"></div>
 
         <div class="center">
             <div class="row">
                 <div class="date-navigation">
-                    <button id="previousWeekBtn" class="btn mx-1">
+                    <button id="previousWeekBtn" class="btn-date btn">
                         <span class="fas fa-chevron-left"></span> Semaine Précédente
                     </button>
                     <input type="date" id="date" class="box mx-1" name="DateofWeek" required>
-                    <button id="nextWeekBtn" class="btn mx-1">
+                    <button id="nextWeekBtn" class="btn-date btn">
                         Semaine Prochaine <span class="fas fa-chevron-right"></span>
                     </button>
                 </div>
@@ -188,14 +894,17 @@
         </div><div id="modal" class="modal">
 
         <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
+                <div class="close">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                </div>
         <form id="modalForm">
+                    <label for="heuredébut">Heure début:</label>
 
             <input type="time" class="box" id="heureDebut" name="heureDebut">
             <label for="heureFin">Heure de fin:</label>
             <input type="time" class="box" id="heureFin" name="heureFin">
 
-            <button type="button" class="btn" id="valider">Valider</button>
+            <button type="button" class="btn margin" id="valider">Valider</button>
         </form>
         </div>
         </div>
@@ -208,7 +917,7 @@
        
 
 
-        <div class="buttons-container mt-4">
+        <div class="buttons-container mt-4 margin">
 
             <div class="form">
                 <label for="search">
@@ -248,7 +957,7 @@
                 <span class="tooltip">Télécharger</span>
             </button>
             <!-- Bouton pour afficher les emplois -->
-            <button type="button" class="btn" id="afficherEmploiButton" onclick="afficherEmploi(event)">Afficher les emplois</button>
+            <button type="button" class="btn btn-date" id="afficherEmploiButton" onclick="afficherEmploi(event)">Afficher les emplois</button>
 
 
 
@@ -285,8 +994,7 @@
 
             <div class="extra-boxes">
 
-                <select class="btn-categories" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
-                    <option value="">Sélectionnez une catégorie</option>
+                <select class="box" id="categorieDropdown" name="CategorieId" title="Sélectionnez une catégorie" required>
                     @if (Model != null && Model.Categories != null)
                     {
                         @foreach (var categorie in Model.Categories)
@@ -295,6 +1003,7 @@
                         }
                     }
                 </select>
+
                 <div id="postesSection">
                     @if (Model != null && Model.Postes != null)
                     {
@@ -311,19 +1020,18 @@
             </div>
 
         </div>
-        <div id="reposSection">
+        <div class="repo-box" id="reposSection">
 
             @if (Model != null && Model.Repos != null)
             {
                 @foreach (var repos in Model.Repos)
                 {
 
-                    <div class="repos" id="@repos.ReposId" draggable="true">
+                    <div  id="@repos.ReposId" draggable="true">
                     </div>
                 }
             }
         </div>
-
 
 
 
@@ -334,12 +1042,64 @@
 
     </form>
 
-    <!--/ End Footer Area -->
+
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <div class="copyright-content">
+                        <p>
+                            Faites confiance à notre équipe
+                            <a href="" class="logo">
+                                <i class="fa fa-heartbeat" aria-hidden="true"> <strong>CliniSys</strong></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!-- jquery Min JS -->
+    <script src="~/js/jquery.min.js"></script>
     <!-- jquery Migrate JS -->
+    <script src="~/js/jquery-migrate-3.0.0.js"></script>
     <!-- jquery Ui JS -->
+    <script src="~/js/jquery-ui.min.js"></script>
     <!-- Easing JS -->
-    <!-- Other scripts -->
+    <script src="~/js/easing.js"></script>
+    <!-- Color JS -->
+    <script src="~/js/colors.js"></script>
+    <!-- Popper JS -->
+    <script src="~/js/popper.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    <!-- Jquery Nav JS -->
+    <script src="~/js/jquery.nav.js"></script>
+    <!-- Slicknav JS -->
+    <script src="~/js/slicknav.min.js"></script>
+    <!-- ScrollUp JS -->
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <!-- Niceselect JS -->
+    <script src="~/js/niceselect.js"></script>
+    <!-- Tilt Jquery JS -->
+    <script src="~/js/tilt.jquery.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/js/owl-carousel.js"></script>
+    <!-- counterup JS -->
+    <script src="~/js/jquery.counterup.min.js"></script>
+    <!-- Steller JS -->
+    <script src="~/js/steller.js"></script>
+    <!-- Wow JS -->
+    <script src="~/js/wow.min.js"></script>
+    <!-- Magnific Popup JS -->
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <!-- Counter Up CDN JS -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- Main JS -->
+    <script src="~/js/main.js"></script>
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -350,6 +1110,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var serviceId = sessionStorage.getItem("serviceId");
+
+            function loadNotifications() {
+                fetch(`/Notification/GetNotifications?serviceId=${serviceId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var notificationCard = document.getElementById('notificationCard');
+                        notificationCard.innerHTML = "";
+                        data.forEach(notification => {
+                            var div = document.createElement("div");
+                            div.className = "notification";
+                            div.innerHTML = `
+                                        <div class="message">${notification.message}</div>
+                                        <div class="date">${new Date(notification.date).toLocaleString()}</div>
+                                    `;
+                            notificationCard.appendChild(div);
+                        });
+                    });
+
+                fetch(`/Notification/GetUnreadCount?serviceId=${serviceId}`)
+                    .then(response => response.json())
+                    .then(count => {
+                        document.getElementById("notificationCounter").textContent = count;
+                    });
+            }
+
+            document.getElementById('notificationIcon').addEventListener("click", function () {
+                var card = document.getElementById("notificationCard");
+                card.style.display = card.style.display === "none" ? "block" : "none";
+
+                if (card.style.display === "block") {
+                    fetch(`/Notification/MarkAsRead?serviceId=${serviceId}`, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                document.getElementById("notificationCounter").textContent = 0;
+                            }
+                        });
+                }
+            });
+
+            loadNotifications();
+            setInterval(loadNotifications, 30000); // Recharger les notifications toutes les 30 secondes
+        });
         let currentCell = null; // Variable to hold the context of the clicked cell
 
         $('#valider').click(function (e) {
@@ -690,7 +1494,7 @@
                                         posteDiv.id = poste.posteId;
 
                                         var posteContent = `<div class="box holiday-box">
-                                                    <strong>${poste.postename}</strong><br />`;
+                                <strong>${poste.postename}</strong><br />`;
 
                                         if (poste.matin) {
                                             posteContent += ' Matin  ';
@@ -703,16 +1507,16 @@
                                         if (poste.gardeSoir) {
                                             posteContent += ' Garde Soir';
                                         }
+
                                         posteContent += `<br />
-                                                    S1 : <span>${poste.seance1Debut} /</span>
-                                                    <span>${poste.seance1Fin}</span><br />`;
+                                S1 :<strong> <span class=>${formatTime(poste.seance1Debut)} || ${formatTime(poste.seance1Fin)}</span></strong><br />`;
 
                                         if (poste.seance2Debut) {
-                                            posteContent += `<span>${poste.seance2Debut} /</span>`;
+                                            posteContent += `<span>${formatTime(poste.seance2Debut)} ||</span>`;
                                         }
 
                                         if (poste.seance2Fin) {
-                                            posteContent += `  S2 :<span>${poste.seance2Fin}</span>`;
+                                            posteContent += `  S2 :<span>${formatTime(poste.seance2Fin)}</span>`;
                                         }
 
                                         posteContent += `</div>`;
@@ -729,16 +1533,19 @@
                                         repoDiv.draggable = "true";
                                         repoDiv.id = repo.reposId;
 
-                                        var dateJoursContent = repo.date_Jours ? `<span> ${repo.date_Jours}</span>` : '';
+                                        // Extract year, month, and day from repo.date_Jours
+                                        var dateJoursContent = repo.date_Jours ? `<span>${repo.date_Jours.slice(0, 10)}</span>` : '';
 
-                                        repoDiv.innerHTML = `<div class="box repo-box">
-                                                    <strong>${repo.reposName}</strong><br />
-                                                    ${dateJoursContent}
-                                                </div>`;
+                                        repoDiv.innerHTML = `
+                    <div class="box repo-box">
+                        <strong>${repo.reposName}</strong><br />
+                        ${dateJoursContent}
+                    </div>`;
 
                                         reposSection.appendChild(repoDiv);
                                     });
                                 }
+
 
                                 if (data.supplements && data.supplements.length > 0) {
                                     data.supplements.forEach(supplement => {
@@ -777,6 +1584,15 @@
             }
 
 
+            function formatTime(timeString) {
+                if (!timeString) return '';
+
+                // Convertir la chaîne de temps en un objet Date pour pouvoir utiliser les méthodes de formatage de Date
+                var time = new Date(`2000-01-01T${timeString}`);
+
+                // Formater le temps en hh:mm
+                return `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+            }
 
             const form = document.getElementById('emploi-form');
             const saveButton = document.getElementById('myButton');

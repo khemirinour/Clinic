@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\animate.min.css" />
+  </ItemGroup>
+
+  <ItemGroup>
 
     <PackageReference Include="FluentNHibernate" Version="3.3.0" />
+
+    <PackageReference Include="MailKit" Version="4.6.0" />
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.31" />
 
@@ -25,6 +31,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MimeKit" Version="4.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Text.Json" Version="6.0.9" />
   </ItemGroup>
@@ -60,11 +67,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\js\jquery.min.js">
+    <Content Update="wwwroot\lib\js\jquery.min.js">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\js\jquery.min.map">
+    <Content Update="wwwroot\lib\js\jquery.min.map">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

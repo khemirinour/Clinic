@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="~/css/style.css">
     <link rel="icon" href="img/favicon.png">
     <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
@@ -17,8 +16,144 @@
     <link rel="stylesheet" href="~/css/animate.min.css">
     <link rel="stylesheet" href="~/css/magnific-popup.css">
     <link rel="stylesheet" href="~/css/normalize.css">
-    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/style-index.css">
     <link rel="stylesheet" href="~/css/responsive.css">
+    <style>
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Assurez-vous que le texte est centré horizontalement */
+        }
+        .header .logo {
+            font-size: 2em;
+            color: var(--black);
+            margin: 20px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+
+            .header .logo i {
+                margin-top: 15px;
+                color: #1A76D1;
+            }
+        .text h4 {
+            color: #2C2D3F;
+            font-size: 25px;
+            font-weight: 700;
+            margin: 0;
+            padding: 0;
+            line-height: 42px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+            .text h4 span {
+                color: #1a76d1;
+            }
+
+        body {
+            background-color: #f0f0f0; /* Fond gris */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container-margin {
+            flex: 1;
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alignement vertical des cartes */
+            margin-top: 50px;
+            gap: 10px; /* Espacement entre les cartes */
+        }
+
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-left:10px;
+            margin-top:35px;
+            width: 440px; 
+            height:500px;/* Largeur fixe des cartes */
+            min-height: 400px; /* Hauteur fixe des cartes */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input {
+            width: 85%;
+            height:40px;
+            padding: 10px;
+            margin-bottom: 15px; /* Prend toute la largeur disponible */
+           
+        }
+        .select {
+            width: 85%; /* Prend toute la largeur disponible */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .margintop {
+            margin-top: 15px;
+        }
+        .margin {
+            margin-bottom: 15px;
+        }
+
+
+
+
+        .btnn {
+            width: 90%; /* Boutons de même taille */
+            padding: 10px;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            position: absolute; /* Position absolue pour le bouton */
+            bottom: 10px; /* 10px du bas */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+
+
+        .btn-dx {
+            width:130px;
+            margin-top: 15px;
+        }
+
+        footer.footer {
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+       a {
+           font-size:12px;
+        }
+        .left{margin-left:40px;}
+        .right{margin-right:20px;}
+
+    </style>
 </head>
 <body>
     <header class="header">
@@ -36,13 +171,13 @@
                             <div class="main-menu">
                                 <nav class="navigation">
                                     <ul class="nav menu">
-                                        <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Employée</a></li>
+                                        <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Employé</a></li>
                                         <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
-                                        <li><a asp-area="" asp-controller="Supplement" asp-action="Index">Heures Supplémentaire</a></li>
+                                        <li><a asp-area="" asp-controller="Supplement" asp-action="Index">Heures supplémentaires</a></li>
                                         <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a></li>
-                                        <li>
-                                            <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn">Déconnexion  </div></a>
-                                        </li>
+
+                                        <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn btn-dx">Déconnexion  </div></a>
+                                      
                                     </ul>
                                 </nav>
                             </div>
@@ -52,157 +187,224 @@
             </div>
         </div>
     </header>
-
-    <form asp-action="AddPoste" class="container">
-        <div class="text center"><h1>Gestion <span> Des poste</span></h1></div>
-        <div class="container margin">
-            <div class="col">
-                <label asp-for="Postename" class="text"><h5>Nom du poste </h5></label>
-                <input asp-for="Postename" placeholder="Nom Poste" class="boxx" />
-                <span asp-validation-for="Postename"></span>
-            </div>
-            <strong>
-                <div class="row">
-                    <div class="col">
-                        <label><input type="checkbox" asp-for="Matin"> Matin</label>
-                    </div>
-                    <div class="col">
-                        <label><input type="checkbox" asp-for="ApresMidi"> Après-midi</label>
-                    </div>
-                    <div class="col">
-                        <label><input type="checkbox" asp-for="GardeSoir"> Garde de soir</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label>Séance 1 :</label>
-                    </div>
-                    <div class="col">
-                        <label>Début :</label>
-                        <input asp-for="Seance1Debut" type="time" class="box">
-                    </div>
-                    <div class="col">
-                        <label>Fin :</label>
-                        <input asp-for="Seance1Fin" type="time" class="box">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label>Séance 2 :</label>
-                    </div>
-                    <div class="col">
-                        <label>Début :</label>
-                        <input asp-for="Seance2Debut" type="time" class="box">
-                    </div>
-                    <div class="col">
-                        <label>Fin :</label>
-                        <input asp-for="Seance2Fin" type="time" class="box">
-                    </div>
-                </div>
-                <div class="row margin">
-                    <div class="col">
-                        <label><input type="checkbox" asp-for="Actif"> Actif?</label>
-                    </div>
-                    <div class="row margin">
+    <div class="row">
+        <!-- Premier formulaire dans une carte -->
+            <div class="card left">
+                <form asp-action="AddPoste" >
+                    <div class="text center"><h4>Ajout <span>De poste</span></h4></div>
+                    <div class="margin"></div>    
+                    <div class="row">
+                            <input asp-for="Postename" placeholder="Nom du poste" class="input" />
+                            <span asp-validation-for="Postename"></span>
+                        </div>
+                        <strong>
+                            <div class="row">
+                                <div class="col">
+                                    <label><input type="checkbox" asp-for="Matin"> Matin</label>
+                                </div>
+                                <div class="col">
+                                    <label><input type="checkbox" asp-for="ApresMidi"> Après-midi</label>
+                                </div>
+                                <div class="col">
+                                    <label><input type="checkbox" asp-for="GardeSoir"> Garde de soir</label>
+                                </div>
+                            </div>
+                    <div class="row margintop">
+                            <div class="col">
+                                <label>Séance 1 :</label>
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance1Debut" type="time" form-control">
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance1Fin" type="time" form-control">
+                            </div>
+                        </div>
+                    <div class="row margintop">
+                            <div class="col">
+                                <label>Séance 2 :</label>
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance2Debut" type="time" form-control">
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance2Fin" type="time" form-control">
+                            </div>
+                        </div>
+                    <div class="row margintop">
                         <div class="col">
-                            <label>Catégorie :</label>
+                            <label><input type="checkbox" asp-for="Actif"> Actif?</label>
+                        </div>
+                        <div class="col-12 col-md-6">
                             @if (ViewBag.CategorieList != null)
                             {
-                                <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="box" required>
-                                    <option value="">Sélectionnez une catégorie</option>
+                                <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="select" required>
+                                    <option value="">Sélectionnez une saison</option>
                                 </select>
                             }
                         </div>
                     </div>
-                    <div class="row margin">
+
+
+
+
+                    </strong>                                    <button type="submit" class="btn btnn">Enregistrer</button>
+
+                </form>
+        </div>
+
+        <!-- Deuxième formulaire dans une carte -->
+        <div class="card">
+                <form asp-action="UpdatePoste">
+                    <div class="text center"><h4>Mise à jour <span>De poste</span></h4></div>
+                <div class="margin"></div>
+                <div class="row margintop">
+
+                    <select asp-for="PosteId" asp-items="@ViewBag.PosteList" class="select" required>
+                        <option value="">Sélectionnez un poste</option>
+                    </select>
+                    </div>
+                    <strong>
+                        <div class="row">
+                            <div class="col">
+                                <label><input type="checkbox" asp-for="Matin"> Matin</label>
+                            </div>
+                            <div class="col">
+                                <label><input type="checkbox" asp-for="ApresMidi"> Après-midi</label>
+                            </div>
+                            <div class="col">
+                                <label><input type="checkbox" asp-for="GardeSoir"> Garde de soir</label>
+                            </div>
+                        </div>
+                    <div class="row margintop">
+                            <div class="col">
+                                <label>Séance 1 :</label>
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance1Debut" type="time" form-control">
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance1Fin" type="time" form-control">
+                            </div>
+                        </div>
+                    <div class="row margintop">
+                            <div class="col">
+                                <label>Séance 2 :</label>
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance2Debut" type="time" form-control">
+                            </div>
+                            <div class="col">
+                                <input asp-for="Seance2Fin" type="time"  form-control">
+                            </div>
+                        </div>
+                    <div class="row margintop">
                         <div class="col">
-                            <button type="submit" class="btn">Enregistrer</button>
+                            <label><input type="checkbox" asp-for="Actif"> Actif?</label>
+                        </div>
+                        <div class="col">
+                            @if (ViewBag.CategorieList != null)
+                            {
+                                <select class="select" asp-for="CategorieId" asp-items="ViewBag.CategorieList" required>
+                                    <option value="">Sélectionnez une saison</option>
+                                </select>
+                            }
                         </div>
                     </div>
-                </div>
-            </strong>
+
+
+                    <button type="submit" class="btn btnn">Mise à jours </button>
+
+
+                </strong>                               
+                </form>
         </div>
-    </form>
 
-    <form asp-action="UpdatePoste">
-        <select asp-for="PosteId" asp-items="@ViewBag.PosteList" class="box" required>
-            <option value="">Sélectionnez un poste</option>
-        </select>
 
-        <strong>
-            <div class="row">
-                <div class="col">
-                    <label><input type="checkbox" asp-for="Matin"> Matin</label>
-                </div>
-                <div class="col">
-                    <label><input type="checkbox" asp-for="ApresMidi"> Après-midi</label>
-                </div>
-                <div class="col">
-                    <label><input type="checkbox" asp-for="GardeSoir"> Garde de soir</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label>Séance 1 :</label>
-                </div>
-                <div class="col">
-                    <label>Début :</label>
-                    <input asp-for="Seance1Debut" type="time" class="box">
-                </div>
-                <div class="col">
-                    <label>Fin :</label>
-                    <input asp-for="Seance1Fin" type="time" class="box">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label>Séance 2 :</label>
-                </div>
-                <div class="col">
-                    <label>Début :</label>
-                    <input asp-for="Seance2Debut" type="time" class="box">
-                </div>
-                <div class="col">
-                    <label>Fin :</label>
-                    <input asp-for="Seance2Fin" type="time" class="box">
-                </div>
-            </div>
-            <div class="row margin">
-                <div class="col">
-                    <label><input type="checkbox" asp-for="Actif"> Actif?</label>
-                </div>
-            </div>
-            <div class="row margin">
-                <div class="col">
-                    <label>Catégorie :</label>
-                    @if (ViewBag.CategorieList != null)
-                    {
-                        <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="box" required>
-                            <option value="">Sélectionnez une catégorie</option>
+
+
+    <!-- Troisième formulaire dans une carte -->
+        <div class="card right">
+
+                <form asp-action="DeletePoste">
+                <div class="text center"><h4>Suppressionr <span>De poste</span></h4></div>
+                <div class="margin"></div>
+                <div class="row margintop">
+                    <select class="select" asp-for="PosteId" asp-items="@ViewBag.PosteList" required>
+                <option value="">Sélectionnez un poste</option>
+                    </select>
+                </div>                <div class="row margintop">
+
+                @if (ViewBag.CategorieList != null)
+                {
+                        <select class="select" id="CategorieId" name="categorieId" asp-items="ViewBag.CategorieList">
+                            <option value="">Sélectionnez une saison</option>
                         </select>
-                    }
+                }
+                    </div>
+
+            <button type="submit" class="btn btnn">Delete</button>
+        </form>
+
+       
+    </div> </div>
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <div class="copyright-content">
+                        <p>
+                            Faites confiance à notre équipe
+                            <a href="" class="logo">
+                                <i class="fa fa-heartbeat" aria-hidden="true"> <strong>CliniSys</strong></i>
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="row margin">
-                <div class="col">
-                    <button type="submit" class="btn">Enregistrer</button>
-                </div>
-            </div>
-        </strong>
-    </form>
-    <form asp-action="DeletePoste">
-    
-        <select asp-for="PosteId" asp-items="@ViewBag.PosteList" class="box" required>
-            <option value="">Sélectionnez un poste</option>
-        </select>
-        <div class="form-group">
-            <label for="CategorieId">Select Categorie</label>
-            @if (ViewBag.CategorieList != null)
-            {
-                <select id="CategorieId" name="categorieId" class="form-control" asp-items="ViewBag.CategorieList"></select>
-            }
         </div>
-        <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
+    </footer>
+
+    <!-- jquery Min JS -->
+    <script src="~/js/jquery.min.js"></script>
+    <!-- jquery Migrate JS -->
+    <script src="~/js/jquery-migrate-3.0.0.js"></script>
+    <!-- jquery Ui JS -->
+    <script src="~/js/jquery-ui.min.js"></script>
+    <!-- Easing JS -->
+    <script src="~/js/easing.js"></script>
+    <!-- Color JS -->
+    <script src="~/js/colors.js"></script>
+    <!-- Popper JS -->
+    <script src="~/js/popper.min.js"></script>
+    <!-- Bootstrap Datepicker JS -->
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    <!-- Jquery Nav JS -->
+    <script src="~/js/jquery.nav.js"></script>
+    <!-- Slicknav JS -->
+    <script src="~/js/slicknav.min.js"></script>
+    <!-- ScrollUp JS -->
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <!-- Niceselect JS -->
+    <script src="~/js/niceselect.js"></script>
+    <!-- Tilt Jquery JS -->
+    <script src="~/js/tilt.jquery.min.js"></script>
+    <!-- Owl Carousel JS -->
+    <script src="~/js/owl-carousel.js"></script>
+    <!-- counterup JS -->
+    <script src="~/js/jquery.counterup.min.js"></script>
+    <!-- Steller JS -->
+    <script src="~/js/steller.js"></script>
+    <!-- Wow JS -->
+    <script src="~/js/wow.min.js"></script>
+    <!-- Magnific Popup JS -->
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <!-- Counter Up CDN JS -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <!-- Main JS -->
+    <script src="~/js/main.js"></script>
 </body>
 </html>
+

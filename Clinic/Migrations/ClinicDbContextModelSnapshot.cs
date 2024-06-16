@@ -196,9 +196,6 @@ namespace Clinic.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool?>("Approved")
                         .HasColumnType("bit");
 
@@ -256,6 +253,31 @@ namespace Clinic.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("Clinic.Models.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"), 1L, 1);
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("Clinic.Models.Poste", b =>

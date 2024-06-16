@@ -1,26 +1,263 @@
 ﻿@model Clinic.Models.Supplement
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Titre</title>
 
-<h2>Ajouter un supplément</h2>
+    <!-- Chargement des CSS externes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/nice-select.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/icofont.css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css">
+    <link rel="stylesheet" href="~/css/owl-carousel.css">
+    <link rel="stylesheet" href="~/css/datepicker.css">
+    <link rel="stylesheet" href="~/css/animate.min.css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+    <link rel="stylesheet" href="~/css/normalize.css">
+    <link rel="stylesheet" href="~/css/style-index.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="Nom">Nom :</label>
-        <input asp-for="Nom" class="form-control" />
-        <span asp-validation-for="Nom" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="CategorieId">Catégorie :</label>
-        <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="form-control"></select>
-        <span asp-validation-for="CategorieId" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Ajouter</button>
-</form>
+    <style>
+        input[type="text"] {
+            width: 90%; /* Champs de même taille */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
 
-<h2>Supprimer un supplément</h2>
-<form asp-action="Delete">
-    <div class="form-group">
-        <label>Sélectionnez le supplément à supprimer :</label>
-        <select asp-for="SupplementId" asp-items="ViewBag.SupplementList" class="form-control"></select>
+  .select {
+            width: 90%; /* Champs de même taille */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            flex: 1;
+            margin-top: 60px;
+            display: flex;
+            justify-content: center; /* Centrer les cartes horizontalement */
+            align-items: center;
+            flex-wrap: wrap; /* Permettre le passage à la ligne si nécessaire */
+            gap: 30px; /* Espacement entre les cartes */
+        }
+
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 600px;
+            height:400px;
+
+            max-width: 400px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .btn-dx {
+            margin: 15px;
+            margin-right: 30px;
+        }
+        .btnn {
+            width: 90%; /* Boutons de même taille */
+            padding: 10px;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            position: absolute; /* Position absolue pour le bouton */
+            bottom: 10px; /* 10px du bas */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        footer.footer {
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .header .logo {
+            font-size: 1.5rem;
+            color: var(--black);
+            margin-top: 15px;
+            margin-left: 30px;
+        }
+
+            .header .logo i {
+                margin-top: 15px;
+                color: #1A76D1;
+            }
+        .header .nav li a{
+         font-size:13px;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Assurez-vous que le texte est centré horizontalement */
+        }
+
+        .text h4 {
+            color: #2C2D3F;
+            font-size: 25px;
+            font-weight: 700;
+            margin: 0;
+            margin-bottom: 20px;
+            padding: 0;
+            line-height: 42px;
+        }
+
+            .text h4 span {
+                color: #1a76d1;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+
+            <div class="row">
+                <!-- Start Logo -->
+                <div class="col">
+                    <!-- Start Logo -->
+                    <a href="" class="logo">
+                        <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
+                    </a>
+
+                </div>
+
+                <div class="margin">
+                    <!-- Main Menu -->
+                    <div class="main-menu">
+                        <nav>
+                            <ul class="nav menu">
+                                <li><a asp-area="" asp-controller="Employe" asp-action="Create">Employée</a></li>
+                                <li><a asp-area="" asp-controller="Poste" asp-action="Index"> Poste</a></li>
+                                <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
+
+                                <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a></li>
+                                <li><a asp-area="" asp-controller="Home" asp-action="ApproveRegistrationRequests">Approved</a></li>
+
+                                <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn btn-dx">Déconnexion</div></a>
+
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <!-- Carte pour Ajouter un supplément -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="center">
+                    <div class="text"><h4>Ajout <span> des heures supplémentaires</span></h4></div>
+</div>
+                    <form asp-action="Create">
+                        <input asp-for="Nom" class="form-control" placeholder="Nom" />
+                        <span asp-validation-for="Nom" class="text-danger"></span>
+                        <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="select">
+                            <option value="">Sélectionnez une saison</option>
+                        </select>
+                        <span asp-validation-for="CategorieId" ></span>
+                        <button type="submit" class="btn btnn">Ajouter</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Carte pour Supprimer un supplément -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="center">
+
+                    <div class="text"><h4>Suppression <span>des heures supplémentaires</span></h4></div>
+                    </div>
+                    <form asp-action="Delete">
+                        <select asp-for="SupplementId" asp-items="ViewBag.SupplementList" class="select">
+                            <option value="">Sélectionnez un supplément</option>
+                        </select> <select asp-for="CategorieId" asp-items="ViewBag.CategorieList" class="select">
+                            <option value="">Sélectionnez une saison</option>
+                        </select>
+                        <button type="submit" class="btn btnn">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-</form>
+
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <div class="copyright-content">
+                        <p>
+                            Faites confiance à notre équipe
+                            <a href="" class="logo">
+                                <i class="fa fa-heartbeat" aria-hidden="true"> <strong>CliniSys</strong></i>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chargement des scripts JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-migrate-3.0.0.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/easing.js"></script>
+    <script src="~/js/colors.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap-datepicker.js"></script>
+    <script src="~/js/jquery.nav.js"></script>
+    <script src="~/js/slicknav.min.js"></script>
+    <script src="~/js/jquery.scrollUp.min.js"></script>
+    <script src="~/js/niceselect.js"></script>
+    <script src="~/js/tilt.jquery.min.js"></script>
+    <script src="~/js/owl-carousel.js"></script>
+    <script src="~/js/jquery.counterup.min.js"></script>
+    <script src="~/js/steller.js"></script>
+    <script src="~/js/wow.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/main.js"></script>
+
+</body>
+</html>

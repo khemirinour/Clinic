@@ -6,12 +6,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using MimeKit;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using System.Net.Mail;
 
 namespace Clinic.Controllers
 {
@@ -19,14 +24,13 @@ namespace Clinic.Controllers
     {
         private readonly ClinicDbContext _context;
         private readonly ILogger<AccountController> _logger;
-        private readonly IConfiguration _configuration; // Add this field
-        private IEnumerable<object> pendingEmployees;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(ClinicDbContext context, ILogger<AccountController> logger, IConfiguration configuration) // Add IConfiguration parameter
+        public AccountController(ClinicDbContext context, ILogger<AccountController> logger, IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
-            _configuration = configuration; // Assign the injected IConfiguration instance
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -34,6 +38,7 @@ namespace Clinic.Controllers
         {
             return View();
         }
+
         private string GenerateJwtToken(Employee user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -41,12 +46,12 @@ namespace Clinic.Controllers
             var expires = DateTime.Now.AddHours(Convert.ToDouble(_configuration["Jwt:ExpireHours"]));
 
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.EmployeeId.ToString()),
-            new Claim(ClaimTypes.Name, user.Name),
-            new Claim("ServiceId", user.ServiceId.ToString()),
-            new Claim("IsChefDeService", user.IsChefDeService.ToString())
-        };
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.EmployeeId.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim("ServiceId", user.ServiceId.ToString()),
+                new Claim("IsChefDeService", user.IsChefDeService.ToString())
+            };
 
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
@@ -70,21 +75,18 @@ namespace Clinic.Controllers
 
                 if (employee != null && employee.Approved == true)
                 {
-                    // Create claims
                     var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()),
-                new Claim(ClaimTypes.Name, employee.Name),
-                new Claim("ServiceId", employee.ServiceId.ToString()),
-                new Claim("IsChefDeService", employee.IsChefDeService.ToString())
-            };
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()),
+                        new Claim(ClaimTypes.Name, employee.Name),
+                        new Claim("ServiceId", employee.ServiceId.ToString()),
+                        new Claim("IsChefDeService", employee.IsChefDeService.ToString())
+                    };
 
                     var claimsIdentity = new ClaimsIdentity(claims, "Login");
 
-                    // Sign in the user
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                    // Determine redirect URL based on role, handling nullable bool
                     var isChefDeService = employee.IsChefDeService ?? false;
                     var redirectUrl = isChefDeService ? Url.Action("Create", "Emploi") : Url.Action("Affiche", "Emploi");
 
@@ -93,7 +95,7 @@ namespace Clinic.Controllers
                         success = true,
                         redirectUrl = redirectUrl,
                         employeeId = employee.EmployeeId,
-                        serviceId = employee.ServiceId // Pass the service ID
+                        serviceId = employee.ServiceId
                     });
                 }
                 else
@@ -118,29 +120,6 @@ namespace Clinic.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Register(Employee employee)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    employee.IsChefDeService = false;
-                    employee.Approved = false;
-
-                    _context.Employee.Add(employee);
-                    await _context.SaveChangesAsync();
-                    return Json(new { success = true });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during registration process.");
-                ModelState.AddModelError(string.Empty, "Une erreur s'est produite lors de l'enregistrement de l'utilisateur.");
-            }
-
-            return Json(new { success = false, message = "Registration failed. Please check the form." });
-        }
         public class ApproveEmployeeRequest
         {
             public int EmployeeId { get; set; }
@@ -172,6 +151,41 @@ namespace Clinic.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Register(Employee employee)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    employee.IsChefDeService = false;
+                    employee.Approved = false;
+
+                    _context.Employee.Add(employee);
+                    await _context.SaveChangesAsync();
+
+                    var notification = new Notification
+                    {
+                        ServiceId = employee.ServiceId,
+                        Message = $"Nouvel employé inscrit: {employee.Name}",
+                        Date = DateTime.Now
+                    };
+
+                    _context.Notification.Add(notification);
+                    await _context.SaveChangesAsync();
+
+                    return Json(new { success = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during registration process.");
+                ModelState.AddModelError(string.Empty, "Une erreur s'est produite lors de l'enregistrement de l'utilisateur.");
+            }
+
+            return Json(new { success = false, message = "Registration failed. Please check the form." });
+        }
+
         [HttpGet]
         public IActionResult GetUnapprovedEmployees(int serviceId)
         {
@@ -183,7 +197,7 @@ namespace Clinic.Controllers
                     {
                         EmployeeId = e.EmployeeId,
                         EmployeeName = e.Name,
-                        Email = e.Email // Assurez-vous d'inclure l'email
+                        Email = e.Email
                     }).ToList();
 
                 return Json(unapprovedEmployees);
@@ -193,6 +207,38 @@ namespace Clinic.Controllers
                 return StatusCode(500, new { error = "An error occurred while fetching unapproved employees.", details = ex.Message });
             }
         }
+
+      
+
+
+        [HttpPost]
+        public IActionResult ApproveEmployeeById([FromBody] ApproveEmployeeRequest request)
+        {
+            try
+            {
+                var employee = _context.Employee.FirstOrDefault(e => e.EmployeeId == request.EmployeeId);
+
+                if (employee != null)
+                {
+                    employee.Approved = true;
+                    employee.TotalWeeklyHours = request.TotalHours;
+                    _context.SaveChanges();
+
+
+                    return Ok(new { message = "Employee approved successfully." });
+                }
+                else
+                {
+                    return NotFound("Employee not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while approving the employee.", details = ex.Message });
+            }
+        }
+
+   
         public async Task<IActionResult> ApproveRegistrationRequests(int serviceId)
         {
             try

@@ -9,6 +9,7 @@ namespace Clinic.Models
        
         public DbSet<Categorie>? Categories { get; set; }
         public DbSet<Employee>? Employee { get; set; }
+        public DbSet<Notification>? Notification { get; set; }
 
         public DbSet<Poste>? Postes { get; set; }
         public DbSet<Repos>? Repos { get; set; }
