@@ -46,6 +46,7 @@
 	<link rel="stylesheet" href="~/css/style-index.css">
 	<link rel="stylesheet" href="~/css/responsive.css">
 	<style>
+		.btn{margin:30px;}
 		.header .logo {
 			font-size: 2em;
 			color: var(--black);
@@ -101,13 +102,14 @@
 										</li>
 										<li><a href="#blog">Blog</a></li>
 										<li><a href="#contact">Contact</a></li>
-										<li>
+									
                                             <a asp-area="" asp-controller="Home" asp-action="Login"> <div class="btn mr-2">Connecter</div></a>
 
-										</li>
-                                        <li>
-											<a asp-area="" asp-controller="Home" asp-action="Login"> <div class="btn mr-2">S'inscrire</div></a>
-                                        </li>
+									
+											<a asp-area="" asp-controller="Home" asp-action="Login">
+												<div class="btn mr-2" id="register-button">S'inscrire</div>
+											</a>
+										
                                     </ul>
 								</nav>
 							</div>

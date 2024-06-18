@@ -8,8 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MimeKit;
-using MailKit.Net.Smtp;
+
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;

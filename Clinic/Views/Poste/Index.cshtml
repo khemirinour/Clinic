@@ -29,8 +29,6 @@
             font-size: 2em;
             color: var(--black);
             margin: 20px;
-            margin-right: 20px;
-            margin-bottom: 10px;
         }
 
             .header .logo i {
@@ -137,7 +135,7 @@
 
         .btn-dx {
             width:130px;
-            margin-top: 15px;
+      margin: 20px;
         }
 
         footer.footer {
@@ -171,8 +169,14 @@
                             <div class="main-menu">
                                 <nav class="navigation">
                                     <ul class="nav menu">
-                                        <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Employé</a></li>
-                                        <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                       <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
                                         <li><a asp-area="" asp-controller="Supplement" asp-action="Index">Heures supplémentaires</a></li>
                                         <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a></li>
 
@@ -327,7 +331,7 @@
         <div class="card right">
 
                 <form asp-action="DeletePoste">
-                <div class="text center"><h4>Suppressionr <span>De poste</span></h4></div>
+                <div class="text center"><h4>Suppression <span>De poste</span></h4></div>
                 <div class="margin"></div>
                 <div class="row margintop">
                     <select class="select" asp-for="PosteId" asp-items="@ViewBag.PosteList" required>
@@ -343,7 +347,7 @@
                 }
                     </div>
 
-            <button type="submit" class="btn btnn">Delete</button>
+            <button type="submit" class="btn btnn">Supprimer</button>
         </form>
 
        

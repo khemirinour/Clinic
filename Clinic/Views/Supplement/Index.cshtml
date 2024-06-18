@@ -160,12 +160,18 @@
                     <div class="main-menu">
                         <nav>
                             <ul class="nav menu">
-                                <li><a asp-area="" asp-controller="Employe" asp-action="Create">Employée</a></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
                                 <li><a asp-area="" asp-controller="Poste" asp-action="Index"> Poste</a></li>
                                 <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
 
                                 <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a></li>
-                                <li><a asp-area="" asp-controller="Home" asp-action="ApproveRegistrationRequests">Approved</a></li>
 
                                 <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn btn-dx">Déconnexion</div></a>
 
@@ -185,7 +191,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="center">
-                    <div class="text"><h4>Ajout <span> des heures supplémentaires</span></h4></div>
+                    <div class="text"><h4>Ajout <span>d'heures supplémentaires</span></h4></div>
 </div>
                     <form asp-action="Create">
                         <input asp-for="Nom" class="form-control" placeholder="Nom" />
@@ -204,7 +210,7 @@
                 <div class="card">
                     <div class="center">
 
-                    <div class="text"><h4>Suppression <span>des heures supplémentaires</span></h4></div>
+                    <div class="text"><h4>Suppression <span>d'heures supplémentaires</span></h4></div>
                     </div>
                     <form asp-action="Delete">
                         <select asp-for="SupplementId" asp-items="ViewBag.SupplementList" class="select">

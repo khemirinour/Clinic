@@ -5,10 +5,10 @@
     <!-- Meta Tags -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title -->
+    <title>Gestion des employés</title>
     <!-- Favicon -->
     <link rel="icon" href="img/favicon.png">
 
@@ -45,7 +45,10 @@
             position: fixed;
             bottom: 0;
         }
-        .container{margin-top:30px;}
+
+        .container {
+            margin-top: 30px;
+        }
 
         .header .logo {
             font-size: 1.5rem;
@@ -63,26 +66,30 @@
             font-size: 13px;
         }
 
-       
-        .btn-dx{
-            width:130px;
-            height:35px;
-            text-align:center;
+        .btn-dx {
+            width: 130px;
+            height: 40px;
+            text-align: center;
         }
+
+        .tablee {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+            .btn-dxn{margin:10px;}
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-inner">
-
             <div class="row">
                 <!-- Start Logo -->
                 <div class="col">
-                    <!-- Start Logo -->
                     <a href="" class="logo">
                         <i class="fa fa-heartbeat" aria-hidden="true"><strong>CliniSys</strong></i>
                     </a>
-
                 </div>
 
                 <div class="margin">
@@ -93,48 +100,42 @@
                                 <li><a asp-area="" asp-controller="Poste" asp-action="Index"> Poste</a></li>
                                 <li><a asp-area="" asp-controller="Repos" asp-action="Index">Pause</a></li>
                                 <li><a asp-area="" asp-controller="Supplement" asp-action="Index">Heurs Suplémentaires</a></li>
-
                                 <li><a asp-area="" asp-controller="Emploi" asp-action="Create">Emploi</a></li>
-
-                                <a asp-area="" asp-controller="Home" asp-action="Index"> <div class="btn btn-dx">Déconnexion</div></a>
-
+                                <a asp-area="" asp-controller="Home" asp-action="Index">
+                                    <div class="btn btn-dx">Déconnexion</div>
+                                </a>
                             </ul>
                         </nav>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </header>
 
-
-<input type="hidden" id="serviceId" value="@ViewBag.ServiceId" />
+    <input type="hidden" id="serviceId" value="@ViewBag.ServiceId" />
     <div class="center">
-
         <div class="container">
-
-    <table class="tablee">
-    <thead>
-        <tr>
-            <th>Employé ID</th>
-            <th>Nom et Prénom</th>
-            <th>Email</th>
-            <th>Heurs par semaine</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="employeeTableBody">
-        <!-- Employee rows will be inserted here by JavaScript -->
-    </tbody>
-</table>
+            <table class="tablee">
+                <thead>
+                    <tr>
+                        <th>Employé ID</th>
+                        <th>Nom et Prénom</th>
+                        <th>Email</th>
+                        <th>Heurs par semaine</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="employeeTableBody">
+                    <!-- Employee rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
         </div>
     </div>
 
-<p id="noRequestsMessage" style="display: none;">No registration requests to approve.</p>
+    <p id="noRequestsMessage" style="display: none;">No registration requests to approve.</p>
+
     <section class="Feautes">
         <div class="container">
-         
             <div class="row">
                 <div class="col-lg-4 col-12">
                     <!-- Start Single features -->
@@ -169,132 +170,168 @@
             </div>
         </div>
     </section>
+
     <!-- Footer Area -->
     <footer id="footer" class="footer ">
-     
-        <!--/ End Footer Top -->
-        <!-- Copyright -->
         <div class="copyright">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-12">
-                        <div class="copyright-content">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <div class="copyright-content">
                         <p>
                             Faites confiance à notre équipe
-                              <a href="" class="logo">
-                                    <i class="fa fa-heartbeat" aria-hidden="true"> <strong>CliniSys</strong></i>
-                                </a>
-                            </p>
-                        </div>
+                            <a href="" class="logo">
+                                <i class="fa fa-heartbeat" aria-hidden="true"> <strong>CliniSys</strong></i>
+                            </a>
+                        </p>
                     </div>
+                </div>
             </div>
         </div>
-        <!--/ End Copyright -->
     </footer>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var serviceId = sessionStorage.getItem("serviceId");
-        console.log("Service ID:", serviceId);
 
-        fetch(`/Account/GetUnapprovedEmployees?serviceId=${serviceId}`)
-            .then(response => {
-                console.log("Response:", response); // Log de la réponse
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                var tbody = document.getElementById("employeeTableBody");
-                var noRequestsMessage = document.getElementById("noRequestsMessage");
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var serviceId = sessionStorage.getItem("serviceId");
+            console.log("Service ID:", serviceId);
 
-                // Clear any existing rows in the tbody
-                tbody.innerHTML = '';
+            fetch(`/Account/GetUnapprovedEmployees?serviceId=${serviceId}`)
+                .then(response => {
+                    console.log("Response:", response); // Log de la réponse
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    var tbody = document.getElementById("employeeTableBody");
+                    var noRequestsMessage = document.getElementById("noRequestsMessage");
 
-                if (data.length > 0) {
-                    noRequestsMessage.style.display = "none";
-                    data.forEach(employee => {
-                        var row = document.createElement("tr");
+                    // Clear any existing rows in the tbody
+                    tbody.innerHTML = '';
 
-                        var cellId = document.createElement("td");
-                        cellId.textContent = employee.employeeId;
+                    if (data.length > 0) {
+                        noRequestsMessage.style.display = "none";
+                        data.forEach(employee => {
+                            var row = document.createElement("tr");
 
-                        var cellName = document.createElement("td");
-                        cellName.textContent = employee.employeeName;
+                            var cellId = document.createElement("td");
+                            cellId.textContent = employee.employeeId;
 
-                        var cellEmail = document.createElement("td");
-                        cellEmail.textContent = employee.email; // Afficher l'email
+                            var cellName = document.createElement("td");
+                            cellName.textContent = employee.employeeName;
 
-                        var cellTotalHours = document.createElement("td");
-                        var totalHoursInput = document.createElement("input");
-                        totalHoursInput.type = "number";
-                        totalHoursInput.min = "0";
-                        totalHoursInput.step = "1";
-                        totalHoursInput.className = "";
+                            var cellEmail = document.createElement("td");
+                            cellEmail.textContent = employee.email; // Afficher l'email
 
-                        cellTotalHours.appendChild(totalHoursInput);
+                            var cellTotalHours = document.createElement("td");
+                            var totalHoursInput = document.createElement("input");
+                            totalHoursInput.type = "number";
+                            totalHoursInput.min = "0";
+                            totalHoursInput.step = "1";
+                            totalHoursInput.className = "";
 
-                        var cellAction = document.createElement("td");
+                            cellTotalHours.appendChild(totalHoursInput);
 
-                        var approveButton = document.createElement("button");
-                        approveButton.textContent = "Confirmer";
-                        approveButton.className = "btn";
-                        approveButton.addEventListener("click", function () {
-                            var totalHours = totalHoursInput.value;
-                            approveEmployee(employee.employeeId, totalHours); // Appeler la fonction pour approuver l'employé
+                            var cellAction = document.createElement("td");
+
+                            var approveButton = document.createElement("button");
+                            approveButton.textContent = "Confirmer";
+                            approveButton.className = "btn";
+                            approveButton.addEventListener("click", function () {
+                                var totalHours = totalHoursInput.value;
+                                approveEmployee(employee.employeeId, totalHours); // Appeler la fonction pour approuver l'employé
+                            });
+
+                            var rejectButton = document.createElement("button");
+                            rejectButton.textContent = "Rejeter";
+                            rejectButton.className = "btn";
+                            rejectButton.addEventListener("click", function () {
+                                var totalHours = totalHoursInput.value;
+                                rejectEmployee(employee.employeeId, totalHours); // App
+                                var totalHours = totalHoursInput.value;
+                                rejectEmployee(employee.employeeId, totalHours); // Appeler la fonction pour rejeter l'employé
+                            });
+
+                            cellAction.appendChild(approveButton);
+                            cellAction.appendChild(rejectButton);
+
+                            row.appendChild(cellId);
+                            row.appendChild(cellName);
+                            row.appendChild(cellEmail); // Ajouter la cellule email à la ligne
+                            row.appendChild(cellTotalHours);
+                            row.appendChild(cellAction);
+
+                            tbody.appendChild(row);
                         });
 
-                        cellAction.appendChild(approveButton);
+                    } else {
+                        noRequestsMessage.style.display = "block";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching unapproved employees:", error);
+                });
+        });
 
-                        row.appendChild(cellId);
-                        row.appendChild(cellName);
-                        row.appendChild(cellEmail); // Ajouter la cellule email à la ligne
-                        row.appendChild(cellTotalHours);
-                        row.appendChild(cellAction);
+        function approveEmployee(employeeId, totalHours) {
+            const data = {
+                employeeId: employeeId,
+                totalHours: totalHours
+            };
 
-                        tbody.appendChild(row);
-                    });
-
-                } else {
-                    noRequestsMessage.style.display = "block";
-                }
+            fetch(`/Account/ApproveEmployee`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             })
-            .catch(error => {
-                console.error("Error fetching unapproved employees:", error);
-            });
-    });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // Afficher la réponse dans la console
+                    // Ajouter ici toute logique supplémentaire après l'approbation
+                })
+                .catch(error => {
+                    console.error("Error approving employee:", error);
+                });
+        }
 
-    function approveEmployee(employeeId, totalHours) {
-        const data = {
-            employeeId: employeeId,
-            totalHours: totalHours
-        };
+        function rejectEmployee(employeeId, totalHours) {
+            const data = {
+                employeeId: employeeId,
+                totalHours: totalHours
+            };
 
-        fetch(`/Account/ApproveEmployee`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+            fetch(`/Account/RejectEmployee`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             })
-            .then(data => {
-                console.log(data); // Afficher la réponse dans la console
-            })
-            .catch(error => {
-                console.error("Error approving employee:", error);
-            });
-    }
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // Afficher la réponse dans la console
+                    // Ajouter ici toute logique supplémentaire après le rejet
+                })
+                .catch(error => {
+                    console.error("Error rejecting employee:", error);
+                });
+        }
+    </script>
 
-</script>
     <!-- End Blog Area -->
     <!-- End Blog Area -->
-
-
     <!--/ End Footer Area -->
     <!-- jquery Min JS -->
     <script src="~/js/jquery.min.js"></script>
@@ -336,14 +373,5 @@
     <script src="~/js/bootstrap.min.js"></script>
     <!-- Main JS -->
     <script src="~/js/main.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="~/js/bootstrap.min.js"></script>
-    <!-- Main JS -->
-    <script src="~/js/main.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-
 </body>
 </html>
-
