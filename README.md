@@ -15,13 +15,13 @@ Ce projet consiste à développer une application web de planification des rende
 - AJAX / Fetch API
 
 ### Backend
-- ASP.NET Core (.NET 6 ou .NET 7)
+- ASP.NET Core (.NET 6 )
 - Entity Framework Core
 - API RESTful
 - SQL Server (ou SQLite)
 
 ---
-<img width="2082" height="4461" alt="homme" src="https://github.com/user-attachments/assets/b18fbee9-5afd-49f7-956c-2bf61bab7e70" />
+<img width="1081" height="2230" alt="homme" src="https://github.com/user-attachments/assets/b18fbee9-5afd-49f7-956c-2bf61bab7e70" />
 
 
 ## 🎯 Fonctionnalités Clés
